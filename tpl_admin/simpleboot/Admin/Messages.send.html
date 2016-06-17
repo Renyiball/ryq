@@ -1,0 +1,34 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Messages/index')}">私信列表</a></li>
+     <li class="active"><a href="{:U('Messages/send')}">发送私信</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Messages/send_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>接收用户ID:</td>
+              <td><input type="text" class="input" name="userid" maxlength="8" required="required" value=""></td>
+            </tr>
+            <tr>
+              <td>消息内容:</td>
+              <td><textarea name="description" rows="5"></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">发送</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+
+</body>
+</html>

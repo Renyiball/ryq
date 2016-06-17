@@ -1,0 +1,40 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('shop/index')}">商品列表</a></li>
+     <li><a href="{:U('shop/add')}">添加商品</a></li>
+     <li class="active"><a href="{:U('shop/logistics')}">库存导入</a></li>
+  </ul>
+
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('shop/logistics_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+						<tr>
+              <td>库存列表:</td>
+              <td><input type="file" name="associatetxt"/>(必须使用CSV文件。)</td>
+            </tr>
+						<tr>
+              <td>示列下载:</td>
+              <td><b style="color: red;">警告：库存导入会覆盖现有库存。请谨慎操作！</b>
+              				<a href="__ROOT__/data/Shop.rar">↘示例文件↙</a>
+              				<b style="color:blue;">导入文件必须和示列文件完全相同。否则会导入失败！</b>
+              </td>
+            </tr>
+          </tbody>
+			<input type="hidden" name="id" value="{$team}" />
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+
+</body>
+</html>

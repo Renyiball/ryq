@@ -1,0 +1,319 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('shop/index')}">商品列表</a></li>
+     <li><a href="{:U('shop/add')}">添加商品</a></li>
+     <li><a href="{:U('shop/logistics')}">库存导入</a></li>
+  </ul>
+  <php>
+  	$j=0;$main_typeid =$temp =  array();
+	for ($i = 0;$i<count($one);$i++) {
+		if($one[$i]["group_text"] == "一级分类"){
+			$typeid = $one[$i]["typeid"];
+			$main_typeid[$j] = $typeid;
+			$j++;
+		}
+	}
+	for ($i = 0;$i<count($mainclass);$i++) {
+			$typeid = $mainclass[$i]["parent_typeid"];
+			$main_typeid[$j] = $typeid;
+			$j++;
+	}
+	//echo "<pre>";print_r($sonclass);echo "</pre>";
+</php>
+
+<script language="JavaScript" type="text/javascript">
+<php>
+echo 'var twoclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($one);$i++) {
+			if($one[$i]["parent_typeid"] == $main_typeid[$j]){
+				$onetext = $one[$i]["type_text"];
+				echo '"'.preg_replace('/\r|\n/', '', $onetext).'",';
+			}
+		}
+		for ($i = 0;$i<count($sonclass);$i++) {
+			if($sonclass[$i]["parent_typeid"] == $main_typeid[$j]){
+				$sontext = $sonclass[$i]["type_text"];
+				echo '"'.preg_replace('/\r|\n/', '', $sontext).'",';
+			}
+		}
+		echo '],';
+	}
+	echo '];var threeclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($one);$i++) {
+			if($one[$i]["parent_typeid"] == $main_typeid[$j]){
+				$oneid =  $one[$i]["typeid"];
+				echo '"'.preg_replace('/\r|\n/', '', $oneid).'",';
+			}
+		}
+		for ($i = 0;$i<count($sonclass);$i++) {
+			if($sonclass[$i]["parent_typeid"] == $main_typeid[$j]){
+				$sonid =  $sonclass[$i]["typeid"];
+				echo '"'.preg_replace('/\r|\n/', '', $sonid).'",';
+			}
+		}
+		echo '],';
+	}
+	echo '];';
+</php> 
+function gettwo(){
+var sltone=document.formadd.oneclass;
+var slttwo=document.formadd.twoclass;  
+var sltthree=document.formadd.threeclass;
+var Onetwo=twoclass[sltone.selectedIndex-1];  
+var Twothree=threeclass[sltone.selectedIndex-1];
+slttwo.length=1;
+for(var i=0;i<Onetwo.length;i++){   
+slttwo[i+1]=new Option(Onetwo[i],Twothree[i]);   
+}   
+}   
+</script>
+
+  		<form class="well form-search" method="post" action="{:U('shop/index')}" name="formadd">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">商品类型：
+              	<select name="oneclass" onChange="gettwo()" class="normal_select index_select"> 
+				<option value="0">----全部----</option>   
+        		<foreach name="one" item="vo">
+                	<if condition="$vo.group_text == '一级分类'">
+		        			<if condition="$formpost['oneclass'] eq $vo['typeid']">
+    								<option selected="selected" value='{$vo.typeid}'>{$vo.type_text}</option>
+			        			<else />
+    								<option value='{$vo.typeid}'>{$vo.type_text}</option>
+							</if>
+	                </if>
+               </foreach>
+        		<foreach name="mainclass" item="vo">
+		        			<if condition="$formpost['oneclass'] eq $vo['parent_typeid']">
+    								<option selected="selected" value='{$vo.parent_typeid}'>{$vo.parent_type_text}</option>
+			        			<else />
+    								<option value='{$vo.parent_typeid}'>{$vo.parent_type_text}</option>
+							</if>
+               </foreach>
+               </select>
+               <select name="twoclass" class="normal_select index_select">   
+				<option value="0">----全部---</option>   
+               </select>
+						<select name="noup" class="normal_select index_select">
+							<option value="999">全部</option>   
+							<option value="100" <if condition="$formpost['noup'] eq '100'">selected="selected"</if>>已上架</option> 
+							<option value="20" <if condition="$formpost['noup'] eq '20'">selected="selected"</if>>临时下架</option>      
+							<option value="10" <if condition="$formpost['noup'] eq '10'">selected="selected"</if>>已废弃</option>   
+							<option value="0" <if condition="$formpost['noup'] eq '0'">selected="selected"</if>>未上架</option>
+						</select>
+						商品ID：
+						<input type="text" name="id" value="{$formpost.id}" style="width: 80px;">
+						商品名称：
+						<input type="text" name="sname" value="{$formpost.sname}" style="width: 80px;">
+						商品货号：
+						<input type="text" name="extra" value="{$formpost.extra}" style="width: 80px;"> &nbsp; &nbsp;
+						<input type="submit" class="btn btn-primary" name="search" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+  <form class="form-horizontal J_ajaxForm" action="{:U('shop/showorders')}" method="post">
+    <div class="table_list">
+      <div class="p10">
+      	<div class="pages"> 
+        <!--button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">保存排序</button-->
+        <button class="btn btn-primary btn_submit mr10 J_articles_move" type="button">移动分类</button>
+        {$Page} </div>
+      </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+			<th width="15"><label><input type="checkbox" class="J_check_all" data-direction="x" data-checklist="J_check_x"></label></th>
+            <!--th width="40">排序</th-->
+            <th width="40">ID</th>
+            <th width="60">列表图像</th>
+            <th width="60">商品价格</th>
+            <th width="80">商品货号</th>
+            <th>商品名称</th>
+            <th width="50">总库存</th>
+            <th width="120">ID：用户昵称</th>
+            <th width="70">发布时间</th>
+            <th width="70">管理操作</th>
+          </tr>
+        </thead>
+        <foreach name="lists" item="vo">
+        	<tr>
+				<td><input type="checkbox" class="J_check" data-yid="J_check_y" data-xid="J_check_x" name="ids[]" value="{$vo.id}" title="ID:{$vo.id}"></td>
+				<!--td><input name="showOrder[{$vo.id}]" type="text" value="{$vo.showOrder}" class="input input-order" maxlength="4"></td-->
+				<td>{$vo.id}</td>
+				<td>
+				<php>$num1=$num2=0;</php>
+	        	<foreach name="images" item="img">
+	        		<if condition="$img['relatedID'] eq $vo[id]">
+		        			<if condition="$img['subtype'] eq 100">
+	        						<img src="{$imgtituan}{$img.filepath}{$img.filename}" name="{$imgtituan}{$img.filepath}{$img.filename}" title="双击查看" width="80" height="45"ondblclick="image_priview(this.name);" >
+		        			</if>
+	        		</if>
+	        	</foreach>
+				</td>
+				<td>
+	        	<foreach name="property" item="prope">
+	        		<if condition="$prope['itemID'] eq $vo['id']">
+		        	<foreach name="price" item="pric">
+		        		<if condition="$pric['relatedID'] eq $prope['id']">
+		        			{$pric.amount}
+		        		</if>
+		        	</foreach>
+		        			<php>$extra = $prope['extraClass'];break;</php>
+	        		</if>
+	        	</foreach>
+				</td>
+				<td>{$extra}</td>
+				<td>{$vo.itemDesc}
+						<br>
+        		<if condition="$vo['push']"><b style="color: #FF0000;">已推送   </b></if>
+        		<if condition="$vo['item_type_d']"><b style="color: #FF0000;">   活动商品</b></if>
+				</td>
+				<td>
+	        	<foreach name="property" item="prope">
+	        		<if condition="$prope['itemID'] eq $vo['id']">
+	        			<php>
+	        				$pro = $prope[originalHeld];
+	        				$num1 = $num1 + $pro;
+	        			</php>
+	        		</if>
+	        	</foreach>
+	        		{$num1}
+				</td>
+				<td>
+						{$vo.userid}：
+	        	<php> $u=1;</php>
+        		<foreach name="users" item="user">
+						<if condition="$user['userid'] eq $vo['userid'] && $u eq 1">
+							<if condition="$user['user_nicename'] neq ''">
+	        			{$user.user_nicename}
+	        		<else />
+	        			{$user.user_login}
+	        		</if>
+	        		<php> $u=0;</php>
+	        	</if>
+            </foreach>
+        		<foreach name="users" item="user">
+						<if condition="$user['id'] eq $vo['userid'] && $u eq 1">
+							<if condition="$user['user_nicename'] neq ''">
+	        			{$user.user_nicename}
+	        		<else />
+	        			{$user.user_login}
+	        		</if>
+	        		<php> $u=0;</php>
+	        	</if>
+            </foreach>
+        </td>
+				<td>{$vo.created}</td>
+				<td>
+					<if condition="$vo['status'] eq 0">
+						<a href="{:U('shop/up',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要上架此商品吗？"style="color: #FF0000;"><b>未上架</b></a>
+					</if>
+					<if condition="$vo['status'] eq 100">
+						<a href="{:U('shop/down',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要下架此商品吗？">下架 </a>|
+					</if>
+					
+					<if condition="$vo['status'] eq 10">
+						<a href="{:U('shop/up',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要恢复此商品吗？"style="color: #FF0000;"><b>已废弃</b></a>
+					</if>
+					<if condition="$vo['status'] eq 100">
+						<a href="{:U('shop/scrap',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要废弃此商品吗？">废弃 </a>
+					</if>
+					<if condition="$vo['status'] eq 20">
+						<a href="{:U('shop/up',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要上架此商品吗？"style="color: #FF0000;"><b>临时下架</b></a>
+					</if>
+					<br>
+					<if condition="$vo['status'] eq 100">
+						<a href="{:U('shop/temporary',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您要临时下架此商品吗？">临时下</a>|
+					</if>
+					<a href="{:U('shop/edit',array('id'=>$vo['id']))}">修改</a>
+					<!--if condition="$roleid eq 1">
+						 | <a class="J_ajax_del" href="{:U('shop/delete',array('id'=>$vo['id']))}">删除</a>
+        	</if-->
+				</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+			<th width="15"><label><input type="checkbox" class="J_check_all" data-direction="x" data-checklist="J_check_x"></label></th>
+            <!--th width="40">排序</th-->
+            <th width="40">ID</th>
+            <th width="60">列表图像</th>
+            <th width="60">商品价格</th>
+            <th width="80">商品货号</th>
+            <th>商品名称</th>
+            <th width="50">总库存</th>
+            <th width="120">ID：用户昵称</th>
+            <th width="70">发布时间</th>
+            <th width="70">管理操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10">
+      	<div class="pages"> 
+        <!--button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">保存排序</button-->
+        <button class="btn btn-primary btn_submit mr10 J_articles_move" type="button">移动分类</button>
+        {$Page} </div>
+      </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+	<script>
+		function refersh_window() {
+			var refersh_time = getCookie('refersh_time');
+			if (refersh_time == 1) {
+				window.location = "{:U('Shop/index',$formget)}";
+			}
+		}
+		setInterval(function() {
+			refersh_window();
+		}, 2000);
+		$(function() {
+			setCookie("refersh_time", 0);
+			Wind.use('ajaxForm', 'artDialog', 'iframeTools', function() {
+				//批量移动
+				$('.J_articles_move').click(
+						function(e) {
+							var str = 0;
+							var id = tag = '';
+							$("input[name='ids[]']").each(function() {
+								if ($(this).attr('checked')) {
+									str = 1;
+									id += tag + $(this).val();
+									tag = ',';
+								}
+							});
+							if (str == 0) {
+								art.dialog.through({
+									id : 'error',
+									icon : 'error',
+									content : '您没有勾选信息，无法进行操作！',
+									cancelVal : '关闭',
+									cancel : true
+								});
+								return false;
+							}
+							var $this = $(this);
+							art.dialog.open(
+										"__ROOT__/index.php?g=Admin&m=Shop&a=move&ids="
+											+ id, {
+										title : "移动分类",
+										width : "40%"
+									});
+						});
+			});
+		});
+	</script>
+</body>
+</html>

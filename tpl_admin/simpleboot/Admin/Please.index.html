@@ -1,0 +1,100 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+<if condition="$jumpUrl">
+	<script>
+		location.href = '{$jumpUrl}';
+	</script>
+</if>
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('please/index')}">邀请统计</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('please/index')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">用户ID：
+						<input type="text" name="userid" value="{$formpost.userid}"  style="width: 80px;">
+							用户昵称：
+						<input type="text" name="nickname" value="{$formpost.nickname}"  style="width: 100px;">
+						来源码：
+						<input type="text" name="code" value="{$formpost.code}"  style="width: 80px;">
+						邀请日期：
+						<input type="text" name="start_time" value="{$formpost.start_time}" class="J_date" style="width: 80px;">-
+						<input type="text" name="end_time" value="{$formpost.end_time}" class="J_date" style="width: 80px;"> &nbsp; &nbsp;
+						<input type="submit" class="btn btn-primary" value="搜索" />
+						<if condition="$count neq 0">
+							共有 {$count} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+   <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page}</div></div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+						<th width="50">ID</th>
+            <th>ID：用户昵称</th>
+            <th>设备号</th>
+            <th width="60">邀请码</th>
+            <th width="60">查看邀请</th>
+            <th width="120">邀请日期</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="lists" item="vo">
+          <tr>
+          	<td>{$vo.id}</td>
+		        	<php>$u=1;</php>
+	        		<foreach name="users" item="user">
+							<if condition="$user['id'] eq $vo['relateduserid']">
+		        		<td class='emoji'>{$vo.relateduserid}：
+							<php> 
+								$base64 = $user['nickname'];
+						 	echo $base64 = preg_replace_callback ( '/@E(.{6}==)/', function ($r) {
+											return base64_decode ( $r [1] );
+									}, $base64 );
+								$uid = $user['id'];
+							</php>
+		        		</td>
+		        		<td>{$user.firstuniqueid}</td>
+		        		<php>$u=0;break;</php>
+		        	</if>
+	            </foreach>
+	            <if condition="$u">
+            		<td></td><td></td>
+		        	</if>
+            <td>{$vo.my_invite_code}</td>
+            <td>
+		        	<php>$l=0;</php>
+			        <foreach name="nums" item="num">
+								<if condition="$num['invite_me_code'] eq $vo['my_invite_code']">
+			        		<php>$l++;</php>
+			        	</if>
+			        </foreach>
+							<a href="{:U('please/look',array('code'=>$vo['my_invite_code']))}">{$l}</a>
+            </td>
+            <td>{$vo.created}</td>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+						<th width="50">ID</th>
+            <th>ID：用户昵称</th>
+            <th>设备号</th>
+            <th width="60">邀请码</th>
+            <th width="60">查看邀请</th>
+            <th width="120">邀请日期</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page}</div></div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript">
+$('.emoji').emoji();
+</script>
+</body>
+</html>

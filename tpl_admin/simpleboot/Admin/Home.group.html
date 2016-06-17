@@ -1,0 +1,72 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('home/plate')}">板块管理</a></li>
+     <li><a href="{:U('home/index',array('itemid'=>$formget['itemid']))}">模块管理</a></li>
+     <li class="active"><a>关联商品集</a></li>
+  </ul>
+  <form class="form-horizontal" action="{:U('home/'.$formget['source'])}" method="get">
+    <div class="table_list">
+			<input type="hidden" name="itemid" value="{$formget.itemid}" />
+			<input type="hidden" name="eventid" value="{$formget.eventid}" />
+			<input type="hidden" name="id" value="{$formget.id}" />
+  <div class="p10"><div class="pages"> {$Page}
+        <button class="btn btn-primary btn_submit mr10" type="submit">提交关联</button>
+	        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+  </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+						<th width="15"></th>
+            <th width="60">ID</th>
+            <th width="60">商品集ID</th>
+            <th>商品列表</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+        <foreach name="lists" item="vo">
+		      <tr>
+						<td><input type="radio" name="groupid" value="{$vo.groupid}"></td>
+						<td>{$vo.id}</td>
+						<td>{$vo.groupid}</td>
+						<td>
+	    <php>
+			$sids = explode(",",$vo['itemid_list']);
+			for($t=0;$t<count($sids);$t++){
+				for($i=0;$i<count($images);$i++){
+					if($sids[$t] == $images[$i]['relatedID']){
+						$filepath = $images[$i]['filepath'];
+						$filename = $images[$i]['filename'];
+					</php>
+					<img src="{$imgtituan}{$filepath}{$filename}" name="{$imgtituan}{$filepath}{$filename}" title="双击查看" width="80" height="45"ondblclick="image_priview(this.name);" >
+					<php>
+					}
+				}
+			}
+	    </php>
+						</td>
+						<td>{$vo.description}</td>
+					</tr>
+        </foreach>
+        <thead>
+          <tr>
+						<th width="15"></th>
+            <th width="60">ID</th>
+            <th width="60">商品集ID</th>
+            <th>商品列表</th>
+            <th>备注</th>
+          </tr>
+        </thead>
+      </table>
+	  <div class="p10"><div class="pages"> {$Page}
+	        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">提交关联</button>
+		        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+	  </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+</body>
+</html>

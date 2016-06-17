@@ -1,0 +1,119 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('Guess/index')}">兑换记录</a></li>
+     <li><a href="{:U('Guess/old')}">旧版统计</a></li>
+  </ul>
+<style> 
+	input .iduoxuan{ width:14px; height:20px;float: left;} 
+	span .sduoxuan{ width:14px; height:14px;margin-right:30px;}
+</style>
+		<form class="well form-search" method="post" action="{:U('Guess/index')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">兑换状态： 
+	              	<select name="typeclass" class="normal_select index_select"> 
+			        		<option value="0">全部</option>
+		        		<foreach name="type" item="vo">
+		        			<if condition="$formpost['typeclass'] eq $vo['id']">
+			        			<option selected="selected" value="{$vo.id}">{$vo.name}</option>
+			        			<else />
+			        			<option value="{$vo.id}">{$vo.name}</option>
+		        			</if>
+		                </foreach>
+	               	</select>
+	               	<input type="checkbox" name="other" value='1' class="iduoxuan" <if condition="$formpost['other'] eq '1'">checked="checked"</if> style="margin-top: -2px;"/>
+	               	<span class="sduoxuan">其他处理</span>
+	               	某周任意一天：
+						<input type="text" name="time" value="{$formpost.time}" class="J_date" style="width: 80px;">
+						<input type="submit" class="btn btn-primary" name="search" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+		以上条件共充值话费 {$moneys} 元
+      <div class="p10"><div class="pages"> {$Page} </div>
+    <div class="table_list">
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th>ID：用户昵称</th>
+            <th width="80">手机号</th>
+            <th>状态说明</th>
+            <th>备注</th>
+            <th width="60">兑换状态</th>
+            <th>申请时间</th>
+            <th>结算时间</th>
+            <th width="95">管理操作</th>
+          </tr>
+        </thead>
+        <foreach name="userbets" item="vo">
+        	<tr>
+				<td>{$vo.id}</td>
+				<td class='emoji'>
+					{$vo.userid}：
+        <foreach name="users" item="user">
+        	<if condition="$vo['userid'] eq $user['id']">
+						<php> 
+							$base64 = $user['nickname'];
+					 		echo $base64 = preg_replace_callback ( '/@E(.{6}==)/', function ($r) {
+										return base64_decode ( $r [1] );
+								}, $base64 );
+							$uid = $user['id'];
+						</php>
+					</if>
+				</foreach>
+				</td>
+				<td>{$vo.betoption}</td>
+				<td>{$vo.description}</td>
+				<td>{$vo.extra_comment}</td>
+				<td>
+					<if condition="$vo['status'] eq 140">
+						<b style="color:red;">申请兑换</b>
+					<else />
+						已兑换
+					</if>
+				</td>
+				<td>{$vo.points_expire}</td>
+				<td>{$vo.created}</td>
+				<td>
+					<if condition="$vo['status'] eq 140">
+						<a class="J_ajax_dialog_btn" data-msg="您确定兑换并且充值话费吗？" href="{:U('Guess/accepted',array('id'=>$vo['id']))}">兑换 </a> | 
+						<a href="{:U('Guess/other',array('id'=>$vo['id']))}">其他 </a>
+					<else />
+						已兑换&nbsp;
+					</if>
+					<if condition="$roleid eq 1">
+						 | <a class="J_ajax_del" href="{:U('Guess/delete',array('id'=>$vo['id']))}">删除</a> 
+        	</if>
+				</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th>ID：用户昵称</th>
+            <th width="80">手机号</th>
+            <th>状态说明</th>
+            <th>备注</th>
+            <th width="60">兑换状态</th>
+            <th>申请时间</th>
+            <th>结算时间</th>
+            <th width="95">管理操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+    </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+$('.emoji').emoji();
+</script>
+</body>
+</html>

@@ -1,0 +1,51 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+   <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('umeng/index')}">推送记录</a></li>
+     <li><a href="{:U('umeng/single')}">单条推送</a></li>
+     <li><a href="{:U('umeng/many')}">群发推送</a></li>
+  </ul>
+ <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>内容</th>
+            <th width="70">设备/接收</th>
+            <th width="70">时间</th>
+            <th width="380">结果(Android-Ios)</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="push" item="vo">
+	          <tr>
+				<td>{$vo.id}</td>
+            	<td>{$vo.push_title}</td>
+	            <td>{$vo.push_describe}</td>
+	            <td>{$vo.push_type}<br>{$vo.push_userid}</td>
+	            <td>{$vo.push_time}</td>
+	            <td>{$vo.push_status}</td>
+	          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>标题</th>
+            <th>内容</th>
+            <th width="70">设备/接收</th>
+            <th width="70">时间</th>
+            <th width="380">结果(Android-Ios)</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   </div>
+
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

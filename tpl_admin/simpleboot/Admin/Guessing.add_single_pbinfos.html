@@ -1,0 +1,117 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <div class="common-form">
+  <button type="button" class="btn btn-primary btn_submit" onclick="history.go(-1)"><<返回</button>
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Guessing/add_post')}">
+      <div class="table_list">
+      <table class="table table-hover">
+	    <tr id="one">
+	      <td width="100px;">比赛名称:</td>
+	      <td>
+				<select name="player_type" style="width:180px;" class="gname" class="normal_select">
+						<option value="0">请选择赛事</option>
+	    		<foreach name="gamelist" item="vo">
+							<option value="{$vo.id}">{$vo.matchdesc}</option>
+	        	</foreach>
+				</select>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td width="100px;">投注球币:</td>
+	      <td>
+	      		<input type="radio" id="ball_m" name="ball" checked="checked">  球币支付
+				<input type="text" style="width:165px;" id="point_amount"  name="point_amount" value='2000' /><font color="red" size="3;" ><b>(不能少于2000)</b></font>
+	      </td>
+	    </tr>
+	    <tr id="cash">
+	      <td width="100px;">投注金额:</td>
+	      <td>
+	      		<input type="radio" id="ball_n" name="ball">  现金支付
+				<input type="text" style="width:165px;" id="price_amount" name="price_amount" value='1' />(元)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td width="100px;">奖&nbsp;&nbsp;金&nbsp;&nbsp;池:</td>
+	      <td>
+				<input type="text" style="width:165px;" name="award_amount" value="500" />(元)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td width="100px;">大&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;球:</td>
+	      <td>
+				<input type="text" style="width:165px;" name="edge_goals" value='3' />(个/净胜球)
+	      </td>
+	    </tr>
+	    <tr>
+	      <td width="100px;">描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</td>
+	      <td>
+				<input type="text" style="width:165px;" readonly="readonly" name="desc1" value='任意球1元欢乐猜 猜单场' />
+	      </td>
+	    </tr>
+	     <tr>
+	      <td width="100px;">场&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;次:</td>
+	      <td>
+				<input type="text" style="width:165px;" readonly="readonly" name="desc3" value='1场' />
+	      </td>
+	    </tr>
+	    <tr>
+	      <td width="100px;">期&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;数:</td>
+	      <td>
+				<input type="text" style="width:165px;" name="desc2" value='第01期' /><font color="red" size="3;" ><b>(此值默认值，每次添加请修改)</b></font>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td width="100px;">比赛状态:</td>
+	      <td>
+				<select name="pb_status" style="width:180px;" class="normal_select">
+	    			<option value="enable">开放</option>
+	    			<option value="disabled" selected="selected">未开放</option>
+				</select>
+	      </td>
+	    </tr>
+	  </table>
+
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/jquery.js"></script>
+<script>
+	$(function(){
+		var val = $("input[type='radio']:checked").val();
+		if(val=='on'){
+			$("input[type='radio']").click(function(){
+	        	var id= $(this).attr("id");
+		        if(id=='ball_m'){
+		        	$("#price_amount").attr("disabled",true);
+		        	$("#point_amount").attr("disabled",false);
+		        }else{
+		        	$("#point_amount").attr("disabled",true);
+		        	$("#price_amount").attr("disabled",false);
+		        }
+       		});
+			$("#price_amount").attr("disabled",true);
+			$(".gname").change(function(){
+				var match = $(".gname").val();
+				$.ajax({
+					type:"get",
+					url:"{:U('Guessing/add_ajax')}",
+					data:{"mid":match},
+					success:function(msg){
+						$("#two").empty();
+						$("#one").after(msg);
+					}
+				})
+			});
+		}
+
+     });
+</script>
+</body>
+</html>

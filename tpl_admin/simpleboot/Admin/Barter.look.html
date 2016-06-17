@@ -1,0 +1,146 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Barter/index')}">兑换列表</a></li>
+     <li><a href="{:U('Barter/statistics')}">兑换统计</a></li>
+     <li class="active"><a>订单内容</a></li>
+  </ul>
+  <div class="common-form">
+    <div class="table_list">
+		<table class="table table-hover">
+        <thead>
+        	<tr>
+			<tr>
+				<td>用户信息</td>
+	        	<td class='emoji'>
+	        		{$users.id} : 
+	        		<php> 
+							 	echo $base64 = preg_replace_callback ( '/@E(.{6}==)/', function ($r) {
+												return base64_decode ( $r [1] );
+										}, $users['nickname'] );
+								</php>
+							 : 
+	        		<if condition="$contacts['telephone'] eq ''">
+	        			未填写手机号
+	        		<else />
+							{$contacts.telephone}
+	        		</if>
+	        	</td>
+	        	<td>
+						<if condition="$contacts['street1'] eq ''">
+	        			未填写地址信息
+	        		<else />
+						{$contacts.street1}
+	        		</if>
+	        		<php>
+	        			    $postArray =$contacts['otherIMID'];
+							    	$de_json = json_decode($postArray,TRUE);
+					          $province = $de_json['addressComponent']['province'];
+					          $city = $de_json['addressComponent']['city'];
+					          $district = $de_json['addressComponent']['district'];
+					          $street = $de_json['addressComponent']['street'];
+					          $street_number = $de_json['addressComponent']['street_number'];
+							      echo '( 系统查询：'.$province.'－'.$city.'－'.$district.'－'.$street.'－'.$street_number.' )';
+	        		</php>
+	        	</td>
+            </tr>
+			<tr>
+				<td>下单信息</td>
+				<td>{$users.id} : {$info.telephone}</td>
+				<td>{$info.street1}</td>
+      </tr>
+			<tr>
+				<td>订单信息</td>
+	        	<td>
+	        		{$info.id} :  
+	        		<foreach name="type" item="typ">
+								<if condition="$typ['typeID'] eq $info['status']">
+		        			{$typ.typeName}
+		        		</if>
+	            </foreach>
+	            : {$info.created}
+	        	</td>
+		        <td><a href="{:U('shop/edit',array('id'=>$shops['id']))}">{$shops['itemDesc']}</a> {$itemdetails.itemColor} - {$itemdetails.itemSize}</td>
+            </tr>
+            <tr>
+            	<td>订单备注</td>
+            	<td>{$info.description}</td>
+    			<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Barter/number_post')}">
+						<td>
+					<if condition="$info['status'] eq '165'">
+							<span class="mr20">
+			              	<select id="province"name="transport" class="normal_select" style="width: 150px;"> 
+					        		<foreach name="number" item="vo">
+								        	<option value="{$vo.id}">{$vo.name}</option>
+					            </foreach>
+			               	</select>
+			               	<input type="text" name="num" value="{$formget.num}" placeholder="请输入订单号...">
+											<input type="hidden" name="infoid" value="{$info.id}" />
+											<input type="hidden" name="usersid" value="{$users.id}" />
+        					<button class="btn btn-primary btn_submit " type="submit"  style="margin-bottom: 10px;">保存</button>
+			               </span>
+	        		</if>
+					<if condition="$info['status'] eq '160'">
+							<a href="{:U('Barter/picking_post',array('id'=>$info['id']))}" class="btn"   style="margin-bottom: 10px; margin-right: 30px;">配货提交</a>
+	        </if>
+					<if condition="$info['status'] eq '165'">
+							<a href="{:U('Barter/cancelpicking',array('id'=>$info['id']))}" class="btn" style="margin-bottom: 10px; margin-right: 30px;">取消配货</a>
+	        </if>
+					<if condition="$info['status'] eq '170'">
+							<a href="{:U('Barter/cancelnumber',array('id'=>$info['id']))}" class="btn" style="margin-bottom: 10px; margin-right: 30px;">取消发货</a>
+	        </if>
+					<if condition="$info['status'] gt '165' && $info['status'] lt '190'">
+							<span class="mr20">{$express.express_text}      订单号: {$express.express_code}  发货时间: {$express.created}</span>
+	        </if>
+					<if condition="$info['status'] gt '185'">
+							<span class="mr20">已退货</span>
+	        </if>
+						</td>
+				</form>
+            </tr>
+        </thead>
+		</table>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="60px">订单ID</th>
+            <th>上次状态</th>
+            <th>当前状态</th>
+            <th>状态描述</th>
+            <th>更新时间</th>
+          </tr>
+        </thead>
+        <foreach name="uexchglogs" item="logs">
+        <tr>
+					<td>{$logs.id}</td>
+					<td>
+	        		<foreach name="type" item="typ">
+								<if condition="$typ['typeID'] eq $logs['status_from']">
+		        			{$typ.typeName}
+		        		</if>
+	            </foreach>
+					</td>
+					<td>
+	        		<foreach name="type" item="typ">
+								<if condition="$typ['typeID'] eq $logs['status_to']">
+		        			{$typ.typeName}
+		        		</if>
+	            </foreach></td>
+					<td>{$logs.description1}</td>
+					<td>{$logs.created}</td>
+				</tr>
+        </foreach>
+      </table>
+    </div>
+      <div class="form-actions">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+$('.emoji').emoji();
+</script>
+</body>
+</html>

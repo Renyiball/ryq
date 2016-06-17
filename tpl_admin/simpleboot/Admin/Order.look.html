@@ -1,0 +1,222 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Order/index')}">订单列表</a></li>
+     <li><a href="{:U('Order/statistics')}">订单统计</a></li>
+     <li><a href="{:U('Order/logistics')}">物流导入</a></li>
+     <li class="active"><a>订单内容</a></li>
+  </ul>
+  <div class="common-form">
+    <div class="table_list">
+		<table class="table table-hover">
+        <thead>
+        	<tr>
+			<tr>
+				<td>用户信息</td>
+	        	<td>{$users.nickname}(userid : {$users.id})</td>
+	        	<td>
+						<if condition="$contacts['street1'] eq ''">
+	        			未填写地址信息
+	        		<else />
+						{$contacts.street1}
+	        		</if>
+	        		<if condition="$contacts['telephone'] eq ''">
+	        			(未填写手机号)
+	        		<else />
+						(tele : {$contacts.telephone})－
+	        		</if>
+	        		<php>
+	        			    $postArray =$contacts['otherIMID'];
+							    	$de_json = json_decode($postArray,TRUE);
+					          $province = $de_json['addressComponent']['province'];
+					          $city = $de_json['addressComponent']['city'];
+					          $district = $de_json['addressComponent']['district'];
+					          $street = $de_json['addressComponent']['street'];
+					          $street_number = $de_json['addressComponent']['street_number'];
+							      echo '( 系统查询地址：'.$province.'－'.$city.'－'.$district.'－'.$street.'－'.$street_number.' )';
+	        		</php>
+	        		<b style="color: red;">此地址可能不准确、请优先使用下表-订单内容-中的地址</b>
+	        	</td>
+            </tr>
+			<tr>
+				<td>订单信息</td>
+	        	<td>
+	        		<foreach name="type" item="typ">
+						<if condition="$typ['typeID'] eq $info['actionType']">
+		        			{$typ.typeName}
+		        		</if>
+	                </foreach>
+						(transactionid : {$info.id})
+	        	</td>
+	        	<td colspan="2">
+        		<foreach name="type" item="typ">
+					<if condition="$typ['typeID'] eq $info['status']">
+	        		<font color="red">	{$typ.typeName}</font>
+	        		</if>
+           		</foreach>
+						(transactiondate : {$info.created})
+	        	</td>
+            </tr>
+            <php>$x=0;</php>
+			<foreach name="items" item="vo">
+				<if condition="$vo['actionType'] eq 10010">
+					<tr>
+						<td>商品信息</td>
+					        <td>{$shops[$x]['itemDesc']}</td>
+			        		<td>颜色：{$property[$x]['itemColor']} — 尺码：{$property[$x]['itemSize']}</td>
+	            			<php>$x++;</php>
+		            </tr>
+				</if>
+				<if condition="$x eq 0">
+					<tr>
+						<td>商品信息</td>
+					        <td>{$info.description}</td>
+					        <td></td>
+	            			<php>break;</php>
+		            </tr>
+				</if>
+			</foreach>
+			<if condition="$x neq 0 ">
+			<tr>
+    			<form method="post" class="form-horizontal J_ajaxForm" action="{:U('order/number_post')}">
+						<td>物流信息</td>
+						<td  colspan="2">
+					<if condition="$info['status'] eq '165'">
+							<span class="mr20">
+			              	<select id="province"name="transport" class="normal_select" style="width: 150px;"> 
+			              		
+			        		<foreach name="number" item="vo">
+						        	<option value="{$vo.id}">{$vo.name}</option>
+			                </foreach>
+			               	</select>
+			               	<input type="text" name="num" value="{$formget.num}" placeholder="请输入订单号...">
+											<input type="hidden" name="infoid" value="{$info.id}" />
+											<input type="hidden" name="usersid" value="{$users.id}" />
+        					<button class="btn btn-primary btn_submit " type="submit"  style="margin-bottom: 10px;">保存</button>
+			               </span>
+	        		</if>
+					<if condition="$info['status'] eq '160'">
+							<a href="{:U('order/picking_post',array('id'=>$info['id']))}" class="btn"   style="margin-bottom: 10px; margin-right: 30px;">配货提交</a>
+	        </if>
+					<if condition="$info['status'] eq '165'">
+							<a href="{:U('order/cancelpicking',array('id'=>$info['id']))}" class="btn" style="margin-bottom: 10px; margin-right: 30px;">取消配货</a>
+	        </if>
+					<if condition="$info['status'] eq '170'">
+							<a href="{:U('order/cancelnumber',array('id'=>$info['id']))}" class="btn" style="margin-bottom: 10px; margin-right: 30px;">取消发货</a>
+	        </if>
+					<if condition="$info['status'] gt '165' && $info['status'] lt '190'">
+							<span class="mr20">{$express.express_text}      订单号: {$express.express_code}  发货时间: {$express.created}</span>
+	        </if>
+					<if condition="$info['status'] gt '185'">
+							<span class="mr20">已退货</span>
+	        </if>
+						</td>
+				</form>
+            </tr>
+			</if>
+        </thead>
+		</table>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="100">编号</th>
+            <th width="80px">商品ID</th>
+            <th>订单内容</th>
+            <th width="180px">明细</th>
+            <th width="60px">单价</th>
+            <th width="60px">数量</th>
+            <th width="60px">总计</th>
+          </tr>
+        </thead>
+        <php>$Pay = $Discount = $Total = $Currency = $Integral = 0;</php>
+        <foreach name="items" item="vo">
+        	<tr>
+				<td>{$vo.id}</td>
+				<td>
+					<if condition="$vo['actionID1'] gt 0">
+					商品ID：<a href="{:U('shop/edit',array('id'=>$vo['actionID1']))}">{$vo.actionID1}</a>
+					</if>
+				</td>
+				<td>{$vo.description}</td>
+				<td>
+	        		<foreach name="type" item="typ">
+						<if condition="$typ['typeID'] eq $vo['actionType']">
+		        			{$typ.typeName}
+		        		</if>
+	                </foreach>
+					({$vo.actionType})
+				</td>
+				<td>{$vo.amount|number_format=2}</td>
+				<td>{$vo.unit}</td>
+				<td><php>
+					if($vo['actionType'] == '10010' || $vo['actionType'] == '10020' || $vo['actionType'] == '10080' || $vo['actionType'] == '20010' || $vo['actionType'] == '20110'){
+						$amount = $unit = 0;
+						$amount = $vo['amount'];
+						$unit = $vo['unit'];
+						$au = $amount*$unit;
+						echo 
+						$Total = $Total+$au;
+						}
+						if($vo['actionType'] == '30010'){
+							$Pay = $vo['amount'];
+						}
+						if($vo['actionType'] == '10030' || $vo['actionType'] == '10040'){
+							$Discount = $vo['amount'];
+						}
+						if($vo['actionType'] == '40030'){
+							$Integral = $vo['amount']/10;
+						}
+						if($vo['actionType'] == '40050'){
+							$Currency = $vo['amount'];
+						}
+				</php></td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="100">编号</th>
+            <th width="80px">商品ID</th>
+            <th>订单内容</th>
+            <th width="180px">明细</th>
+            <th width="60px">单价</th>
+            <th width="60px">数量</th>
+            <th width="60px">总计</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+    </div>
+    <div class="offset2">
+    实际支付：{$Pay|number_format=2}　　　
+    合计 = （
+						    实际支付金额：{$Pay|number_format=2}
+		        		<if condition="$Currency">
+						     ＋球币抵用金额：{$Currency|number_format=2}
+		        		</if>
+		        		<if condition="$Integral">
+						     ＋积分抵用金额：{$Integral|number_format=2}
+		        		</if>
+		        		<if condition="$Discount">
+						     ＋优惠卷金额：{$Discount|number_format=2}
+		        		</if>
+	        		）－（订单价格：{$Total|number_format=2} ）= 
+					    <php>
+					    	$Result = $Pay+$Currency+$Integral+$Discount-$Total;
+					    		echo $Result;
+					    </php>
+					    
+						<if condition="$info['status'] gt 155">
+			        		<if condition="$Result !=0">
+						    　　　<a>订单合计结果不正确。请联系管理员！！！</a>
+			        		</if>
+		        </if>
+    </div>
+      <div class="form-actions">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

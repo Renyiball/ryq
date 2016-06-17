@@ -1,0 +1,35 @@
+<admintpl file="header" />
+</head>
+<body class="J_scroll_fixed">
+	<div class="wrap J_check_wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('Push/index')}">推送列表</a></li>
+			<li><a href="{:U('Push/push')}">消息推送</a></li>
+		</ul>
+  		<table width="100%" cellspacing="0" class="table table-hover">
+			<thead>
+				<tr>
+		            <th width="60">ID</th>
+		            <th>内容</th>
+		            <th>设备/接收</th>
+		            <th>时间</th>
+		            <th>结果</th>
+				</tr>
+			</thead>
+			<tbody>
+				<foreach name="pushs" item="push">
+				<tr>
+					<td>{$push.id}</td>
+		            <td>{$push.push_describe}</td>
+		            <td>{$push.push_type} - {$push.push_userid}</td>
+		            <td>{$push.push_time}</td>
+		            <td>{$push.push_status}</td>
+				</tr>
+				</foreach>
+			</tbody>
+		</table>
+		<div class="pagination">{$page}</div>
+	</div>
+	<script src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

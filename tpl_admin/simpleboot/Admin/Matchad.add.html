@@ -1,0 +1,40 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Matchad/index')}">广告列表</a></li>
+     <li class="active"><a href="{:U('Matchad/add')}">添加广告</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Matchad/add_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>选择赛事:</td>
+              <td>
+	              	<select id="province"name="typeclass" class="normal_select"> 
+									<option value="0">全部</option>
+		        				<foreach name="action" item="vo">
+			        			<option value="{$vo.constid}">{$vo.actionName}</option>
+		                </foreach>
+	               	</select>
+              </td>
+            </tr>
+						<tr>
+              <td>选择图片:</td>
+              <td><input type="file" name="teamimg"  accept="image/*" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

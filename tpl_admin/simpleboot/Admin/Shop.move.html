@@ -1,0 +1,156 @@
+<admintpl file="header" />
+</head>
+<body class="J_scroll_fixed">
+	<div class="wrap J_check_wrap">
+		<php>
+  	$j=0;$main_typeid =$temp =  array();
+	for ($i = 0;$i<count($one);$i++) {
+		if($one[$i]["group_text"] == "一级分类"){
+			$typeid = $one[$i]["typeid"];
+			$main_typeid[$j] = $typeid;
+			$j++;
+		}
+	}
+</php>
+
+<script language="JavaScript" type="text/javascript">
+<php>
+echo 'var twoclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($one);$i++) {
+			if($one[$i]["parent_typeid"] == $main_typeid[$j]){
+				$onetext  = $one[$i]["type_text"];
+				echo '"'.preg_replace('/\r|\n/', '', $onetext).'",';
+			}
+		}
+		echo '],';
+	}
+	echo '];var threeclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($one);$i++) {
+			if($one[$i]["parent_typeid"] == $main_typeid[$j]){
+				$oneid = $one[$i]["typeid"];
+				echo '"'.preg_replace('/\r|\n/', '', $oneid).'",';
+			}
+		}
+		echo '],';
+	}
+	echo '];';
+</php> 
+function gettwo(){
+var sltone=document.formadd.oneclass;
+var slttwo=document.formadd.twoclass;  
+var sltthree=document.formadd.threeclass;
+var Onetwo=twoclass[sltone.selectedIndex-1];  
+var Twothree=threeclass[sltone.selectedIndex-1];
+slttwo.length=1;
+for(var i=0;i<Onetwo.length;i++){   
+slttwo[i+1]=new Option(Onetwo[i],Twothree[i]);   
+}   
+}   
+</script>
+		<form method="post" class="J_ajaxForm" name="formadd">
+			<div class="table_list">
+				<table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+					<tbody>
+			            <tr>
+			              <td>一级分类</td>
+			              <td>
+									<select name="oneclass" onChange="gettwo()"> 
+									<option value="0">----不修改分类----</option>   
+					        		<foreach name="one" item="vo">
+					                	<if condition="$vo.group_text == '一级分类'">
+					    					<option value='{$vo.typeid}'>{$vo.type_text}</option>
+						                </if>
+					               </foreach>
+					               </select>
+			              </td>
+			            </tr>
+			            <tr>
+			              <td>二级分类</td>
+			              <td>
+									<select name="twoclass" >   
+									<option value="0">----不修改分类----</option>   
+									</select></td>
+			            </tr>
+			            <tr>
+			              <td>品牌分类<input type="checkbox" name="whether1" value="0"  style="margin-top: -2px;"/></td>
+			              <td>
+								<div id="divcon1" style="display:none">
+									<select name="brandclass" >   
+									<option value="0">----请选择分类----</option>   
+					        		<foreach name="brandclass" item="vo">
+					    					<option value='{$vo.typeid}'>{$vo.type_text}</option>
+					               </foreach>
+					               </select>
+			              		</div>
+			              </td>
+			            </tr>
+			            <tr>
+			              <td>特许分类<input type="checkbox" name="whether2" value="0"  style="margin-top: -2px;"/></td>
+			              <td>
+								<div id="divcon2" style="display:none">
+						              	<select name="charterclass" >   
+										<option value="0">----请选择分类----</option>   
+						        		<foreach name="charterclass" item="vo">
+						    					<option value='{$vo.typeid}'>{$vo.type_text}</option>
+						               </foreach>
+						               </select>
+								</div>
+			              </td>
+			            </tr>
+						<tr>
+							<td colspan="2">
+								<button class="btn btn-primary btn_submit J_ajax_submit_btn" type="submit">确定</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+	
+	<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+    window.onload=function(){
+        var whether1=document.getElementsByName("whether1");
+        var whether2=document.getElementsByName("whether2");
+        var divcon1=document.getElementById("divcon1");
+        var divcon2=document.getElementById("divcon2");        
+        for(var i=0;i<whether1.length;i++){
+            whether1[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<whether1.length;n++){
+                    if(whether1[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    divcon1.style.display="none";
+                }else{
+                    divcon1.style.display="";
+                }
+            }
+        }
+        for(var i=0;i<whether2.length;i++){
+            whether2[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<whether2.length;n++){
+                    if(whether2[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    divcon2.style.display="none";
+                }else{
+                    divcon2.style.display="";
+                }
+            }
+        }
+        
+    }
+</script>
+</body>
+</html>

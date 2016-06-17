@@ -1,0 +1,100 @@
+<admintpl file="apiheader"/>
+<title>比赛列表</title>
+<style type="text/css">
+	body{ background-color:#FFFFFF;font-family: "Microsoft YaHei","Lato","Helvetica Neue",Helvetica,Arial,sans-serif;}
+	td a { color: #000000;}
+	td a:link{color: #000000;}
+	td a:hover{color: #000000;}
+	.navbar-inner {background:#6CBB52;border: 0px solid #6CBB52;min-height: 40px;}
+	.navbar-inner h3{color: white;text-align: center;line-height:40px;font-size:150%;margin:0;}
+	.navbar-banr {background:#F4F5F9;margin-top: 40px;}
+	.navbar-banr h3{color:#000000;line-height:35px;font-size:100%; margin-left: 10px;}
+	.wrap {padding: 0px 10px;}
+	p{ line-height: 36px;}
+	div .article{ height: 25px;line-height:25px;color:white;float:left; text-align:center;overflow: hidden;}
+	div .w{background-color:#E74F38;}
+	div .d{background-color:#59B10F;}
+	div .l{background-color:#40A7D0;}
+	div .team-photo {
+		max-width: 36px!important;
+		border: 2px solid #DADADA;
+		border-radius: 24px;
+		background-color: #dadada;
+	}
+	.table{margin-top: 0px;}
+	.table td{padding:3px 0; margin:0;vertical-align: inherit; text-align:center;border: 0px;}
+	.posts{margin:0;vertical-align: inherit; border: 0px; color: #000000;padding-bottom:0px; width: 100%;float: left;border-bottom: 1px solid #F4F5F9;}
+	div .team-left {
+		float:left;
+	}
+	div .team-right {
+		float:right;
+	}
+	.table td span{
+	text-align: center;
+	line-height: 40px;
+	}
+</style>
+<body class="J_scroll_fixed" onselectstart="return false">
+<div class="navbar-fixed-top">
+  <div class="navbar-inner">
+	<h3>猜球</h3>
+  </div>
+</div>
+  <div class="navbar-banr">
+	<h3>{$summary}</h3>
+  </div>
+<div class="wrap J_check_wrap">
+		<table width="100%" cellspacing="0" class="table">
+			<thead>
+	        <foreach name="banner" item="vo">
+				<tr>
+					<td></td>
+		        	<td style="width:85%;"><a href="{:U('Against/guess',array('id'=>$vo['matchid']))}"><div style="margin-bottom: -20px;">{$vo.description1}</div></a></td>
+				</tr>
+				<tr>
+	        		<td style="font-size: 16px;">
+			        		{$vo.description2}
+	        		</td>
+	        		<td>
+        			<a href="{:U('Against/guess',array('id'=>$vo['matchid']))}">
+    				<div>
+						<img class="team-photo team-left" width="36" height="36" src="{$imgtituan}{$vo.teamlogo1}" alt="{$vo.teamname1}">
+						<span style="font-size: 14px;">
+							{$vo.teamname1}<small>&nbsp;<b style="color: #F69B00;">&nbsp;{$vo.result}&nbsp;</b>&nbsp;</small>{$vo.teamname2}
+			        	</span>
+		        		<img class="team-photo team-right" width="36" height="36" src="{$imgtituan}{$vo.teamlogo2}" alt="{$vo.teamname2}">
+		        	</div>
+        			</a>
+			        </td>
+				</tr>
+				<tr>
+					<td>赔率</td>
+		        	<php>
+		        		$rate_w = $vo['rate_w']*100;
+		        		$rate_d = $vo['rate_d']*100;
+		        		$rate_l = $vo['rate_l']*100;
+		        	</php>
+		        	<td>
+	        			<a href="{:U('Against/guess',array('id'=>$vo['matchid']))}">
+						<div class="article w" style=" width:{$rate_w}%;">{$vo.text_w}</div>
+						<div class="article d" style=" width:{$rate_d}%;">{$vo.text_d}</div>
+						<div class="article l" style=" width:{$rate_l}%;">{$vo.text_l}</div>
+						</a>
+					</td>
+				</tr>
+	        </foreach>
+			</thead>
+		</table>
+</div>
+
+<admintpl file="apifooter"/>
+<script>
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

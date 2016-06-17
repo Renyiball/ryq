@@ -1,0 +1,152 @@
+<admintpl file="apiheader"/>
+<title>猜球中奖兑换</title>
+<body class="J_scroll_fixed" onselectstart="return true">
+<div class="wrap J_check_wrap">
+<style type="text/css">
+.btn{float: right;margin-top: -10px;}
+</style>
+   	<if condition="$output neq null">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+            	<td><b>{$monday}</b>至<b>{$sunday}</b>共发布<b>{$field}</b>场竞猜</td>
+            </tr>
+		   	<if condition="$output neq null">
+			    <tr>
+			    	<td>
+						{$output.code} - {$output.info}
+			    	</td>
+			    </tr>
+		    </if>
+          </tbody>
+        </table>
+    <elseif condition="$off eq 0"/>
+          <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+            	<td><b>{$monday}</b>至<b>{$sunday}</b>共发布<b>{$field}</b>场竞猜</td>
+            </tr>
+          	<php>
+          		$percent = floor(($correct/$field)*100);
+          		$bout = 0;
+          		if($percent >= 50){ $bout++;}
+          		if($people >= $field/2){ $bout++;}
+          	</php>
+            <tr>
+				<input type="hidden" name="percent" value="{$percent}" />
+            	<td>您上周共参与了<b>{$people}</b>场竞猜,猜中<b>{$correct}</b>场,正确率<b>{$percent}%</b></td>
+            </tr>
+            <tr>
+            	<td>您当前的球币总数为<b>{$currency}</b></td>
+            </tr>
+            <tr>
+            	<td>您本周可兑换 <b>{$bout}</b> 次商品</td>
+            </tr>
+          </tbody>
+        </table>
+	<else />
+    <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('exchange/barter_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+			<input type="hidden" name="userid" value="{$contacts.relatedID}" />
+          	<php>
+          		$percent = floor(($correct/$field)*100).'%';
+          	</php>
+
+            <tr>
+				<input type="hidden" name="monday" value="{$monday}" />
+				<input type="hidden" name="sunday" value="{$sunday}" />
+            	<td><b>{$monday}</b>至<b>{$sunday}</b>共有<b>{$field}</b>场比赛进行结束竞猜</td>
+            </tr>
+            <tr>
+				<input type="hidden" name="percent" value="{$percent}" />
+            	<td>您上周共参与了<b>{$people}</b>场竞猜,猜中<b>{$correct}</b>场,正确率<b>{$percent}</b></td>
+            </tr>
+            <tr>
+				<input type="hidden" name="telephone" value="{$contacts.telephone}" />
+            	<td>您要充值的手机号为<b>
+				   	<if condition="$contacts['telephone'] != null">
+            			{$contacts.telephone}
+            		<else />
+            			请前往用户资料处完善手机号。
+					</if>
+            	</b></td>
+            </tr>
+            <tr>
+            	<td>您当前的球币总数为<b>{$currency}</b></td>
+            </tr>
+            <tr>
+	        	<td>
+					<if condition="$percent lt 30">
+	   					您猜中的场次不足，不可兑换话费
+					</if>
+					<if condition="$percent egt 30 && $currency elt 2000">
+		   				您的球币不足，不可兑换话费
+					</if>
+					<if condition="$percent egt 30 && $percent lt 50 && $currency egt 2000">
+	   					消耗<b>2000</b>球币可兑换<b>10元</b>话费
+						<input type="hidden" name="currency" value="2000" />
+						<input type="hidden" name="calls" value="10" />
+					</if>
+					<if condition="$percent egt 50 && $currency egt 4000 && ($percent1 lt 50 || $percent2 lt 50)">
+	   					消耗<b>4000</b>球币可兑换<b>20元</b>话费
+						<input type="hidden" name="currency" value="4000" />
+						<input type="hidden" name="calls" value="20" />
+					</if>
+					<if condition="$percent egt 50 && $currency egt 5000 && $percent1 egt 50 && $percent2 egt 50">
+	   					您连续两周正确率达到50%以上、<br>消耗<b>5000</b>球币可兑换<b>50元</b>话费
+						<input type="hidden" name="currency" value="5000" />
+						<input type="hidden" name="calls" value="50" />
+					</if>
+					<if condition="$percent egt 50 && $currency egt 2000 && $currency lt 4000">
+	   					您的球币不足、可消耗<b>2000</b>球币可兑换<b>10元</b>话费
+						<input type="hidden" name="currency" value="2000" />
+						<input type="hidden" name="calls" value="10" />
+					</if>
+	        	</td>
+            </tr>
+            <tr>
+            	<td>
+   					本轮兑换申请结束时间：{$tuesday}
+	        	</td>
+            </tr>
+          </tbody>
+        </table>
+		<if condition="!$record && $percent egt 30 && $currency egt 2000 && ($timeday eq 2 || $timeday eq 1)">
+			<button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">申请兑换</button>
+		</if>
+      </div>
+    </form>
+
+    </div>
+		<if condition="$record['status'] eq 140">
+			<a class="btn">已申请</a>
+		</if>
+		<if condition="$record['status'] eq 150">
+			<a class="btn">已充值</a>
+		</if>
+	</if>
+	<div class="common-form">
+	<h5 style="text-align: center;">基准兑换规则</h5>
+		1 每人每周兑换机会有限,仅限本周使用:<br>
+		&nbsp;&nbsp;1)上周猜球场次达到50%以上(例:发布15场,猜球8场),获得一次兑换机会;<br>
+		&nbsp;&nbsp;2)上周猜球胜率达到50%以上(例:发布15场,猜中8场),增加一次兑换机会;<br>
+		2 每周每个参加兑换的商品数量有限,先申请先得;<br>
+		3 除商品质量问题外，商品一经兑换，一律不退回积分/球币。<br>
+		<b>客服电话：010-53677611</b>
+		<if condition="$bout gt 0">
+			<h3 style="text-align: center;">→<a href="{:U('Convert/index',array('userid'=>$userid))}">点我兑换</a>←</h3>
+		</if>
+	</div>
+  </div>
+<script>
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

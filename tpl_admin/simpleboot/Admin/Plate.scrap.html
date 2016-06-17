@@ -1,0 +1,74 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Plate/index')}">板块列表</a></li>
+     <li class="active"><a href="{:U('Plate/scrap')}">板块列表(弃)</a></li>
+     <li><a href="{:U('Plate/add')}">添加板块</a></li>
+  </ul>		
+    <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="50">ID</th>
+            <th width="150">板块标题</th>
+            <th width="60">板块图片</th>
+            <th>板块描述</th>
+            <th width="150">板块状态</th>
+            <th width="130">创建时间</th>
+          </tr>
+        </thead>
+        <foreach name="lists" item="vo">
+        	<tr>
+				<td>{$vo.id}</td>
+				<td>{$vo.title}</td>
+				<td>
+	        	<foreach name="images" item="img">
+	        		<if condition="$img['relatedID'] eq $vo[id]">
+	        			<img src="{$imgtituan}{$img.filepath}{$img.filename}" height="50px">
+	        		</if>
+	        	</foreach>
+				</td>
+				<td>{$vo.description|msubstr=0,256}</td>
+            	<td>
+					<if condition="$vo['status'] lt 100">
+						<a href="{:U('Plate/openbar',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要开启此帖吗？"style="color: #FF0000;"><b>已关闭</b></a>
+					<else />
+						<a href="{:U('Plate/closebar',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要关闭此帖吗？">未关闭 </a>
+					</if>
+					|
+					<if condition="$vo['status'] eq 1000">
+						<a href="{:U('Plate/downbar',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要取消置顶此帖吗？"style="color: #FF0000;"><b>已置顶</b></a>
+					<else />
+						<a href="{:U('Plate/upbar',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要置顶此帖吗？">未置顶 </a>
+					</if>
+					|
+					<if condition="$vo['displayorder'] lt 100">
+						<a href="{:U('Plate/openshow',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要显示此板块吗？"style="color: #FF0000;"><b>不显示</b></a>
+					<else />
+						<a href="{:U('Plate/closeshow',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要取消显示吗？">已显示 </a>
+					</if>
+            	</td>
+				<td>{$vo.created}</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="50">ID</th>
+            <th width="150">板块标题</th>
+            <th width="60">板块图片</th>
+            <th>板块描述</th>
+            <th width="150">板块状态</th>
+            <th width="130">创建时间</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+    </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

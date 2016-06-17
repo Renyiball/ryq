@@ -1,0 +1,90 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('please/index')}">邀请统计</a></li>
+     <li class="active"><a>查看邀请</a></li>
+  </ul>
+		<if condition="$count neq 0">
+		<form class="well form-search">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">
+							邀请码 {$source} 共有 {$count} 条相关记录
+					</span>
+				</div>
+			</div>
+		</form>
+		</if>
+   <div class="table_list">
+    <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+    <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="250">ID：用户昵称</th>
+            <th>设备号</th>
+            <th width="80">出现次数</th>
+            <th width="80">来源码</th>
+            <th width="80">邀请码</th>
+            <th width="80">邀请人数</th>
+            <th width="120">邀请日期</th>
+          </tr>
+        </thead>
+        <tbody>
+		    <php>$v=$removed=0;</php>
+	      <foreach name="users" item="user">
+          <tr>
+    			<foreach name="lists" item="vo">
+						<if condition="$user['id'] eq $vo['relateduserid']">
+	        		<td>{$vo.relateduserid}：{$user.nickname}</td>
+	        		<td>{$user.firstuniqueid}</td>
+            	<php>
+            		$firstuniqueid[$v] = $user['firstuniqueid'];
+            		$temp = $user['firstuniqueid'];
+            		$v++;
+            		if($first[$temp]>0){ $removed++;}
+            		echo "<td>第<b style='color: red;'>";
+	            	$first = array_count_values($firstuniqueid);
+	            	echo $first[$temp];
+            		echo "</b>次出现</td>";
+	            </php>
+	            <td>{$vo.invite_me_code}</td>
+	            <td>{$vo.my_invite_code}</td>
+		        	<php>$l=0;</php>
+			        <foreach name="nums" item="num">
+								<if condition="$num['invite_me_code'] eq $vo['my_invite_code']">
+			        		<php>$l++;</php>
+			        	</if>
+			        </foreach>
+	            <td>
+				        <a href="{:U('please/look',array('code'=>$vo['my_invite_code']))}">{$l}</a>
+	            </td>
+	            <td>{$vo.created}</td>
+	        	</if>
+            </foreach>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="250">ID：用户昵称</th>
+            <th>设备号</th>
+            <th width="80">出现次数</th>
+            <th width="80">来源码</th>
+            <th width="80">邀请码</th>
+            <th width="80">邀请人数</th>
+            <th width="120">邀请日期</th>
+          </tr>
+        </thead>
+      </table>
+      <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+			<php>
+					if($removed){
+						echo "共有".$removed."个账号注册设备重复!!! ";
+					}
+					echo " 当前邀请码共有".($count-$removed)."个有效用户。";
+			</php>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

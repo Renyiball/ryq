@@ -1,0 +1,29 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+  	 <li><a href="{:U('home/plate')}">首页板块</a></li>
+     <li><a href="{:U('home/plate')}">板块管理</a></li>
+     <li class="active"><a href="{:U('home/edit_app_default')}">修改默认</a></li>
+  </ul>
+  <form class="form-horizontal J_ajaxForm" action="{:U('home/edit_app_post')}" method="post">
+   <div class="table_list">
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          修改默认：<input type="text" name="default_cracter" class="" style="width: 160px;"><br />
+          <button type="submit" class="btn btn-primary btn_submit">修改</button>
+        </thead>
+        <tbody>
+       
+        </tbody>
+        <thead>
+        </thead>
+      </table>
+   </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

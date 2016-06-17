@@ -1,0 +1,140 @@
+<admintpl file="apiheader"/>
+<title>赛程信息添加</title>
+<body class="J_scroll_fixed" onselectstart="return false">
+<style> 
+.table_list{margin: 20px;}
+.span13{margin: 0px;}
+.btnclick{width: 27px;}
+.inpwidth{width: 50px;}
+.selwidth{width: 135px;}
+</style>
+   	<if condition="$out203 || $out204 || $out401 || $out403 || $out404">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+          	<if condition="$out203">
+	            <tr><td>
+	   					{$out203.code} - {$out203.info}
+		        </td></tr>
+			</if>
+          	<if condition="$out204">
+	            <tr><td>
+	   					{$out204.code} - {$out204.info}
+		        </td></tr>
+			</if>
+          	<if condition="$out401">
+	            <tr><td>
+	   					{$out401.code} - {$out401.info}
+		        </td></tr>
+			</if>
+          	<if condition="$out403">
+	            <tr><td>
+	   					{$out403.code} - {$out403.info}
+		        </td></tr>
+			</if>
+          	<if condition="$out404">
+	            <tr><td>
+	   					{$out404.code} - {$out404.info}
+		        </td></tr>
+			</if>
+          </tbody>
+        </table>
+			<else />
+<div class="span13">
+	<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Fixtures/add_post')}" name="formadd">
+    	<input type="hidden" name="matchid" value="{$matchid}" />
+    	<input type="hidden" name="teamid" value="{$teamid}" />
+    	<input type="hidden" name="userid" value="{$userid}" />
+		<input type="hidden" name="teamuserid" value="{$teamuserid}" />
+		<input type="hidden" name="teamusername" value="{$teamusername}" />
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%">
+          <tbody>
+            <tr>
+            <td>选择球员:</td>
+            <td>
+        	<div class='emoji'>
+			<php>
+			 	echo preg_replace_callback ( '/@E(.{6}==)/', function ($b) {
+										return base64_decode ( $b [1] );
+									},$teamusername);
+			</php>
+			<if condition="$teamusername">
+			<button class="btn btn-primary btn-small J_articles_select" type="button" style="float: right;">修改队员</button>
+			<else />
+			<button class="btn btn-primary btn-small J_articles_select" type="button" style="width: 144px;">选取队员</button>
+			</if>
+			</div>
+			</td>
+            </tr>
+            <tr>
+              <td>进球数:</td>
+		      <td>
+				<input type="button" value="─" class="btn btnclick" onClick="javascript:this.form.enter.value--;">
+				<input type="text" readonly="readonly" name="enter" class="input inpwidth" value="0">
+				<input type="button" value="+" class="btn btnclick" onClick="javascript:this.form.enter.value++;">
+		      </td>
+            </tr>
+            <tr>
+              <td>红牌数:</td>
+		      <td>
+				<input type="button" value="─" class="btn btnclick" onClick="javascript:this.form.red.value--;">
+				<input type="text" readonly="readonly" name="red" class="input inpwidth" value="0">
+				<input type="button" value="+" class="btn btnclick" onClick="javascript:this.form.red.value++;">
+		      </td>
+            </tr>
+            <tr>
+              <td>黄牌数:</td>
+		      <td>
+				<input type="button" value="─" class="btn btnclick" onClick="javascript:this.form.yellow.value--;">
+				<input type="text" readonly="readonly" name="yellow" class="input inpwidth" value="0">
+				<input type="button" value="+" class="btn btnclick" onClick="javascript:this.form.yellow.value++;">
+		      </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+	  <div class="form-actions" style="padding-left: 50%;margin-left: -50px;">
+        <button type="submit" class="btn btn-primary btn_submit J_ajax_submit_btn">添加</button>
+		<a class="btn" href="{:U('Fixtures/index',array('matchid'=>$matchid,'teamid'=>$teamid,'userid'=>$userid))}">返回</a>
+      </div>
+    </form>
+</div>
+	</if>
+<script>
+	function stop(){
+		return false;
+	}
+	document.oncontextmenu=stop;
+	$('.emoji').emoji();
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+	<script>
+		function refersh_window() {
+			var refersh_time = getCookie('refersh_time');
+			if (refersh_time == 1) {
+				window.location = "{:U('fixtures/add')}";
+			}
+		}
+		setInterval(function() {
+			refersh_window();
+		}, 2000);
+		$(function() {
+			setCookie("refersh_time", 0);
+			Wind.use('ajaxForm', 'artDialog', 'iframeTools', function() {
+				//批量移动
+				$('.J_articles_select').click(
+						function(e) {
+							var $this = $(this);
+							art.dialog.open(
+										"__ROOT__/index.php?g=api&m=fixtures&a=select&matchid={$matchid}&teamid={$teamid}&userid={$userid}"
+										, {
+										title : "球员列表",
+										width : "70%"
+									});
+						});
+			});
+		});
+	</script>
+
+</body>
+</html>

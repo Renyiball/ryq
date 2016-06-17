@@ -1,0 +1,112 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Exchange/index')}">兑换列表</a></li>
+     <li><a href="{:U('Exchange/add')}">添加兑换</a></li>
+     <li class="active"><a>关联商品</a></li>
+  </ul>
+  		<form class="well form-search" method="post" action="{:U('Exchange/shop')}" name="formadd">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+
+						商品ID：
+						<input type="text" name="sid" value="{$formget.sid}" style="width: 80px;">
+						商品名称：
+						<input type="text" name="sname" value="{$formget.sname}" style="width: 80px;">
+						商品货号：
+						<input type="text" name="extra" value="{$formget.extra}" style="width: 80px;"> &nbsp; &nbsp;
+						<input type="submit" class="btn btn-primary" name="search" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+						<input type="hidden" name="id" value="{$formget.id}" />
+						<input type="hidden" name="source" value="{$formget.source}" />
+					</span>
+				</div>
+			</div>
+		</form>
+  <form class="form-horizontal" action="{:U('Exchange/'.$formget['source'])}" method="get">
+    <div class="table_list">
+			<input type="hidden" name="id" value="{$formget.id}" />
+						<input type="hidden" name="source" value="{$formget.source}" />
+      <div class="p10"><div class="pages"> {$Page} 
+        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">提交关联</button>
+	        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+						<th width="15"></th>
+            <th width="40">ID</th>
+            <th width="60">商品图像</th>
+            <th width="60">商品价格</th>
+            <th width="80">商品货号</th>
+            <th>商品名称</th>
+            <th width="120">发布时间</th>
+          </tr>
+        </thead>
+        <foreach name="lists" item="vo">
+        	<tr>
+				<td>
+	        		<if condition="!$vo['item_type_d']">
+								<input type="radio" class="J_check" data-yid="J_check_y" data-xid="J_check_x" name="sids[]" value="{$vo.id}" title="ID:{$vo.id}">
+							<else />
+								<input type="radio" class="J_check" data-yid="J_check_y" data-xid="J_check_x" name="sids[]" value="{$vo.id}" title="ID:{$vo.id}" disabled>
+	        		</if>
+				</td>
+				<td>{$vo.id}</td>
+				<td>
+				<php>$num1=$num2=0;</php>
+	        	<foreach name="images" item="img">
+	        		<if condition="$img['relatedID'] eq $vo[id]">
+	        			<img src="{$imgtituan}{$img.filepath}{$img.filename}" name="{$imgtituan}{$img.filepath}{$img.filename}" title="双击查看" width="80" height="45"ondblclick="image_priview(this.name);" >
+	        			<php>$rid=$img['relatedID'];break;</php>
+	        		</if>
+	        	</foreach>
+				</td>
+				<td>
+	        	<foreach name="property" item="prope">
+	        		<if condition="$prope['itemID'] eq $vo['id']">
+		        	<foreach name="price" item="pric">
+		        		<if condition="$pric['relatedID'] eq $prope['id']">
+		        			{$pric.amount}
+		        		</if>
+		        	</foreach>
+		        			<php>$extra = $prope['extraClass'];break;</php>
+	        		</if>
+	        	</foreach>
+				</td>
+				<td>{$extra}</td>
+				<td>{$vo.itemDesc}
+						<br>
+        		<if condition="$vo['push']"><b style="color: #FF0000;">已推送   </b></if>
+        		<if condition="$vo['item_type_d']"><b style="color: #FF0000;">   活动商品</b></if>
+				</td>
+				<td>{$vo.created}</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+						<th width="15"></th>
+            <th width="40">ID</th>
+            <th width="60">商品图像</th>
+            <th width="60">商品价格</th>
+            <th width="80">商品货号</th>
+            <th>商品名称</th>
+            <th width="120">发布时间</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} 
+        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">提交关联</button>
+	        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

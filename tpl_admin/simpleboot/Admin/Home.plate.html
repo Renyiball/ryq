@@ -1,0 +1,76 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('home/plate')}">首页板块</a></li>
+     <li><a href="{:U('home/addplate')}">添加板块</a></li>
+     <li><a href="{:U('home/edit_app_default')}">修改默认</a></li>
+  </ul>
+  <form class="form-horizontal J_ajaxForm" action="{:U('home/showorders')}" method="post">
+   <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} 
+        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">排序</button></div> </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="50">排序</th>
+            <th width="50">ID</th>
+            <th>板块名称</th>
+            <th>板块描述</th>
+            <th>样式</th>
+            <th width="80">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="lists" item="vo">
+	          <tr>
+	            <td><input name="showorder[{$vo.id}]" type="text" maxlength="4" value="{$vo.showorder}" class="input"style="width: 50px;"></td>
+							<td>{$vo.id}</td>
+							<td>{$vo.title}</td>
+	            <td>
+	            	<a href="{:U('home/index',array('itemid'=>$vo['itemid']))}">{$vo.description}</a>
+	            	<foreach name="imgs" item="img"><if condition="$img['parentid'] eq $vo['itemid']">
+	            		<img src="{$imgtituan}{$img.img_path}{$img.img_name}"name="{$imgtituan}{$img.img_path}{$img.img_name}" title="双击查看" height="40px"ondblclick="image_priview(this.name);" style="float: right;">
+	            	</if></foreach>
+	            </td>
+	            <td>{$vo.style}</td>
+	            <td>
+								<if condition="$vo['status'] eq 0">
+									<a href="{:U('home/openbar',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要启用此板块吗？"style="color: #FF0000;"><b>已停用</b></a>
+								<else />
+									<a href="{:U('home/closebar',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要停用此板块吗？">已启用 </a>
+								</if>|
+						<a href="{:U('home/editplate',array('id'=>$vo['id']))}">修改</a><br>
+						<if condition="$vo['push']">
+							<b style="color: #FF0000;">已推送</b>
+							<else />
+							<a href="{:U('home/push',array('id'=>$vo['id']))}">推送</a>
+						</if>
+					<if condition="$roleid eq 1">
+						|<a class="J_ajax_del" href="{:U('home/delete_plate',array('id'=>$vo['id']))}">删除</a>
+        	</if>
+	            </td>
+	          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="50">排序</th>
+            <th width="50">ID</th>
+            <th>板块名称</th>
+            <th>板块描述</th>
+            <th>样式</th>
+            <th width="80">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} 
+        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">排序</button></div> </div>
+   </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

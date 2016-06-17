@@ -1,0 +1,105 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Ballbar/index')}">球帖列表</a></li>
+     <li class="active"><a href="{:U('Ballbar/add')}">发布球帖</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Ballbar/add_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>选择所属板块:</td>
+              <td>
+	              	<select id="province"name="typeclass" class="normal_select"> 
+								<option value="0">请选择</option>
+		        		<foreach name="forumsections" item="vo">
+			        			<option value="{$vo.id}">{$vo.sectiontitle}</option>
+		                </foreach>
+	               	</select>
+									<input type="checkbox" name="ptypeid" value="1000"  style="margin-top: -2px;"/>
+	               	<span class="sduoxuan">推广</span>
+              </td>
+            </tr>
+            <tr id="divcon" style="display:none">
+              <td>帖子显示类型:</td>
+              <td>
+	              	<select id="province"name="typeconfigs" class="normal_select"> 
+								<option value="0">请选择</option>
+		        		<foreach name="configs" item="vo">
+		        			<if condition="$vo['typeID'] lt 13004">
+			        			<option value="{$vo.typeID}">{$vo.typeName}</option>
+			        		</if>
+		                </foreach>
+	               	</select>
+	               	<!--<input type="radio" name="status" value='1000' class="iduoxuan" style="margin-top: -2px;"/>
+	               	<span class="sduoxuan">置顶</span>-->
+              </td>
+            </tr>
+            <tr>
+              <td>标题:</td>
+              <td><input type="text"  name="post_title" id="title" required="" value="" class="input input_hd J_title_color" placeholder="请输入标题" onkeyup="strlen_verify(this, 'title_len', 160)">
+	               	<!--<input type="radio" name="status" value='10000' class="iduoxuan" style="margin-top: -2px;"/>
+	               	<span class="sduoxuan">热帖</span>-->
+              </td>
+            </tr>
+            <tr>
+              <td>内容:</td>
+              <td><textarea name="post_excerpt" id="description" required="" style="width:650px;height:100px;" placeholder="请填写内容"></textarea></td>
+            </tr>
+            <tr>
+              <td>图片列表:<br>（不可超过8张）</td>
+              <td>
+							<fieldset class="blue pad-10">
+					        <ul id="photos" class="picList unstyled"></ul>
+							</fieldset>
+							<a href="javascript:;" style="margin: 5px 0;" onclick="javascript:flashupload('albums_images', '图片上传','photos',change_images,'10,gif|jpg|jpeg|png|bmp,0','','','')" class="btn">选择图片 </a>
+						  </td>
+					  </tr>
+            <tr>
+              <td>帖子状态:</td>
+              <td>
+	              	<select name="status" class="normal_select"> 
+									<option value="90">关闭</option>
+									<option value="100">未启用</option>
+									<option value="200">启用</option>
+	               	</select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script>
+    window.onload=function(){
+        var ptypeid=document.getElementsByName("ptypeid");
+        var divcon=document.getElementById("divcon");
+        for(var i=0;i<ptypeid.length;i++){
+            ptypeid[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<ptypeid.length;n++){
+                    if(ptypeid[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    divcon.style.display="none";
+                }else{
+                    divcon.style.display="";
+                }
+            }
+        }
+    }
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+</body>
+</html>

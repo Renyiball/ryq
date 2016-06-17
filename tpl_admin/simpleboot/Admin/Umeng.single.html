@@ -1,0 +1,56 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+   <ul class="nav nav-tabs">
+     <li><a href="{:U('umeng/index')}">推送记录</a></li>
+     <li class="active"><a href="{:U('umeng/single')}">单条推送</a></li>
+     <li><a href="{:U('umeng/many')}">群发推送</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('umeng/single_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>用户ID:</td>
+              <td><input type="text" class="input" name="userid"  value=""></td>
+            </tr>
+            <tr>
+              <td>消息内容:</td>
+              <td><textarea name="description" rows="5"></textarea></td>
+            </tr>
+            <!--<tr>
+              <td>IOS选项</td>
+              <td>
+              	<label class="radio">
+              		<input type="checkbox" name="popup" value="xiaoxi"  style="margin-top: -2px;"/>
+              		<span>弹窗提示</span>
+              	</label>
+              	<label class="radio">
+              		<input type="radio" name="type" value="close" onclick="http.style.display='none'">
+              		<span>关闭</span>
+              	</label>
+              	<label class="radio">
+              		<input type="radio" name="type" value="update" onclick="http.style.display='none'">
+              		<span>更新</span>
+              	</label>
+              	<label class="radio">
+              		<input type="radio" name="type" value="url" onclick="http.style.display='block'"checked>
+              		<span>跳转</span>
+              	</label>
+              		<input type="type"class="input" name="http" placeholder="请输入需要跳转到的链接">
+              </td>
+            </tr>-->
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">推送</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

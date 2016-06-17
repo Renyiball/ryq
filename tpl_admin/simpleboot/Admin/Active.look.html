@@ -1,0 +1,58 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('active/day')}">日活跃度</a></li>
+     <li><a href="{:U('active/month')}">月活跃度</a></li>
+     <li><a href="{:U('active/index')}">操作列表</a></li>
+     <li class="active"><a>查看详情</a></li>
+  </ul>
+  <div class="common-form">
+  	  <form class="form-horizontal J_ajaxForm" action="{:U('active/index')}" method="post">
+    <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+                <th width="50">ID</th>
+                <th width="150">最后操作内容</th>
+                <th width="60">请求端口</th>
+                <th>数据</th>
+                <th width="100">请求来源IP</th>
+                <th width="120">请求时间</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="lists" item="vo">
+          <tr>
+							<td>{$vo.id}</td>
+							<td>{$vo.funcname} — {$vo.art}</td>
+							<td>{$vo.remote_port}</td>
+							<td>{$vo.response_data|msubstr=0,128}</td>
+							<td>{$vo.remote_addr}</td>
+							<td>{$vo.created}</td>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+                <th width="50">ID</th>
+                <th width="150">最后操作内容</th>
+                <th width="60">请求端口</th>
+                <th>数据</th>
+                <th width="100">请求来源IP</th>
+                <th width="120">请求时间</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+    </div>
+  </form>
+      <div class="form-actions">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

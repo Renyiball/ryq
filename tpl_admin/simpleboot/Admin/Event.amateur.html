@@ -1,0 +1,94 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('event/expert')}">专业赛事</a></li>
+     <li class="active"><a href="{:U('event/amateur')}">业余赛事</a></li>
+     <li><a href="{:U('event/old')}">业余赛事(旧)</a></li>
+     <li><a href="{:U('event/addamateur')}">添加业余赛事</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('event/amateur')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">赛事名称： 
+						<input type="text" name="game_name" value="{$formget.game_name}"  style="width: 80px;"/>
+						比赛时间： 
+						<input type="text" name="game_time" value="{$formget.game_time}" class="J_date" style="width: 80px;">
+						<input type="submit" class="btn btn-primary" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+  <form class="form-horizontal J_ajaxForm" action="{:U('event/showorders')}" method="post">
+   <div class="table_list">
+   <div class="p10">
+	   	<div class="pages">
+	        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">保存排序</button>
+	         {$Page}
+	   	</div>
+   </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="30">排序</th>
+            <th width="60">赛事ID</th>
+            <th>赛事名称</th>
+            <th>举办信息</th>
+            <th width="80">赛事LOGO</th>
+            <th width="80">赛事广告</th>
+            <th width="120">开赛/结束时间</th>
+            <th width="50">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="gameinfos" item="infos">
+          <tr>
+					<td><input name="show_order[{$infos.id}]" type="text" value="{$infos.show_order}" class="input input-order" maxlength="4"></td>
+            <td>{$infos.constid}</td>
+            <td>{$infos.game_name}<br><if condition="$infos['rules_url']"> <a href="{$infos.rules_url}" target="_blank">查看赛规</a> </if> {$infos.player_type}</td>
+						<td>{$infos.host_title} - {$infos.host_field} - {$infos.other_partner}<br>{$infos.area}</td>
+						<td>
+							<if condition="$infos['game_logo']">
+								<img src="{$imgtituan}{$infos.game_logo}" height="40px">
+							</if>
+						</td>
+						<td>
+							<if condition="$infos['game_adv']">
+								<img src="{$imgtituan}{$infos.game_adv}" height="40px">
+							</if>
+						</td>
+            <td>{$infos.startdate}<br>{$infos.enddate}</td>
+            <td>
+					<a href="{:U('event/editamateur',array('id'=>$infos['id']))}">修改</a><br>
+					<if condition="$infos['is_show'] eq 0">
+						<a href="{:U('event/openamateur',array('id'=>$infos['id']))}" class="J_ajax_dialog_btn" data-msg="您要显示广告吗？"style="color: #FF0000;"><b>开启广告</b></a>
+					<else />
+						<a href="{:U('event/closeamateur',array('id'=>$infos['id']))}" class="J_ajax_dialog_btn" data-msg="您要关闭广告吗？">关闭广告 </a>
+					</if>
+            </td>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="30">排序</th>
+            <th width="60">赛事ID</th>
+            <th>赛事名称</th>
+            <th>举办信息</th>
+            <th width="80">赛事LOGO</th>
+            <th width="80">赛事广告</th>
+            <th width="120">开赛/结束时间</th>
+            <th width="50">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

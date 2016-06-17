@@ -1,0 +1,59 @@
+<tc_include file="Public:head" />
+<body class="body-white" id="top">
+<div class="container tc-main">
+		<if condition="$role_id eq 7">
+			<h2 style="font-size: 20px;margin: 0;">{$action.actionName}</h2>
+		<else />
+			<ul class="nav nav-tabs">
+				<li><a href="{:U('game/expert')}">专业比赛</a></li>
+				<li class="active"><a href="{:U('game/amateur')}">业余比赛</a></li>
+			</ul>
+  		</if>
+		<div class="p10"><div class="pages"> {$Page} </div> </div><br>
+ 		<table class="table table-bordered table-striped table-hover">
+		 <thead>
+			<tr>
+			  <th style="min-width: 120px;">对战球队</th>
+			  <th style="min-width: 75px;">开赛时间</th>
+			  <th style="min-width: 65px;">操作</th>
+			</tr>
+		 </thead>
+		 <tbody>
+		 <foreach name="lists" item="vo">
+			<tr>
+			  <td>
+		  		<foreach name="teams" item="team">
+					<if condition="$team['constid'] eq $vo['teamid1'] || $team['teamnumber'] eq $vo['teamid1']">
+			  			{$team.teamname} 
+			  		</if>
+				</foreach>
+		 			:
+		  		<foreach name="teams" item="team">
+					<if condition="$team['constid'] eq $vo['teamid2'] || $team['teamnumber'] eq $vo['teamid2']">
+			  			 {$team.teamname}
+			  		</if>
+				</foreach>
+			  </td>
+			  <td>{$vo.matchdatetime}</td>
+			  <td>
+					<a href="{:U('game/update',array('id'=>$vo['id']))}">更新赛况</a>
+			  	<php>
+			  		$stattime = $vo['matchdatetime'] ;
+			  		$endtime = date("Y-m-d H:i:s",strtotime("$stattime +1hours"));
+			  		if($endtime < date("Y-m-d H:i:s")){
+			  	</php>
+		  			|
+		  			<a href="{:U('game/edit',array('id'=>$vo['id']))}">更新比分</a>
+			  	<php>
+			  		}
+			  	</php>
+			  </td>
+			</tr>
+		 </foreach>
+		 </tbody>
+		</table>
+		<div class="p10"><div class="pages"> {$Page} </div> </div>						
+</div>
+	<tc_include file="Public:footer" />
+</body>
+</html>

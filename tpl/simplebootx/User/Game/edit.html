@@ -1,0 +1,76 @@
+<tc_include file="Public:head" />
+<body class="J_scroll_fixed body-white" id="top">
+<div class="wrap J_check_wrap">
+<div class="container tc-main">
+    <div class="row">
+        <div class="span12">
+<form method="post" class="form-horizontal J_ajaxForm" action="{:U('game/edit_post')}">
+  <div class="table_list">
+    <table cellpadding="2" cellspacing="2" width="100%">
+      <tbody>
+        <tr>
+          <td><button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">更新</button></td>
+          <td><button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80px;">赛事类型:</td>
+          <td>
+				<input type="text" name="oneclass" value={$action.actionName}{$teamname.teamname} class="input" readonly="readonly">
+          </td>
+        </tr>
+        <tr>
+          <td>对战球队:</td>
+          <td>
+			<foreach name="teams" item="vo">
+				<if condition="$vo['constid'] eq $infos['teamid1'] || $vo['teamnumber'] eq $infos['teamid1']">
+      				<input type="text" class="input" name="teamid1" value="{$vo.teamname}" style="width: 96px;" readonly="readonly">
+        		</if>
+			</foreach>
+			<foreach name="teams" item="vo">
+				<if condition="$vo['constid'] eq $infos['teamid2'] || $vo['teamnumber'] eq $infos['teamid2']">
+      				<input type="text" class="input" name="teamid2" value="{$vo.teamname}" style="width: 96px;" readonly="readonly">
+        		</if>
+			</foreach>
+          </td>
+        </tr>
+        <tr>
+          <td>比分:</td>
+          <td>
+	      	<input name="score1" type="number" class="input" style="width: 96px;"/>
+	      	<input name="score2" type="number" class="input" style="width: 96px;"/>
+          </td>
+        </tr>
+		<if condition="$bets neq ''">
+		    <tr>
+		      <td>竞猜赔率:</td>
+              <td>
+              	<input type="text" class="input" name="odds_w" value="{$bets.odds_w}" style="width: 57px;" readonly="readonly">
+              	<input type="text" class="input" name="odds_d" value="{$bets.odds_d}" style="width: 58px;" readonly="readonly">
+              	<input type="text" class="input" name="odds_l" value="{$bets.odds_l}" style="width: 57px;" readonly="readonly">
+              </td>
+		    </tr>
+		</if>
+        <tr>
+          <td>比赛时间:</td>
+	      <td>
+				<input type="text" name="start_time" value="{$infos.matchdatetime}" size="21" class="input" readonly="readonly">
+	      </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="form-actions">
+	<input type="hidden" name="info_id" value="{$infos.id}" />
+	<input type="hidden" name="bets_mid" value="{$bets.matchinfoid}" />
+	<input type="hidden" name="bets_id" value="{$bets.id}" />
+    <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">更新</button>
+    <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+  </div>
+</form>
+        </div>
+    </div>
+</div>
+</div>
+<tc_include file="Public:footer" />
+</body>
+</html>

@@ -1,0 +1,150 @@
+<admintpl file="apiheader"/>
+<title>竞猜交流</title>
+<style type="text/css">
+	body{ background:#FFFFFF;font-family: "Microsoft YaHei","Lato","Helvetica Neue",Helvetica,Arial,sans-serif;}
+	.navbar-inner {background:#6CBB52;border: 0px solid #6CBB52;min-height: 40px;}
+	.navbar-inner h3{color: white;text-align: center;line-height:40px;font-size:150%;margin:0;}
+	.navbar-banr {background:#F4F5F9;margin-top:40px;height: 135px;background-position-x: 100%;background-position-y: 100%;}
+	div .team-photo {
+		max-width: 46px!important;
+		border: 2px solid #FFFFFF;
+		border-radius: 24px;
+	}
+	div a{color: #000000;}
+	div a:link{ color: #000000;}
+	div a:hover{color: #000000;}
+	.bheight{
+		height: 40px;
+		line-height: 40px;
+		width: 33%;
+		float: left;
+		text-align: center;
+		background: #FFFFFF;
+	}
+	.dleft{ float: left;width: 45px;}
+	.lr{border-left: 1px solid #f5f5f5;border-right: 1px solid #f5f5f5;}
+	.al{margin-left: 5px;}
+	.table {width: 100%; margin: 0;}
+	.table td{padding:3px 0; margin:0;vertical-align: inherit; text-align:center;border: 0px; color: #FFFFFF;padding-bottom:0px;white-space:nowrap;}
+	.posts{margin:0;vertical-align: inherit; border: 0px; color: #000000;padding-bottom:0px; width: 100%;float: left;border-bottom: 1px solid #F4F5F9;}
+	div .team-center {
+		text-align:center;
+	}
+	.table td span{
+	text-align: center;
+	line-height: 40px;
+	}
+	hr {
+	margin: 0;
+	border: 0;
+	border-top: 1px solid #F4F5F9;
+	}
+</style>
+<body class="J_scroll_fixed" onselectstart="return false">
+<div class="navbar-fixed-top">
+  <div class="navbar-inner">
+	<h3 style="float: left;margin-left: 10px;" onclick="javascript:history.go(-1);"><i class="fa fa-arrow-left normal"></i></h3>
+	<h3 style="float: right;margin-right: 10px;" >&nbsp;&nbsp;&nbsp;</h3>
+	<h3>{$bannert.description1}</h3>
+  </div>
+</div>
+   	<if condition="$out204">
+	   	<div class="navbar-fixed-top"><div class="navbar-inner"><h3>{$out204.code} - {$out204.info}</h3></div></div>
+	<else />
+  <div class="navbar-banr">
+  	<img src="__ROOT__/tpl_admin/simpleboot/Api/images/bettop.png" width="100%" height="135"/>
+	<table width="100%" cellspacing="0" class="table" style="margin-top: -135px;">
+		<thead>
+			<tr>
+				<td width="30%">&nbsp;</td>
+	        	<td><div style="margin-bottom: -20px; font-size: 14px;">{$bannert.description2}</div></td>
+				<td width="30%">&nbsp;</td>
+			</tr>
+			<tr>
+				<td>
+					<img class="team-photo team-center" width="46" height="46" src="{$imgtituan}{$bannert.teamlogo1}" alt="{$bannert.teamname1}">
+				</td>
+				<td>
+		        	<span style="font-size: 20px;">
+						<small>&nbsp;<b>&nbsp;{$bannert.result}&nbsp;</b>&nbsp;</small>
+		        	</span>
+				</td>
+        		<td>
+		        	<img class="team-photo team-center" width="46" height="46" src="{$imgtituan}{$bannert.teamlogo2}" alt="{$bannert.teamname2}">
+		        </td>
+			</tr>
+			<tr>
+				<td>{$bannert.teamname1}</td>
+				<td>
+					<if condition="$description4 gt $bannert['description3']">
+						已结束
+					<else />
+						未开赛
+					</if>
+				</td>
+        		<td>{$bannert.teamname2}</td>
+			</tr>
+			<tr>
+				<td>{$bannert.team1_description}</td>
+				<td>{$bannert.description3}</td>
+        		<td>{$bannert.team2_description}</td>
+			</tr>
+		</thead>
+	</table>
+  </div>
+	<foreach name="bannerb" item="vo">
+	<hr>
+		<div class="posts">
+			<a href="http://s.renyiball.com/sharing/qiuba/?threadid={$vo.threadid}">
+			<div>
+			<div class="dleft al">
+				<img class="team-photo team-center" width="36" height="36" src="{$vo.user_head}" alt="{$vo.username}">
+			</div>
+			<div style="background: #F4F5F9;">
+				<php>
+					$base64 = $vo['username'];
+				 	echo $base64 = preg_replace_callback ( '/@E(.{6}==)/', function ($r) {
+									return base64_decode ( $r [1] );
+							}, $base64 );
+				</php><br>
+				{$vo.time_text}
+			</div>
+			<div class="al">
+				<b>{$vo.title}</b><br>
+				{$vo.description}
+			</div>
+			<if condition="$vo['imagelist'][0]">
+				<php>
+					$imagelist=$vo['imagelist'];
+					for($i=0;$i<count($imagelist);$i++){
+						echo "<img width='22%' height='70' src='".$imgtituan.$imagelist[$i]."' style='margin:5px'>";
+	        		}
+				</php>
+			</if>
+			<if condition="$vo['comment1']">
+			<hr>
+				<div class="al">
+						{$vo.comment1}
+				</div>
+			</if>
+			</div>
+			<hr>
+		<a href="http://a.app.qq.com/o/simple.jsp?pkgname=net.tituan.app">
+		<div class="bheight" ><i class="fa fa-heart-o normal"></i>&nbsp;{$vo.cnt_favorite}&nbsp;点赞</div>
+		<div class="bheight lr" ><i class="fa fa-comment-o normal"></i>&nbsp;{$vo.cnt_reply}&nbsp;评论</div>
+		<div class="bheight"><i class="fa fa-share-square-o normal"></i>&nbsp;分享</div>
+		</a>
+		</div>
+	</foreach>
+
+	</if>
+<admintpl file="apifooter"/>
+<script>
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,126 @@
+<admintpl file="apiheader"/>
+<title>我的订单</title>
+<body class="J_scroll_fixed" onselectstart="return true">
+<style>
+	.wrap{padding: 0 20px;margin-top: 50px;}
+	p{float: right;margin: 0; color: red;}
+	.navbar-fixed-top{
+		margin-right: 0px;
+		margin-left: 0px;
+		position: fixed;
+		right: 0;
+		left: 0;
+		z-index: 1030;
+		margin-bottom: 0;
+	}
+	.navbar {
+		background: #FFFFFF;
+		-webkit-box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		-moz-box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		top: 0;
+		overflow: visible;
+	}
+	h5{
+		margin:10px 20px;
+	}
+</style>
+    <div class="navbar navbar-fixed-top">
+    	<h5>我的订单<a style="float: right;"href="{:U('Convert/index',array('userid'=>$userid))}">返回</a></h5>
+    </div>
+<div class="wrap J_check_wrap">
+    <div class="common-form">
+      <div class="table_list">
+        <foreach name="uexchanges" item="uex">
+		        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+		          <tbody>
+		            <tr>
+		            	<td style="width: 30%;">下单时间：</td>
+		            	<td colspan="2">
+		            		{$uex.created}
+		            		<p>
+		            			<if condition="$uex['status'] eq 160">已支付</if>
+		            			<if condition="$uex['status'] eq 165">已配货</if>
+		            			<if condition="$uex['status'] eq 170">已发货</if>
+		            			<if condition="$uex['status'] eq 175">已收货</if>
+		            			<if condition="$uex['status'] eq 180">已评价</if>
+		            		</p>
+		            	</td>
+		            </tr>
+				    <tr>
+						<td rowspan="2" style="padding: 0;">
+				        <foreach name="images" item="imag">
+							<if condition="$uex['itemid'] eq $imag['relatedID']">
+							    <a href="{:U('Convert/detail',array('userid'=>$userid,'exchid'=>$uex['exchid']))}">
+							    <img width='100%' src='{$imgtituan}{$imag.filepath}{$imag.filename}'>
+							    </a>
+					        </if>
+				        </foreach>
+				        </td><td>
+				         <foreach name="iteminfos" item="info">
+							<if condition="$uex['itemid'] eq $info['id']">
+							    <a href="{:U('Convert/detail',array('userid'=>$userid,'exchid'=>$uex['exchid']))}">{$info.itemDesc}</a>
+					        </if>
+				        </foreach>
+				        </td>
+		            </tr>
+				    <tr><td>
+				         <foreach name="itemdetails" item="detail">
+							<if condition="$uex['detailid'] eq $detail['id']">
+							    消费:{$uex.points}球币 - {$detail.itemColor} - {$detail.itemSize}
+					        </if>
+				        </foreach>
+				    </td></tr>
+					<if condition="$uex['description']">
+			            <tr>
+			            	<td>备注信息</td>
+			            	<td colspan="2">{$uex.description}</td>
+			            </tr>
+			        </if>
+            		<if condition="$uex['status'] gt 175">
+			            <tr>
+			            	<td>我的评论</td>
+			            	<td colspan="2">
+						        <foreach name="comments" item="comm">
+									<if condition="$uex['id'] eq $comm['transid']">
+					            		{$comm.starScore}星：{$comm.commentText}
+							        </if>
+						        </foreach>
+			            	</td>
+			            </tr>
+            		</if>
+		            <if condition="$uex['status'] gt 160">
+		            <tr>
+		            	<td colspan="3" style="padding:0 5px;">
+								<a class="btn" href="{:U('Convert/logisticsorder',array('userid'=>$userid,'exchid'=>$uex['id']))}">查看物流</a>   
+		            		
+		            		<if condition="$uex['status'] lt 175">
+		            			<a class="btn btn-primary" href="{:U('Convert/receiptorder',array('userid'=>$userid,'exchid'=>$uex['id'],'itemid'=>$uex['itemid']))}"style="float: right;">确认收货</a>
+		            		</if>
+		            	</td>
+		            </tr>
+		            </if>
+		 		  </tbody>
+		        </table>
+        </foreach>
+        <if condition="!$uexchanges">
+	        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+	          <tbody>
+	            <tr>
+	            	<td>您当前暂无订单信息！</td>
+	            </tr>
+	          </tbody>
+	        </table>
+        </if>
+      </div>
+    </div>
+  </div>
+<script>
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

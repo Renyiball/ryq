@@ -1,0 +1,126 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('ballbar/index')}">球帖列表</a></li>
+     <li><a href="{:U('ballbar/add')}">发布球帖</a></li>
+     <li class="active"><a>关联猜球</a></li>
+  </ul>
+    <script type="application/javascript">
+  	var currentShowCity=0;
+$(document).ready(function(){
+   $("#province").change(function(){
+   $("#province option").each(function(i,o){
+   if($(this).attr("selected"))
+   {
+  
+   $(".city").hide();
+   $(".city").eq(i).show();
+   currentShowCity=i;
+   }
+   });
+   });
+   $("#province").change();
+});
+function getSelectValue(){
+alert("1级="+$("#province").val());
+  
+$(".city").each(function(i,o){
+                    
+ if(i == currentShowCity){
+alert("2级="+$(".city").eq(i).val());
+ }
+   });
+}
+  </script>
+  <div class="common-form">
+		<form method="post" class="form-horizontal J_ajaxForm" action="{:U('ballbar/associate_post')}">
+			<div class="table_list">
+				<table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+					<tbody>
+			<tr>
+              <td style="width: 200px;">所属板块:</td>
+              <td>
+              			<input type="text" class="input" name="classtitle" value="{$class.title}"  readonly="readonly">
+						<input type="hidden" name="classid" value="{$class.id}" />
+              </td>
+           </tr>
+			<tr>
+              <td>球帖名称:</td>
+              <td>
+              			<input type="text" class="input" name="nametitle" value="{$name.title}"  readonly="readonly">
+						<input type="hidden" name="nameid" value="{$name.id}" />
+              </td>
+            </tr>
+			<tr>
+              <td >选择比赛类型:</td>
+              <td>
+              	<select name="competition"  id="province"> 
+    					<option value="0">请选择</option> 
+    					<option value="1">专业比赛</option>
+    					<option value="2">业余比赛</option>
+               </select>
+              </td>
+            </tr>
+            <tr>
+              <td>比赛名称:</td>
+              <td>
+		      <select class="city" class="form-control">
+    					<option value="0">请选择</option> 
+			  </select> 
+		      <select class="city" name="guess"  class="form-control">
+    					<option value="0">请选择</option> 
+		        		<foreach name="match" item="guess">
+									<if condition="strlen($guess['matchconstid']) eq 10">
+    							<option value="{$guess.matchconstid}">
+	    								{$guess.matchdesc} — 
+						        		<foreach name="teams" item="team">
+											<if condition="$team['constid'] eq $guess['teamid1']">
+				    							{$team.teamname}
+				    						</if>
+						                </foreach>
+						                :
+						        		<foreach name="teams" item="team">
+											<if condition="$team['constid'] eq $guess['teamid2']">
+				    							{$team.teamname}
+				    						</if>
+						                </foreach>
+    							</option> 
+			    					</if>
+		                </foreach>
+			  </select> 
+		      <select class="city" name="amateur"  class="form-control"> 
+    					<option value="0">请选择</option> 
+		        		<foreach name="match" item="amateur">
+									<if condition="strlen($amateur['matchconstid']) eq 13">
+    							<option value="{$amateur.matchconstid}">
+    								{$amateur.matchdesc} — 
+					        		<foreach name="teams" item="team">
+										<if condition="$team['constid'] eq $amateur['teamid1']">
+			    							{$team.teamname}
+			    						</if>
+					                </foreach>
+					                :
+					        		<foreach name="teams" item="team">
+										<if condition="$team['constid'] eq $amateur['teamid2']">
+			    							{$team.teamname}
+			    						</if>
+					                </foreach>
+			    					</if>
+					              </option> 
+		                </foreach>
+			   </select>
+              </td>{$ballbarid}
+            </tr>
+					</tbody>
+				</table>
+			</div>
+	      <div class="form-actions">
+	        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">关联</button>
+	        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+	      </div>
+		</form>
+	</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

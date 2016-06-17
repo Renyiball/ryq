@@ -1,0 +1,77 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Collect/index')}">商品集列表</a></li>
+     <li><a href="{:U('Collect/add')}">添加商品集</a></li>
+     <li class="active"><a>修改商品集</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Collect/edit_post')}" name="formadd">
+      <div class="table_list">
+      <table width="100%" class="table table-hover">
+				<if condition="$sids">
+		    <thead>
+		      <tr>
+		        <th width="40">ID</th>
+		        <th width="60">商品图像</th>
+		        <th>商品名称</th>
+		        <th>操作</th>
+		      </tr>
+		    </thead>
+	        <foreach name="sids" item="sid">
+					<foreach name="items" item="vo">
+					<if condition="$vo['id'] eq $sid">
+						<tr>
+				        <foreach name="images" item="img">
+									<if condition="$img['relatedID'] eq $sid">
+										<td>{$vo.id}</td>
+										<td>
+					        	<img src="{$imgtituan}{$img.filepath}{$img.filename}" name="{$imgtituan}{$img.filepath}{$img.filename}" title="双击查看" width="80" height="45"ondblclick="image_priview(this.name);" >
+										<input type="hidden" name="ids[]" value="{$sid}">
+										</td>
+										<td>{$vo.itemDesc}</td>
+										<td>
+											<a href="{:U('Collect/edit_del',array('id'=>$formget['id'],'delitemid'=>$sid))}" class="btn J_ajax_dialog_btn" data-msg="您要删除此商品吗？">删除</a>
+										</td>
+									</if>
+				        </foreach>
+						</tr>
+					</if>
+	        </foreach>
+	        </foreach>
+	        <td colspan="4" style="text-align: center;">
+	        	<a href="{:U('Collect/shop',array('source'=>'edit','id'=>$formget['id']))}" class="btn btn-primary btn_submit">插入</a>
+	        	<b>请不要把所有商品都删除，否则 商品集列表 显示会有问题</b>
+	        </td>
+				</if>
+				</table>
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>商品集说明:</td>
+              <td><input type="text" class="input" name="title" value="{$item.description}"></td>
+            </tr>   
+            <tr>
+              <td>是否启用:</td>
+              <td><select name="updown" >
+    					<option value='0'<if condition="$item['status'] eq 0">selected="selected"</if>>不启用</option>
+    					<option value='100'<if condition="$item['status'] eq 100">selected="selected"</if>>启用</option>
+               </select></td>
+            </tr>        
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+      	<input type="hidden" name="id" value="{$formget.id}">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">修改</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

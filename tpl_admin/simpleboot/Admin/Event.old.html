@@ -1,0 +1,71 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('event/expert')}">专业赛事</a></li>
+     <li><a href="{:U('event/amateur')}">业余赛事</a></li>
+     <li class="active"><a href="{:U('event/old')}">业余赛事(旧)</a></li>
+     <li><a href="{:U('event/addamateur')}">添加业余赛事</a></li>
+  </ul>
+  <form class="form-horizontal J_ajaxForm" action="{:U('event/showorders')}" method="post">
+   <div class="table_list">
+   <div class="p10">
+	   	<div class="pages">{$Page}</div>
+   </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="80">赛事ID</th>
+            <th>赛事名称</th>
+            <th width="80">赛事LOGO</th>
+            <th>赛事说明</th>
+            <th width="120">开赛时间</th>
+            <th width="120">结束时间</th>
+            <th width="70">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="lists" item="vo">
+          <tr>
+            <td>{$vo.constid}</td>
+            <td>{$vo.actionName}</td>
+				<td>
+	        	<foreach name="images" item="img">
+	        		<if condition="$img['relatedID'] eq $vo[constid]">
+	        			<img src="{$imgtituan}{$img.filepath}{$img.filename}" height="40px">
+	        		</if>
+	        	</foreach>
+				</td>
+            <td>{$vo.actionDesc}</td>
+            <td>{$vo.startDate}</td>
+            <td>{$vo.endDate}</td>
+            <td>
+					<a href="{:U('event/editamateur',array('id'=>$vo['constid']))}">修改</a>|
+					<if condition="$vo['status'] eq 0">
+						<a href="{:U('event/openamateur',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要启用此赛事吗？"style="color: #FF0000;"><b>未启用</b></a>
+					<else />
+						<a href="{:U('event/closeamateur',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要停用此赛事吗？">启用 </a>
+					</if>
+            </td>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="80">赛事ID</th>
+            <th>赛事名称</th>
+            <th width="80">赛事LOGO</th>
+            <th>赛事说明</th>
+            <th width="120">开赛时间</th>
+            <th width="120">结束时间</th>
+            <th width="70">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

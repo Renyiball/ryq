@@ -1,0 +1,18 @@
+<foreach name="userbets" item="ubet">
+	<tr <if condition="$ubet['userid'] eq $userid">style='color: red;'</if>>
+        <td>{$a++}</td>
+		<td class='emoji'>
+			<foreach name="users" item="user">
+				<if condition="$user['id'] eq $ubet['userid']">
+					<php>
+						echo preg_replace_callback('/@E(.{6}==)/',function($b){return base64_decode($b[1]);},$user['nickname']);
+					</php>
+				</if>
+			</foreach>
+		</td>
+		<td>{:number_format($ubet['points_sum'])}</td>
+	</tr>
+</foreach>
+<if condition="$over">
+	{$over}
+</if>

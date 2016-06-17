@@ -1,0 +1,69 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Vouchers/index')}">代金卷列表</a></li>
+     <li><a href="{:U('Vouchers/add')}">添加代金卷</a></li>
+     <li class="active"><a>修改代金卷</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Vouchers/edit_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 100px;">代金卷名称:</td>
+              <td><input type="text" class="input" name="name" value="{$info.itemDesc}"<if condition="$action"> readonly="readonly" </if>></td>
+		              <input type="hidden" name="infoid" value="{$info.id}" />
+            </tr>
+            <tr>
+              <td>代金卷描述:</td>
+              <td><input type="text" class="input" name="description" value="{$property.extraDesc}"></td>
+            </tr>
+            <tr>
+              <td>使用倍数:</td>
+              <td>
+              	<if condition="$action">
+              		<input type="text" class="input" name="value" value="{$property.extraClass}"<if condition="$action"> readonly="readonly" </if>>
+              	<else />
+		              <select name="multiple" >   
+		    					<option value='{$property.extraClass}'>{$property.extraClass}</option>
+		    					<option value='1'>一倍</option>
+		    					<option value='2'>二倍</option>
+		    					<option value='3'>三倍</option>
+		    					<option value='4'>四倍</option>
+		    					<option value='5'>五倍</option>
+		    					<option value='6'>六倍</option>
+		    					<option value='7'>七倍</option>
+		    					<option value='8'>八倍</option>
+		    					<option value='9'>九倍</option>
+		               </select>
+              	</if>
+              </td>
+            </tr>
+            <tr>
+              <td>代金卷面值:</td>
+              <td><input type="text" class="input" name="value" value="{$property.itemColor}"<if condition="$action"> readonly="readonly" </if>></td>
+            </tr> 
+            <tr>
+              <td>特定商品ID:</td>
+              <td><input type="text" class="input" name="num" value="{$property.originalHeld}" <if condition="$action"> readonly="readonly" </if>></td>
+            </tr> 
+            <tr>
+              <td>代金卷有效期:</td>
+              <td><input type="text" class="input" name="validity" value="{$property.itemSize}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">修改</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+
+</body>
+</html>

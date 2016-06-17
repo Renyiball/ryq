@@ -1,0 +1,109 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('Plate/index')}">板块列表</a></li>
+     <li><a href="{:U('Plate/scrap')}">板块列表(弃)</a></li>
+     <li><a href="{:U('Plate/add')}">添加板块</a></li>
+  </ul>		
+  <form class="form-horizontal J_ajaxForm" action="{:U('Plate/showorder')}" method="post">
+    <div class="table_list">
+      <div class="p10"><div class="pages">
+        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">保存排序</button>
+        {$Page} </div> </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+          	<th width="40">排序</th>
+            <th width="50">ID</th>
+            <th>板块标题</th>
+            <th width="60">板块图片</th>
+            <th>板块描述</th>
+            <th>板块备注</th>
+            <th width="60">板块状态</th>
+            <th width="120">ID：用户昵称</th>
+            <th width="130">创建时间</th>
+            <th width="120">操作</th>
+          </tr>
+        </thead>
+        <foreach name="lists" item="vo">
+        	<tr>
+        <td><input name="showorder[{$vo.id}]" type="text" value="{$vo.showorder}" class="input input-order" maxlength="4"></td>
+				<td>{$vo.id}</td>
+				<td>{$vo.sectiontitle}</td>
+				<td>
+					<if condition="$vo['image_logo']">
+						<img src="{$imgtituan}{$vo.image_logo}" height="50px">
+          </if>
+				</td>
+				<td>{$vo.description1}</td>
+				<td>{$vo.description2}</td>
+        <td>
+					<if condition="$vo['status'] lt 100">
+						<a href="{:U('Plate/enable',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要启用此板块吗？"style="color: #FF0000;"><b>停用</b></a>
+					<else />
+						<a href="{:U('Plate/disabled',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要停用此板块吗？">启用 </a>
+					</if>
+        </td>
+				<td>
+						{$vo.userid}：
+	        	<php> $u=1;</php>
+        		<foreach name="users" item="user">
+						<if condition="$user['userid'] eq $vo['userid'] && $u eq 1">
+							<if condition="$user['user_nicename'] neq ''">
+	        			{$user.user_nicename}
+	        		<else />
+	        			{$user.user_login}
+	        		</if>
+	        		<php> $u=0;</php>
+	        	</if>
+            </foreach>
+        		<foreach name="users" item="user">
+						<if condition="$user['id'] eq $vo['userid'] && $u eq 1">
+							<if condition="$user['user_nicename'] neq ''">
+	        			{$user.user_nicename}
+	        		<else />
+	        			{$user.user_login}
+	        		</if>
+	        		<php> $u=0;</php>
+	        	</if>
+            </foreach>
+        </td>
+				<td>{$vo.created}</td>
+            	<td>
+            		<if condition="$vo['id'] neq 2">
+	            		<a href="{:U('Plate/edit',array('id'=>$vo['id']))}">修改板块</a>
+	            		|
+            			<a href="{:U('Plate/delete',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="删除是不可逆操作，你确定吗？">整版删除</a>
+            		<else />
+            			系统板块不可操作
+            		</if>
+            	</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+          	<th width="40">排序</th>
+            <th width="50">ID</th>
+            <th>板块标题</th>
+            <th width="60">板块图片</th>
+            <th>板块描述</th>
+            <th>板块备注</th>
+            <th width="60">板块状态</th>
+            <th width="120">ID：用户昵称</th>
+            <th width="130">创建时间</th>
+            <th width="120">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages">
+        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">保存排序</button>
+        {$Page} </div> </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('event/expert')}">专业赛事</a></li>
+     <li><a href="{:U('event/amateur')}">业余赛事</a></li>
+     <li class="active"><a href="{:U('event/addexpert')}">添加专业赛事</a></li>
+  </ul>
+ 
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 30px;} 
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('event/addexpert_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 80px;">赛事类型:</td>
+              <td>
+	              	<select name="teamname" class="normal_select"> 
+									<option value="0">请选择</option>
+		        				<foreach name="teams" item="team">
+			        			<option value="{$team.id}">{$team.name}</option>
+		                </foreach>
+	               	</select>
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 80px;">赛季名称:</td>
+              <td>
+								<input type="text" name="fullname1" value="{$datey}" style="width: 141px;">
+								-	
+								<input type="text" name="fullname2" value="{$datey+1}" style="width: 141px;">
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 80px;">排序标识:</td>
+              <td>
+	              	<select name="extradesc" class="normal_select"> 
+										<option value="0">请选择</option>
+		        				<foreach name="extras" item="extra">
+			        			<option value="{$extra.id}">{$extra.name}</option>
+		                </foreach>
+	               	</select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

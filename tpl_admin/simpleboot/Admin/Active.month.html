@@ -1,0 +1,88 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('active/day')}">日活跃度</a></li>
+     <li class="active"><a href="{:U('active/month')}">月活跃度</a></li>
+     <li><a href="{:U('active/index')}">操作列表</a></li>
+  </ul>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:450px;width: 800px;"></div>
+    <!-- ECharts单文件引入 -->
+    <script src="__ROOT__/statics/js/echarts.js"></script>
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+        
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/line'
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var myChart = ec.init(document.getElementById('main')); 
+
+option = {
+   title: {
+       text: "最近12个月用户活跃量走势图",
+       x: "center"
+   },
+    tooltip : {
+        trigger: 'axis'
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            restore : {show: true},
+            saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            boundaryGap : false,
+            data : [
+	          <php>
+							for($i = count($num)-1;$i > 0;$i--){
+									echo '"'.$num[$i][mon].'",';
+							}
+						</php>
+            ]
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+           name: "活跃用户量",
+           type: "line",
+           data: [
+				<php>
+						for($i = count($num)-1;$i > 0;$i--){
+								echo $num[$i][num].',';
+						}
+				</php>
+            ]
+        }
+    ]
+};
+
+                // 为echarts对象加载数据 
+                myChart.setOption(option); 
+            }
+        );
+    </script>
+</div>
+
+</body>
+</html>

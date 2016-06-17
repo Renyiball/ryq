@@ -1,0 +1,53 @@
+<foreach name="userbets" item="vo">
+		<php>
+		for($b=0;$b<count($bets);$b++){
+			if($bets[$b]['id'] == $vo['betid']){
+				for($m=0;$m<count($matchinfos);$m++){
+					if($bets[$b]['matchinfoid'] == $matchinfos[$m]['matchconstid']){
+						echo "<tr>";
+						if($vo['status'] == 140){
+							echo "<td>投注 ".$vo['points'];
+						}
+						if($vo['status'] == 150){
+							echo "<td style='background-color: #6dbb00;'>痛失 ".$vo['points'];
+						}
+						if($vo['status'] == 160){
+							echo "<td style='background-color: #ee9900;'>赢得 ".$vo['points']*$vo['odds'];
+						}
+						echo " 球币<br />竞猜 ";
+						if($vo['betoption'] == 'w'){
+							echo "主队获胜";
+						}
+						if($vo['betoption'] == 'd'){
+							echo "两队战平";
+						}
+						if($vo['betoption'] == 'l'){
+							echo "客队获胜";
+						}
+						echo "</td><td>";
+						for($t=0;$t<count($teams);$t++){
+							if($teams[$t]['constid'] == $matchinfos[$m]['teamid1'] || $teams[$t]['teamnumber'] == $matchinfos[$m]['teamid1']){
+								echo $teams[$t]['teamname'].' VS ';
+							}
+						}
+						for($t=0;$t<count($teams);$t++){
+							if($teams[$t]['constid'] == $matchinfos[$m]['teamid2'] || $teams[$t]['teamnumber'] == $matchinfos[$m]['teamid2']){
+								echo $teams[$t]['teamname'];
+							}
+						}
+						echo "<br />".mb_substr($matchinfos[$m]['matchdatetime'],5,11,'utf-8');
+						if($matchinfos[$m]['score1']!='' && $matchinfos[$m]['score2'] !=''){
+							echo " 比分 ".$matchinfos[$m]['score1']." : ".$matchinfos[$m]['score2'];
+						}else{
+							echo " 等待开奖";
+						}
+						echo "</td></tr>";
+					}
+				}
+			}
+		}
+		</php>
+</foreach>
+<if condition="$over">
+	{$over}
+</if>

@@ -1,0 +1,66 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('schedule/index')}">球队日程</a></li>
+     <li class="active"><a>查看赛况</a></li>
+  </ul>
+   <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+      <table width="100%" class="table table-hover">
+				    <thead>
+				      <tr>
+				        <th style="min-width: 60px;">球队名称</th>
+            		<th>ID：用户昵称</th>
+				        <th>进球</th>
+				        <th>红牌</th>
+				        <th>黄牌</th>
+				        <th>操作</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				    <foreach name="lists" item="vo">
+				      <tr>
+			        	<foreach name="userroles" item="userrole">
+			        	<if condition="$userrole['id'] eq $vo['userroleid']">
+				        	<foreach name="teams" item="team">
+				        	<if condition="$team['id'] eq $userrole['relatedID']">
+				        	 <td>{$team.teamname}</td>
+				        	</if>
+				        	</foreach>
+				        	<foreach name="users" item="user">
+				        	<if condition="$user['id'] eq $userrole['relatedUserID']">
+				        	<td>{$user.id}：{$user.nickname}</td>
+				        	</if>
+				        	</foreach>
+			        	</if>
+			        	</foreach>
+				        <td>{$vo.goals}</td>
+				        <td>{$vo.red_card}</td>
+				        <td>{$vo.yellow_card}</td>
+				        <td>
+				        	<a href="{:U('schedule/edit',array('id'=>$vo['id']))}">修改</a> 
+							<if condition="$roleid eq 1">
+						  	| <a class="J_ajax_del" href="{:U('schedule/delete',array('id'=>$vo['id']))}">删除</a>
+        			</if>
+				        </td>
+				      </tr>
+				    </foreach>
+				    </tbody>
+				    <thead>
+				      <tr>
+				        <th style="min-width: 60px;">球队名称</th>
+            		<th>ID：用户昵称</th>
+				        <th>进球</th>
+				        <th>红牌</th>
+				        <th>黄牌</th>
+				        <th>操作</th>
+				      </tr>
+				    </thead>
+				  </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

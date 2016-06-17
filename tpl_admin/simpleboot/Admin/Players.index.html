@@ -1,0 +1,148 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('Players/index')}">球员列表</a></li>
+     <li><a href="{:U('Players/add')}">添加球员</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('Players/index')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">所属球队： 
+	              	<select id="province"name="typeclass" class="normal_select index_select"> 
+							<option value="0">全部</option>
+        		<foreach name="teams" item="vo">
+        			<if condition="$formpost['typeclass'] eq $vo['id']">
+	        			<option selected="selected" value="{$vo.id}">{$vo.teamname}</option>
+	        			<else />
+	        			<option value="{$vo.id}">{$vo.teamname}</option>
+        			</if>
+                </foreach>
+	               	</select>
+						添加日期：
+						<input type="text" name="start_time" value="{$formpost.start_time}" class="J_date" style="width: 80px;">-
+						<input type="text" name="end_time" value="{$formpost.end_time}" class="J_date" style="width: 80px;"> &nbsp; &nbsp;
+						<input type="submit" class="btn btn-primary" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+   <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="60">用户ID</th>
+            <th>所属球队</th>
+            <th width="200">所属赛事</th>
+            <th width="60">球队角色</th>
+            <th width="60">球服号码</th>
+            <th width="80">联系电话</th>
+            <th>姓名</th>
+            <th width="60">性别</th>
+            <th width="60">年龄</th>
+            <th width="60">身高(cm)</th>
+            <th width="60">体重(kg)</th>
+            <th width="70">生日</th>
+            <th width="110">身份证号</th>
+            <th width="60">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="roles" item="vo">
+          <tr>
+            <td>{$vo.relatedUserID}</td>
+            <td>
+						<foreach name="teams" item="team">
+							<if condition="$team['id'] eq $vo['relatedID']">
+            		{$team.teamname}
+							</if>
+ 						</foreach>
+            </td>
+            <td>
+						<foreach name="infos" item="info">
+							<if condition="$info['constid'] eq $vo['entitytype']">
+            		{$info.actionName}
+							</if>
+ 						</foreach>
+            </td>
+            <td>
+						<foreach name="configs" item="config">
+							<if condition="$config['typeID'] eq $vo['roleTypeID']">
+            		{$config.typeName}
+							</if>
+ 						</foreach>
+            </td>
+            <td>{$vo.play_number}</td>
+            <td>
+		        <foreach name="contacts" item="contact">
+							<if condition="$contact['relatedID'] eq $vo['relatedUserID']">
+	        				{$contact.telephone}
+	        				<php>break;</php>
+	        		</if>
+		        </foreach>
+            </td>
+						<foreach name="details" item="detail">
+							<if condition="$detail['relatedUserID'] eq $vo['relatedUserID']">
+            		<td>{$detail.realname}</td>
+            		<td>
+								<php> 
+									if(!$detail['gender'] && $detail['personid']>0){
+										$gender = substr($detail['personid'],-2,1);
+										if($gender%2==0){ echo '女';}else{ echo '男';}
+										}else{ echo $detail['gender'];}
+								</php>
+								</td>
+								<td>
+								<php> 
+									if(!$detail['age']){
+										$age = $date - $detail['dob'];
+										if($age>=0 && $age <=160)
+											{echo $age;}
+										}else{ echo $detail['age'];}
+								</php>
+								</td>
+								<td>{$detail.height}</td>
+								<td>{$detail.weight}</td>
+								<td><php>if($detail['dob']){ echo  date("Y-m-d", strtotime($detail['dob']));}</php></td>
+								<td>{$detail.personid}</td>
+							</if>
+ 						</foreach>
+ 						<td>
+					<a href="{:U('Players/edit',array('id'=>$vo['relatedUserID'],'p'=>$_GET['p'],'c'=>$formpost['typeclass']))}">修改</a>
+					<if condition="$roleid eq 1">
+						 | <a class="J_ajax_del" href="{:U('Players/delete',array('id'=>$vo['relatedUserID']))}">删除</a>
+        	</if>
+            </td>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="60">用户ID</th>
+            <th>所属球队</th>
+            <th width="200">所属赛事</th>
+            <th width="60">球队角色</th>
+            <th width="60">球服号码</th>
+            <th width="80">联系电话</th>
+            <th>姓名</th>
+            <th width="60">性别</th>
+            <th width="60">年龄</th>
+            <th width="60">身高(cm)</th>
+            <th width="60">体重(kg)</th>
+            <th width="70">生日</th>
+            <th width="110">身份证号</th>
+            <th width="60">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   </div>
+</div>
+<script src="__ROOT__/statics/js/common.js" ></script>
+
+</body>
+</html>

@@ -1,0 +1,122 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('Exchange/index')}">兑换列表</a></li>
+     <li><a href="{:U('Exchange/add')}">添加兑换</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('Exchange/index')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">兑换类型： 
+	              	<select name="typeclass" class="normal_select index_select"> 
+			        		<option value="0">全部</option>
+		        		<foreach name="activity" item="vo">
+		        			<if condition="$formpost['typeclass'] eq $vo['typeid']">
+			        			<option selected="selected" value="{$vo.typeid}">{$vo.type_text}</option>
+			        			<else />
+			        			<option value="{$vo.typeid}">{$vo.type_text}</option>
+		        			</if>
+		                </foreach>
+	               	</select>
+	               	活动状态
+	              	<select name="astatus" class="normal_select index_select"> 
+			        		<option value="0">全部</option>
+			        		<option value="1">未开始</option>
+			        		<option value="2">进行中</option>
+			        		<option value="3">已结束</option>
+	               	</select>
+						<input type="submit" class="btn btn-primary" name="search" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+      <div class="p10"><div class="pages"> {$Page} </div>
+    <div class="table_list">
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th width="60">商品ID</th>
+            <th>兑换描述</th>
+            <th>兑换类型</th>
+            <th>兑换限制</th>
+            <th>兑换消耗</th>
+            <th>商品总数</th>
+            <th>已兑换数</th>
+            <th>活动状态</th>
+            <th width="120">管理操作</th>
+          </tr>
+        </thead>
+        <foreach name="items" item="vo">
+        	<tr>
+				<td>{$vo.id}</td>
+				<td><a href="{:U('shop/edit',array('id'=>$vo['itemid']))}">{$vo.itemid}</a></td>
+				<td>{$vo.description}</td>
+				<td>
+						<foreach name="activity" item="acti">
+        			<if condition="$vo['itemtype'] eq $acti['typeid']">
+	        			{$acti.type_text}
+        			</if>
+		        </foreach>
+				</td>
+				<td>
+		        <if condition="$vo['typeid'] eq 100">
+		        	一次活动
+		        </if>
+		        <if condition="$vo['typeid'] eq 200">
+		        	重复活动
+		        </if>
+				</td>
+				<td>{$vo.points}</td>
+				<td>{$vo.cnt}</td>
+				<td>{$vo.uses}</td>
+				<td>
+					<if condition="$vo['period_from'] gt date('Y-m-d H:i:s')">
+							未开始 
+					</if>
+					<if condition="$vo['period_to'] lt date('Y-m-d H:i:s')">
+							已结束
+					</if>
+					<if condition="$vo['period_from'] lt date('Y-m-d H:i:s') && $vo['period_to'] gt date('Y-m-d H:i:s')">
+							<b style="color:red;">进行中 <if condition="$vo['cnt'] eq $vo['uses']"> - 已兑完</if></b>
+					</if>
+				</td>
+				<td>
+					<if condition="$vo['status'] eq 100">
+							<a href="{:U('Exchange/open',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要启用此兑换吗？"style="color: #FF0000;"><b>关闭兑换</b></a>
+					</if>
+					<if condition="$vo['status'] eq 200">
+							<a href="{:U('Exchange/close',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要停用此兑换吗？">打开兑换 </a>
+					</if>
+						 | <a href="{:U('Exchange/edit',array('id'=>$vo['id'],'p'=>$_GET['p'],'c'=>$formpost['typeclass']))}">修改</a>
+					<if condition="$roleid eq 1">
+						 | <a class="J_ajax_del" href="{:U('Exchange/delete',array('id'=>$vo['id']))}">删除</a> 
+        	</if>
+				</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th width="60">商品ID</th>
+            <th>兑换描述</th>
+            <th>兑换类型</th>
+            <th>兑换限制</th>
+            <th>兑换消耗</th>
+            <th>商品总数</th>
+            <th>已兑换数</th>
+            <th>活动状态</th>
+            <th width="120">管理操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+    </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

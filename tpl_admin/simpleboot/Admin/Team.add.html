@@ -1,0 +1,135 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('team/index')}">专业球队</a></li>
+     <li><a href="{:U('team/amateur')}">业余球队</a></li>
+     <li class="active"><a href="{:U('team/add')}">创建球队</a></li>
+  </ul>
+  <script type="application/javascript">
+  	var currentShowCity=0;
+$(document).ready(function(){
+   $("#province").change(function(){
+   $("#province option").each(function(i,o){
+   if($(this).attr("selected"))
+   {
+  
+   $(".city").hide();
+   $(".city").eq(i).show();
+   currentShowCity=i;
+   }
+   });
+   });
+   $("#province").change();
+});
+function getSelectValue(){
+alert("1级="+$("#province").val());
+  
+$(".city").each(function(i,o){
+                    
+ if(i == currentShowCity){
+alert("2级="+$(".city").eq(i).val());
+ }
+   });
+}
+  </script>
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 30px;} 
+tr{height: 34px;}
+.radio {margin-top: 5px;}
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('team/add_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 120px;">球队类型:</td>
+              <td>
+              	<select  id="province" name="type">
+				<option value="0">--选择球队--</option>
+				<option value="1">--专业球队--</option>
+				<option value="2">--业余球队--</option>
+               </select>
+            </tr>
+            <tr>
+              <td style="width: 120px;">赛事类型:</td>
+              <td>
+		    <select class="city" name="proclass"  class="form-control"> 
+				<option value="0">--选择赛事--</option>
+			  </select> 
+		      <select class="city" name="proclass"  class="form-control"> 
+				<option value="0">--选择专业赛事--</option>
+	        		<foreach name="proclass" item="vo">
+							 <option value='{$vo.teamtype}'/><if condition="$vo['fullname'] neq ''">{$vo.fullname}<else />{$vo.teamname}</if></option>
+	            </foreach>
+			  </select> 
+		      <select class="city" name="actionclass"  class="form-control"> 
+				<option value="0">--选择业余赛事--</option>
+	        		<foreach name="actionclass" item="vo">
+							 <option value='{$vo.constid}'/>{$vo.actionName}</option>
+	            </foreach>
+			   </select>
+            </tr>
+            <tr>
+              <td>球队分组:</td>
+              <td>
+		              	<select name="packet">
+								<option value="0">--选择分组--</option>
+								<foreach name="packet" item="vo">
+							        	<option value="{$vo.id}">{$vo.name}</option>
+			                	</foreach>
+		              	</select>(无分组可不选)
+              </td>
+            </tr>
+            <tr>
+              <td>球队名称:</td>
+              <td>
+              		<input type="text" name="teamname" value="" />
+              </td>
+            </tr>
+            <tr>
+              <td>球队描述:</td>
+              <td>
+              		<input type="text" name="teamdesc" value="" />
+              </td>
+            </tr>
+						<tr>
+              <td>球队LOGO:</td>
+              <td><input type="file" name="teamimg"  accept="image/*" /></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+    window.onload=function(){
+        var whether=document.getElementsByName("whether");
+        var divcon=document.getElementById("divcon");
+        for(var i=0;i<whether.length;i++){
+            whether[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<whether.length;n++){
+                    if(whether[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    divcon.style.display="none";
+                }else{
+                    divcon.style.display="";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

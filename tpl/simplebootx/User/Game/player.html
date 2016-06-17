@@ -1,0 +1,66 @@
+<tc_include file="Public:head" />
+<body class="J_scroll_fixed body-white" id="top">
+<div class="wrap J_check_wrap">
+<div class="container tc-main">
+        <div class="row">
+            <div class="span12">
+<style> 
+.btnclick{width: 32px;}
+.inpwidth{width: 100px;}
+.deswidth{width: 170px;}
+</style>
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('game/player_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%">
+          <tbody>
+            <tr>
+              <td><button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">更新</button></td>
+              <td><button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button></td>
+            </tr>
+            <tr>
+              <td style="width: 80px;">球队-球员:</td>
+              <td>
+					<input type="text" name="oneclass" value="{$player.description}" class="input deswidth" readonly="readonly">
+              </td>
+            </tr>
+            <tr>
+              <td>进球数:</td>
+              <td>
+				<input type="button" value="─" class="btn btnclick" onClick="javascript:this.form.enter.value--;">
+				<input type="text" name="enter" class="input inpwidth" value="{$player.goals}"readonly="readonly">
+				<input type="button" value="┼" class="btn btnclick" onClick="javascript:this.form.enter.value++;">
+		      </td>
+            </tr>
+            <tr>
+              <td>红牌数:</td>
+              <td>
+				<input type="button" value="─" class="btn btnclick" onClick="javascript:this.form.red.value--;">
+				<input type="text" name="red" class="input inpwidth" value="{$player.red_card}"readonly="readonly">
+				<input type="button" value="┼" class="btn btnclick" onClick="javascript:this.form.red.value++;">
+		      </td>
+            </tr>
+            <tr>
+              <td>黄牌数:</td>
+              <td>
+				<input type="button" value="─" class="btn btnclick" onClick="javascript:this.form.yellow.value--;">
+				<input type="text" name="yellow" class="input inpwidth" value="{$player.yellow_card}"readonly="readonly">
+				<input type="button" value="┼" class="btn btnclick" onClick="javascript:this.form.yellow.value++;">
+		      </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+		<input type="hidden" name="playerid" value="{$player.id}" />
+		<input type="hidden" name="matchconstid" value="{$player.matchconstid}" />
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">更新</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+            </div>
+        </div>
+	</div>
+</div>
+<tc_include file="Public:footer" />
+</body>
+</html>

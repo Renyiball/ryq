@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+	<html lang="zh-cmn-Hans">
+	<head>
+		<title>{$post.post_title}┊{$site_name}</title>
+		<meta name="keywords" content="{$post.post_keywords}" />
+		<meta name="description" content="{$post.post_excerpt}">
+		<tc_include file="Public:head" />
+		<style>
+			#article_content img{height:auto !important}
+			h2{font-size: 18px;}
+			body{padding: 0;background: #fff; margin-top: -10px;}
+		</style>
+	</head>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+	wx.config({
+		debug: 		false,
+		appId: 		'wx8efff750d56373d2',
+		timestamp: 	{$signPackage.timestamp},
+		nonceStr: 	'{$signPackage.nonceStr}',
+		signature: 	'{$signPackage.signature}',
+		jsApiList: [
+			// 所有要调用的 API 都要加到这个列表中
+			'wx.hideOptionMenu',
+			'wx.showOptionMenu',
+			'onMenuShareTimeline',
+			'onMenuShareAppMessage'
+		]
+	});
+	wx.hideOptionMenu();
+</script>
+<script>
+	$(function() {
+		wx.ready(function () {
+			wx.onMenuShareTimeline({
+				title: '{$post.post_title}',
+				link: "{$url}",
+				imgUrl: '{$imgtituan}{$post.post_image}',
+				success: function () { 
+				},
+				cancel: function () { 
+				}
+			});
+
+			wx.onMenuShareAppMessage({
+				title: '{$post.post_title}',
+				desc: '{$post.post_excerpt}',
+				link: "{$url}",
+				imgUrl: '{$imgtituan}{$post.post_image}',
+				type: '',
+				dataUrl: '',
+				success: function () { 
+				},
+				cancel: function () { 
+				}
+			});
+		});
+	});
+</script>
+<body onselectstart="return false">
+<div class="container tc-main"style="padding: 0 15px;">
+		<div class="span12">
+			<div class="tc-box first-box article-box">
+			<if condition="$post['post_status'] eq 1">
+		    	<h2>{$post.post_title}</h2>
+		    	<div class="article-infobox">
+		    		<span style="color: #999;"><php> echo substr($post['post_modified'],0,16)</php>&nbsp;&nbsp;&nbsp;{$post.post_source}</span>
+		    	</div>
+		    	<hr>
+		    	<div id="article_content">
+		    	{$post.post_content}
+		    	</div>
+			<else />
+	    	<h2 style="text-align: center;">此帖已关闭!</h2>
+	    	</if>
+		    </div>
+		</div>
+</div>
+<if condition="$sd">
+<style type="text/css">
+.navbar-inner {background:#6CBB52;border: 0px solid #6CBB52;min-height: 40px;}
+.navbar-inner h3{color: white;text-align: center;line-height:40px;font-size:150%;margin:0;}
+.navbar-fixed-bottom {
+position: fixed;
+right: 0;
+left: 0;
+z-index: 1030;
+margin-bottom: 0;
+}
+</style>
+<admintpl file="apifooter"/>
+</if>
+<script>function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+</script>
+</body>
+</html>

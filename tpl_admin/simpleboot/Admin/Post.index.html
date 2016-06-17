@@ -1,0 +1,154 @@
+<admintpl file="header" />
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('Post/index')}">资讯文章</a></li>
+     <li><a href="{:U('Post/celebrity')}">名人文章</a></li>
+     <li><a href="{:U('Post/add')}"  target="_self">添加资讯</a></li>
+  </ul>
+  <form class="well form-search" method="post" action="{:u('Post/index')}">
+    <div class="search_type cc mb10">
+      <div class="mb10"> 
+        <span class="mr20">分类：
+        <select class="normal_select index_select" name="typeclass">
+          	<option value='0' >全部</option>
+	        		<foreach name="terms" item="vo">
+		        			<if condition="$formpost['typeclass'] eq $vo['typeID']">
+			        			<option selected="selected" value="{$vo.typeID}">{$vo.typeName}</option>
+			        			<else />
+			        			<option value="{$vo.typeID}">{$vo.typeName}</option>
+		        			</if>
+		          </foreach>
+        </select>
+				关键字查找：
+				<input type="text" name="keywords" value="{$formpost.keywords}"  style="width: 120px;"> &nbsp; &nbsp;
+        &nbsp;&nbsp;发布时间：
+        	<input type="text" name="start_time" class="input length_2 J_date" value="{$formpost.start_time}" style="width:80px;" autocomplete="off">-
+        	<input type="text" name="end_time" class="input length_2 J_date" value="{$formpost.end_time}" style="width:80px;" autocomplete="off">
+				<input type="submit" class="btn btn-primary" value="搜索"/>
+        </span>
+      </div>
+    </div>
+  </form>
+  <form class="J_ajaxForm" action="" method="post">
+    <div class="table_list">
+      <div class="p10">
+      	<div class="pages"> 
+        <button class="btn btn-primary J_ajax_submit_btn" type="submit" data-action="{:u('Post/showorder')}">排序</button>
+        {$Page} </div>
+      </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+	          <tr>
+	            <th width="50">排序</th>
+	            <th width="40">ID</th>
+	            <th>文章分类</th>
+	            <th>标题</th>
+		          <th>关键字</th>
+		          <th width="60">缩略图</th>
+		          <th width="40">状态</th>
+	            <!--<th width="45">点赞量</th>-->
+            	<th width="120">ID：用户昵称</th>
+	            <th width="30">操作</th>
+	          </tr>
+        </thead>
+        	<foreach name="posts" item="vo">
+	        	<tr>
+		            <td><input name='showorder[{$vo.id}]' class="input input-order"  type='text' size='3' value='{$vo.showorder}'></td>
+		            <td>{$vo.id}</td>
+		            <td>
+	        		<foreach name="terms" item="term">
+		        			<if condition="$term['typeID'] eq $vo['post_term']">
+			        			{$term.typeName}
+		        			</if>
+		          </foreach>
+		            </td>
+		            <td>
+		            	<a href="{:U('portal/article/index',array('id'=>$vo['id']))}" target="_blank">
+		            		<span>{$vo.post_title}</span>
+		            	</a><br>浏览量（{$vo.post_hits}）
+		            		<if condition="$vo['post_push']"><b style="color: #FF0000;">已推送</b><else />
+		            		<a href="{:U('Post/push',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要推送此帖吗？">推送</a>
+		            		</if>
+		            </td>
+                <td>{$vo.post_keywords|msubstr=0,8}</td>
+                <td>
+		        			<if condition="$vo['post_image']">
+	        						<img src="{$imgtituan}{$vo.post_image}" name="{$imgtituan}{$vo.post_image}" title="双击查看" width="80" height="40"ondblclick="image_priview(this.name);" >
+		        			<else />
+		        					未上传
+		        			</if>
+                </td>
+                <td>
+								<if condition="$vo['post_istop'] eq 0">
+									<a href="{:U('Post/top',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要置顶此帖吗？">未置顶</a>
+								<else />
+									<a href="{:U('Post/down',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要取消置顶此帖吗？"><b style="color: #FF0000;">已置顶</b> </a>
+								</if>
+								<br>
+								<if condition="$vo['post_status'] eq 0">
+									<a href="{:U('Post/openpost',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要开启此帖吗？"style="color: #FF0000;"><b>已关闭</b></a>
+								<else />
+									<a href="{:U('Post/closepost',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要关闭此帖吗？">未关闭 </a>
+								</if>
+                </td>
+		            <!--<td>{$vo.post_like}</td>-->
+		            <td>
+								{$vo.userid}：
+			        	<php> $u=1;</php>
+		        		<foreach name="users" item="user">
+								<if condition="$user['userid'] eq $vo['userid'] && $u eq 1">
+									<if condition="$user['user_nicename'] neq ''">
+			        			{$user.user_nicename}
+			        		<else />
+			        			{$user.user_login}
+			        		</if>
+			        		<php> $u=0;</php>
+			        	</if>
+		            </foreach>
+		        		<foreach name="users" item="user">
+								<if condition="$user['id'] eq $vo['userid'] && $u eq 1">
+									<if condition="$user['user_nicename'] neq ''">
+			        			{$user.user_nicename}
+			        		<else />
+			        			{$user.user_login}
+			        		</if>
+			        		<php> $u=0;</php>
+			        	</if>
+		            </foreach>
+		            <br>{$vo.post_date}</td>
+		            <td>
+		      <a href="{:U('Post/edit',array('id'=>$vo['id'],'p'=>$_GET['p'],'c'=>$formpost['typeclass']))}">修改</a>
+					<if condition="$roleid eq 1">
+						<br><a class="J_ajax_del" href="{:U('Post/delete',array('id'=>$vo['id']))}">删除</a>
+        	</if>
+								</td>
+	          </tr>
+          </foreach>
+        <thead>
+	          <tr>
+	            <th width="50">排序</th>
+	            <th width="40">ID</th>
+	            <th>文章分类</th>
+	            <th>标题</th>
+		          <th>关键字</th>
+		          <th width="60">缩略图</th>
+		          <th width="40">状态</th>
+	            <!--<th width="45">点赞量</th>-->
+            	<th width="120">ID：用户昵称</th>
+	            <th width="30">操作</th>
+	          </tr>
+        </thead>
+          </table>
+      <div class="p10">
+      	<div class="pages"> 
+        <button class="btn btn-primary J_ajax_submit_btn" type="submit" data-action="{:u('Post/showorder')}">排序</button>
+        {$Page} </div>
+      </div>
+    </div>
+  </form>
+</div>
+<script src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('home/plate')}">板块管理</a></li>
+     <li><a href="{:U('home/index',array('itemid'=>$home['parentid']))}">模块管理</a></li>
+     <li><a href="{:U('home/add',array('itemid'=>$home['parentid']))}">添加模块</a></li>
+     <li class="active"><a>修改模块</a></li>
+  </ul>
+    <script type="application/javascript">
+  	var currentShowCity=0;
+$(document).ready(function(){
+   $("#select").change(function(){
+   $("#select option").each(function(i,o){
+   if($(this).attr("selected"))
+   {
+  
+   $(".Activity").hide();
+   $(".Activity").eq(i).show();
+   currentShowCity=i;
+   }
+   });
+   });
+   $("#select").change();
+});
+  </script>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('home/edit_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>所属板块:</td>
+              <td>
+			        	<input type="text" class="input" value="{$style.description}" readonly="readonly">
+              </td>
+            </tr>
+            <tr>
+              <td>样式:</td>
+              <td>
+			        	<input type="text" class="input" value="{$style.style}" readonly="readonly">
+              </td>
+            </tr>
+            <tr>
+              <td>模块名称:</td>
+              <td>
+              		<input type="text" class="input" name="title" value="{$home.title}">
+									<input type="hidden" name="id" value="{$home.id}" />
+									<input type="hidden" name="parentid" value="{$home.parentid}" />
+              </td>
+            </tr>
+            <tr>
+              <td>选择事件:</td>
+              <td>
+								<select name="clickid" id="select">
+									<foreach name="arrs" item="vo">
+										<if condition="$formget['eventid']">
+											<if condition="$vo['id'] eq $formget['eventid']">
+											<option selected="selected" value="{$vo.id}">{$vo.name}</option>
+											<else />
+											<option value="{$vo.id}">{$vo.name}</option>
+											</if>
+										<else />
+											<if condition="$vo['p_art'] eq $home['p_art']">
+											<option selected="selected" value="{$vo.id}">{$vo.name}</option>
+											<else />
+											<option value="{$vo.id}">{$vo.name}</option>
+											</if>
+										</if>
+									</foreach>
+								</select>
+              </td>
+            </tr>
+            <php>
+            </php>
+            <tr>
+            	<td>关联操作</td>
+            	<td>
+            		<div class="Activity" name="parameter"><input type="text" class="input" name="typeid" value="{$formget.typeid}"></div>
+            		<div class="Activity" name="parameter">
+	        				<if condition="$formget['groupid']">
+	        					已关联（{$formget.groupid}）
+	        					 | 
+	        					<a href="{:U('home/group',array('itemid'=>$formget['parentid'],'eventid'=>'2','source'=>'edit','id'=>$home['id']))}">修改</a>
+        						<input type="hidden" name="groupid" value="{$formget.groupid}">
+            			<else/>
+            				<a href="{:U('home/group',array('itemid'=>$formget['itemid'],'eventid'=>'2','source'=>'edit','id'=>$home['id']))}">关联商品集</a>
+	        				</if>
+            		</div>
+            		<div class="Activity" name="parameter">
+	        				<if condition="$formget['shopid']">
+	        					<a href="{:U('shop/edit',array('id'=>$formget['shopid']))}">已关联（{$formget.shopid}）</a>
+	        					 | 
+	        					<a href="{:U('home/shop',array('itemid'=>$formget['parentid'],'eventid'=>'3','source'=>'edit','id'=>$home['id']))}">修改</a>
+        						<input type="hidden" name="shopid" value="{$formget.shopid}">
+            			<else/>
+            				<a href="{:U('home/shop',array('itemid'=>$formget['itemid'],'eventid'=>'3','source'=>'edit','id'=>$home['id']))}">关联商品</a>
+	        				</if>
+            		</div>
+            	</td>
+            </tr>
+						<tr>
+              <td>图像:</td>
+              <td>
+		        			<if condition="$home['img_path']">
+	        					<img src="{$imgtituan}{$home.img_path}{$home.img_name}" width="324">
+              			<input type="file" name="teamimg"  accept="image/*" />
+			        			<else />
+              			<input type="file" name="teamimg"  accept="image/*" />
+		        			</if>
+              </td>
+            </tr>         
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">修改</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

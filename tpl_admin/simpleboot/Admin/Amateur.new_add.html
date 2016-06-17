@@ -1,0 +1,192 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('amateur/index')}">比赛列表</a></li>
+     <li><a href="{:U('amateur/add')}">添加比赛</a></li>
+     <li class="active"><a href="{:U('amateur/new_add')}">添加比赛(2016)</a></li>
+  </ul>
+    <php>
+  	$x=0;$main_typeid =$temp =  array();
+	for ($a = 0;$a<count($action);$a++) {
+			$constid = $action[$a]["constid"];
+			$main_typeid[$a] = $constid;
+	}
+	for ($m = 0;$m<count($main_typeid);$m++){
+		for($a = 0;$a<count($actions);$a++){
+			if($actions[$a]['action_constid'] == $main_typeid[$m]){
+				for($t = 0;$t<count($teams);$t++){
+					if($actions[$a]['teamid'] == $teams[$t]['id']){
+						$teamdesc[$x]['id'] =  $teams[$t]['id'];
+						$teamdesc[$x]['teamnumber'] =  $teams[$t]['teamnumber'];
+						$teamdesc[$x]['teamname'] =  $teams[$t]['teamname'];
+						$teamdesc[$x]['extradesc'] =$main_typeid[$m];
+						$teamdesc[$x]['zu'] = $actions[$a]['cur_group'];
+						$x++;
+					}
+				}
+			}
+		}
+	}
+</php>
+
+<script language="JavaScript" type="text/javascript">
+<php>
+	$x=0;
+echo 'var twoclass=[';
+	for ($m = 0;$m<count($main_typeid);$m++) {
+		echo '[';
+		for ($t = 0;$t<count($teamdesc);$t++) {
+			if($teamdesc[$t]["extradesc"] == $main_typeid[$m]){
+				$teamname=$teamdesc[$t]["teamname"];
+				if($teamdesc[$t]["zu"]){
+					$zu=$teamdesc[$t]["zu"];
+					echo '"'.preg_replace('/\|\/', '', $teamname).'--'.preg_replace('/\|\/', '', $zu).'",';
+				}else{
+					echo '"'.preg_replace('/\|\/', '', $teamname).'",';
+				}
+			}
+		}
+		echo '],';
+	}
+	echo '];var threeclass=[';
+	for ($m = 0;$m<count($main_typeid);$m++) {
+		echo '[';
+		for ($t = 0;$t<count($teamdesc);$t++) {
+			if($teamdesc[$t]["extradesc"] == $main_typeid[$m]){
+				$id=500000+$teamdesc[$t]["id"];
+				$teamnumber=$teamdesc[$t]["teamnumber"];
+				if($teamnumber){
+					echo '"'.preg_replace('/\r|\n/', '', $teamnumber).'",';
+				}else{
+					echo '"'.preg_replace('/\r|\n/', '', $id).'",';
+				}
+			}
+		}
+		echo '],';
+	}
+	echo '];';
+</php>
+function gettwo(){
+	var sltone=document.formadd.oneclass;
+	var slttwo1=document.formadd.twoclass1;  
+	var slttwo2=document.formadd.twoclass2;  
+	var sltthree=document.formadd.threeclass;
+	var Onetwo=twoclass[sltone.selectedIndex-1];  
+	var Twothree=threeclass[sltone.selectedIndex-1];
+	slttwo1.length=1;
+	slttwo2.length=1;
+	for(var i=0;i<Onetwo.length;i++){   
+	slttwo1[i+1]=new Option(Onetwo[i],Twothree[i]);   
+	}   
+	for(var i=0;i<Onetwo.length;i++){   
+	slttwo2[i+1]=new Option(Onetwo[i],Twothree[i]);   
+	}   
+}   
+</script> 
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 30px;} 
+tr{height: 34px;}
+.radio {margin-top: 5px;}
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('amateur/add_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 120px;">赛事类型:</td>
+              <td>
+              	<select name="oneclass" onChange="gettwo()">
+				<option value="0">--请选择赛事类型--</option>   
+					<foreach name="action" item="vo">
+				        	<option value="{$vo.constid}">{$vo.actionName}</option>
+                	</foreach>
+               </select>
+            </tr> 
+            <tr>
+              <td>对战球队:</td>
+              <td>
+              	<select name="twoclass1" style="width: 160px;">
+					<option value="0">----请选择球队----</option>   
+               	</select>
+              	<select name="twoclass2" style="width: 160px;">
+					<option value="0">----请选择球队----</option>   
+               	</select>
+              </td>
+            </tr>
+            <tr>
+              <td>比赛类型:</td>
+              <td>
+	          	<span class="switch_list cc">
+	        		<foreach name="type" item="vo">
+	        			<if condition="$vo['id'] eq 99">
+					<label class="radio"><input type="radio" name="oneclasstype" value="{$vo.id}"  onclick="oneclassround.style.display='block'"checked><span>{$vo.name}</span></label>
+		        		<else />
+					<label class="radio"><input type="radio" name="oneclasstype" value="{$vo.id}" onclick="oneclassround.style.display='none'"><span>{$vo.name}</span></label>
+	        			</if>
+	                </foreach>
+				</span>
+              	<select name="oneclassround">
+									<option value="00">----请选择轮次----</option>   
+              		<php>
+              			for($i = 1; $i <= 50; $i++){
+              				if($i<10){
+              				echo '<option value="0'.$i.'">第0'.$i.'轮</option>';
+              				}else{
+              				echo '<option value="'.$i.'">第'.$i.'轮</option>';
+              				}
+              			}
+              		</php>
+               	</select>
+              </td>
+            </tr>
+            <tr>
+              <td>比赛时间:</td>
+		      <td><input type="text" name="start_time" value="{:date('Y-m-d H:i:s',strtotime('+7 day'))}" size="21" class="input J_datetime"></td>
+            </tr>
+            <tr>
+              <td>启用竞猜<input type="checkbox" name="whether" value="0"  style="margin-top: -2px;"/></td>
+              <td>
+							<div id="divcon" style="display:none">
+		          	<input type="text" class="input" name="odds_w" value="1.5" style="width: 92px;">
+		          	<input type="text" class="input" name="odds_d" value="1.5" style="width: 91px;">
+		          	<input type="text" class="input" name="odds_l" value="1.5" style="width: 91px;">
+							</div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+    window.onload=function(){
+        var whether=document.getElementsByName("whether");
+        var divcon=document.getElementById("divcon");
+        for(var i=0;i<whether.length;i++){
+            whether[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<whether.length;n++){
+                    if(whether[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    divcon.style.display="none";
+                }else{
+                    divcon.style.display="";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

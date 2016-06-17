@@ -1,0 +1,97 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Statistics/index')}">用户列表</a></li>
+     <li><a href="{:U('Statistics/source')}">来源统计</a></li>
+     <li><a href="{:U('Statistics/month')}">月注册数</a></li>
+     <li><a href="{:U('Statistics/day')}">日注册数</a></li>
+     <li class="active"><a>球队列表</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('groups/team')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">
+						<if condition="$count neq 0">
+							共有 {$count} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+   <div class="table_list">
+      <div class="p10"><div class="pages">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      {$Page}</div></div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="70">球队id</th>
+            <th width="180">球队简称</th>
+            <th>球队全称</th>
+            <th>球队描述</th>
+            <th width="270">队长ID：用户昵称</th>
+            <th width="60">球队人数</th>
+            <th width="120">创建时间</th>
+            <th width="60">查看球员</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="teams" item="vo">
+          <tr>
+          	<td>{$vo.id}</td>
+        		<td>{$vo.teamname}</td>
+            <td>{$vo.fullname}</td>
+	          <td>{$vo.teamdesc|msubstr=0,48}</td>
+            <php>$u=$uid=0;</php>
+            <td>
+						<foreach name="roles" item="role">
+							<if condition="$role['relatedID'] eq $vo['id'] && $role['roleTypeID'] eq 20300">	
+			        		<foreach name="users" item="user">
+									<if condition="$user['id'] eq $role['relatedUserID'] && $uid == 0">
+										{$user.id}：{$user.nickname}
+									<php> $uid = $user['id'];</php>
+				        	</if>
+			            </foreach>
+							</if>
+								<php>
+									if($role['relatedID'] == $vo['id']){
+										$rol[$u]=$role['relatedUserID'];
+										$u++;
+									}
+								</php>
+						</foreach>
+						</td>
+            <td>
+            	<php>
+	            	echo count(array_unique($rol));
+	            	$rol=null;
+            	</php>
+            </td>
+            <td>{$vo.created}</td>
+            <td>
+							<a href="{:U('groups/look',array('id'=>$vo['id']))}">球员列表</a>
+            </td>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="70">球队id</th>
+            <th width="180">球队简称</th>
+            <th>球队全称</th>
+            <th>球队描述</th>
+            <th width="270">队长ID：用户昵称</th>
+            <th width="60">球队人数</th>
+            <th width="120">创建时间</th>
+            <th width="60">查看球员</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      {$Page}</div></div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

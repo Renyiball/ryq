@@ -1,0 +1,20 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+       <img src="__TMPL__Public/simpleboot/img/logo.png"/>
+		<ul class="nav pull-right" id="main-menu-left">
+			<if condition="sp_is_user_login()">
+	            <if condition="empty($user['avatar'])">
+	            <a class="dropdown-toggle user" href="{:U('game/index')}"><img src="__TMPL__/Public/simpleboot/img/headicon.png" class="headicon"/>{$user.user_nicename}</a>
+	            <else/>
+	            <a class="dropdown-toggle user" href="{:U('game/index')}"><img src="{:sp_get_user_avatar_url($user['avatar'])}" class="headicon"/>{$user.user_nicename}</a>
+	            </if>
+	        <else/>
+	            <!--a class="dropdown-toggle user" href="{:U('Game/index/index')}">
+	           		<img src="__TMPL__/Public/simpleboot/img/headicon.png" class="headicon"/>登录
+	            </a-->
+	        </if>
+		</ul>
+    </div>
+  </div>
+</div>

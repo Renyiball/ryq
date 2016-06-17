@@ -1,0 +1,67 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Currency/index')}">每日登录</a></li>
+     <li><a href="{:U('Currency/guess')}">每周猜球</a></li>
+     <li><a href="{:U('Currency/record')}">发放记录</a></li>
+     <li class="active"><a>球币发放</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Currency/grant_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>用户ID:</td>
+              <td><input type="text" class="input" name="userid" maxlength="8" required="required" value=""></td>
+            </tr>
+            <tr>
+              <td>发放原因:</td>
+              <td>
+              	<select name="description" >  
+    						<option value='0'>请选择</option> 
+		        		<foreach name="configs" item="config">
+			        			<option value="{$config.typeID}">{$config.typeName}</option>
+		            </foreach>
+               </select>
+              </td>
+            </tr>
+            <tr>
+              <td>订单ID:</td>
+              <td><input type="text" class="input" name="shopid" value="" required="required"></td>
+            </tr>
+            <tr>
+              <td>发放金额:</td>
+              <td><input type="text" class="input" name="value" value="" maxlength="4" required="required"></td>
+            </tr> 
+            <tr>
+              <td>发放倍数:</td>
+              <td>
+              	<select name="multiple" >   
+    					<option value='1'>一倍</option>
+    					<option value='2'>二倍</option>
+    					<option value='3'>三倍</option>
+    					<option value='4'>四倍</option>
+    					<option value='5'>五倍</option>
+    					<option value='6'>六倍</option>
+    					<option value='7'>七倍</option>
+    					<option value='8'>八倍</option>
+    					<option value='9'>九倍</option>
+               </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('shop/index')}">商品列表</a></li>
+     <li><a href="{:U('shop/add')}">添加商品</a></li>
+     <li class="active"><a>修改商品</a></li>
+     <li><a href="{:U('shop/logistics')}">库存导入</a></li>
+  </ul>
+<script type="application/javascript">
+  	var currentShowCity=0;
+$(document).ready(function(){
+   $("#province").change(function(){
+   $("#province option").each(function(i,o){
+   if($(this).attr("selected"))
+   {
+  
+   $(".xssize").hide();
+   $(".xssize").eq(i).show();
+   $(".ljsize").hide();
+   $(".ljsize").eq(i).show();
+   currentShowCity=i;
+   }
+   });
+   });
+   $("#province").change();
+});
+function getSelectValue(){
+alert("1级="+$("#province").val());
+  
+$(".xssize").each(function(i,o){
+                    
+ if(i == currentShowCity){
+alert("2级="+$(".xssize").eq(i).val());
+ }
+   });
+   $(".ljsize").each(function(i,o){
+                    
+ if(i == currentShowCity){
+alert("2级="+$(".ljsize").eq(i).val());
+ }
+   });
+}
+  </script>
+  <div class="common-form">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 130px;">商品ID</td>
+              <td><input type="text" class="input" name="item_Desc" id="action" value="{$type.id}" readonly="readonly">
+        			<button type="button" class="btn" onclick="javascript:history.go(-1);" style="margin-left: 58px;margin-top: -14px;">返回</button>
+              </td>
+            </tr>
+            <tr>
+              <td>商品名称</td>
+              <td>
+    					<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/edit_post')}">
+              	<input type="text" class="input" name="item_Desc" id="action" value="{$type.itemDesc}">
+		             <input type="hidden" name="item_id" value="{$type.id}" />
+        			  <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">保存</button>
+             	</form>
+              </td>
+            </tr>
+							<if condition="$type['item_type_d']">
+		            <tr>
+		              <td>活动商品</td>
+		              <td>{$activity.type_text}</td>
+		            </tr>
+							</if>
+            <tr>
+              <td style="width: 130px;">所属分类</td>
+              <td>
+									<table>
+										<if condition="$maxclass['type_text']">
+												<tr>
+													<td><font color="red"><b>特许分类 ：</b></font>{$maxclass['type_text']}</td>
+													<td><font color="red"><b>特许分类ID：</b></font>{$maxclass['typeid']}</td>
+												</tr>
+										<else />
+													<tr>
+																<td colspan="2">
+																<font color="red"><b>未分配特许分类。</b></font>
+																</td>
+													</tr>
+										</if>
+										<if condition="$brandclass['type_text']">
+												<tr>
+													<td><font color="green"><b>品牌分类 ：</b></font>{$brandclass['type_text']}</td>
+													<td><font color="green"><b>品牌分类ID：</b></font>{$brandclass['typeid']}</td>
+												</tr>
+										<else />
+													<tr>
+																<td colspan="2">
+																<font color="green"><b>未分配品牌分类。</b></font>
+																</td>
+													</tr>
+										</if>
+										<if condition="$oneclass['type_text']">
+												<tr>
+													<td><font color="blue"><b>一级分类 ：</b></font>{$oneclass['type_text']}</td>
+													<td><font color="blue"><b>一级分类ID：</b></font>{$oneclass['typeid']}</td>
+												</tr>
+										<else />
+													<tr>
+																<td colspan="2">
+													<font color="blue"><b>未分配一级分类。</b></font>
+																</td>
+													</tr>
+										</if>
+										<if condition="$twoclass['type_text']">
+												<tr>
+													<td><font color="blue"><b>二级分类 ：</b></font>{$twoclass['type_text']}</td>
+													<td><font color="blue"><b>二级分类ID：</b></font>{$twoclass['typeid']}</td>
+												</tr>
+										<else />
+													<tr>
+																<td colspan="2">
+													<font color="blue"><b>未分配二级分类。</b></font>
+																</td>
+													</tr>
+										</if>
+									</table>
+              </td>
+            </tr>
+								<php>
+										for($y=0;$y<count($property);$y++){
+											for($e=0;$e<count($price);$e++){
+												if($price[$e]['relatedID'] == $property[$y][id]){
+														$pamount[$e] = $price[$e]['amount'];
+														$prepeat[$e] = $price[$e]['repeatType'];
+												}
+											}
+										}
+										$amount=implode(array_merge(array_unique($pamount)));
+										$repeat=implode(array_merge(array_unique($prepeat)));
+										$pamounts = count(array_merge(array_unique($pamount)));
+										$prepeats = count(array_merge(array_unique($prepeat)));
+								</php>
+								<if condition="$pamounts eq 1 && $prepeats eq 1">
+              <tr>
+              	<td>例：打六折、</td>
+              	<td>—————价格———————————折扣———————操作</td>
+              </tr>
+            <tr>
+              	<td>折扣价框填写60</td>
+              	<td>
+									<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/edit_amountrepeat')}">
+									<input style="width:144px;" type="text" class="input" name="pric_amount" value="{$amount}">
+									<input style="width:144px;" type="text" class="input" name="pric_repeatType" value="{$repeat}">
+									<input type="hidden" name="type_id" value="{$type.id}" />
+									<button type="submit" class="btn btn-primary btn_submit J_ajax_submit_btn">修改</button>
+									</form>
+              	</td>
+            </tr>
+								<else />
+									<tr>
+										<td></td>
+										<td>价格或折扣不同。不可批量调整价格和折扣</td>
+									</tr>
+								</if>
+              <tr>
+              	<td>颜色—显示码—丽晶码</td>
+              	<td>——价格————折扣————库存—————货号————操作———例：打八五折、折扣价框填写85</td>
+              </tr>
+	        <foreach name="property" item="prope">
+	              <tr>
+		              <td>{$prope.itemColor} — {$prope.itemSize} — {$prope.store_size}</td>
+		              <td>
+<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/edit_post')}">
+	<foreach name="price" item="pric">
+		<if condition="$pric['relatedID'] eq $prope[id]">
+			<input style="width: 70px;" type="text" class="input" name="pric_amount" id="action" value="{$pric.amount}">
+			<input style="width: 40px;" type="text" class="input" name="pric_repeatType" id="action" value="{$pric.repeatType}">
+			<input type="hidden" name="pric_id" value="{$pric.id}" />
+		</if>
+	</foreach>
+	<input style="width: 50px;" type="text" class="input" name="prope_existing" id="action" value="{$prope.originalHeld}">
+	<input style="width: 84px;" type="text" class="input" name="prope_coding" id="action" value="{$prope.extraClass}">
+	<input type="hidden" name="prope_id" value="{$prope.id}" />
+	<button type="submit" class="btn btn-primary btn_submit J_ajax_submit_btn">修改</button>
+	<if condition="$roleid eq 1">
+		<a href="{:U('shop/delete_property',array('id'=>$prope['id']))}" class="btn J_ajax_dialog_btn" data-msg="您确定要删除此商品吗？">删除</a>
+	</if>
+</form>
+		              </td>
+	              </tr>
+        	</foreach>
+              <tr>
+              	<td>新增商品属性</td>
+              	<td>
+    					<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/addtype_post')}">
+		             <input type="hidden" name="item_id" value="{$type.id}" />
+									<select name="color"  style="width: 80px; "> 
+														<option value="颜色">颜色</option>          
+						        		<foreach name="itemColor" item="vo">
+				                	<if condition="$vo.parent_type_text == 颜色">
+							    					<option name="color" value='{$vo.type_text}'>{$vo.type_text}</option>
+					                </if>
+						            </foreach>
+									</select>
+              <select  id="province"  name="type" style="width: 80px;">
+	    					<option value="0">请选择</option>
+	    					<option value="1">球鞋码</option>
+	    					<option value="2">球服码</option>
+	    					<option value="3">配件码</option>
+              </select>
+						<select class="xssize" style="width: 80px;"> 
+    					<option value="0">显示码</option>
+            </select>
+						<select class="xssize" name="xsxsize"  style="width: 80px;"> 
+									<option value="0">鞋码</option>           
+		        		<foreach name="itemSize" item="vo">
+                	<if condition="$vo.parent_type_text == 鞋码  && $vo.type_text egt 20">
+			    					<option value='{$vo.type_text}'>{$vo.type_text}</option>
+	                </if>
+		            </foreach>
+						</select>
+						<select class="xssize" name="xsfsize"  style="width: 80px;"> 
+									<option value="0">衣服</option>           
+		        		<foreach name="itemSize" item="vo">
+                	<if condition="$vo.parent_type_text == 衣服码">
+			    					<option value='{$vo.type_text}'>{$vo.type_text}</option>
+	                </if>
+		            </foreach>
+						</select>
+						<select class="xssize" name="xspsize"  style="width: 80px;"> 
+									<option value="0">配件</option>           
+		        		<foreach name="itemSize" item="vo">
+                	<if condition="$vo.parent_type_text == 配件码">
+			    					<option value='{$vo.type_text}'>{$vo.type_text}</option>
+	                </if>
+		            </foreach>
+						</select>
+						
+						<select class="ljsize" style="width: 80px;"> 
+    					<option value="0">丽晶码</option>
+            </select>
+						<select class="ljsize" name="ljxsize"  style="width: 80px;"> 
+									<option value="0">鞋码</option>           
+		        		<foreach name="itemSize" item="vo">
+                	<if condition="$vo.parent_type_text == 鞋码">
+				    					<option value='{$vo.type_text}'>{$vo.type_text}</option>
+	                </if>
+		            </foreach>
+						</select>
+						<select class="ljsize" name="ljfsize"  style="width: 80px;"> 
+									<option value="0">衣服</option>           
+		        		<foreach name="itemSize" item="vo">
+                	<if condition="$vo.parent_type_text == 衣服码">
+			    					<option value='{$vo.type_text}'>{$vo.type_text}</option>
+	                </if>
+		            </foreach>
+						</select>
+						<select class="ljsize" name="ljpsize"  style="width: 80px;"> 
+									<option value="0">配件</option>           
+		        		<foreach name="itemSize" item="vo">
+                	<if condition="$vo.parent_type_text == 配件码">
+			    					<option value='{$vo.type_text}'>{$vo.type_text}</option>
+	                </if>
+		            </foreach>
+						</select>
+		              	<input style="width: 80px;" type="text" class="input" name="pric_amount" placeholder='价格'>
+		              	<input style="width: 80px;" type="text" class="input" name="prope_existing" placeholder='库存'>
+		              	<input style="width: 80px;" type="text" class="input" name="prope_coding" placeholder='货号'>
+        						<button type="submit" class="btn btn-primary btn_submit J_ajax_submit_btn">增加</button>
+    					</form>
+              	</td>
+              </tr>
+            <tr>
+              <td>推送:启用<input type="checkbox" name="OpenPush"<if condition="$type['push']">checked value="1"</if> style="margin-top: -2px;"/></td>
+              <td>
+							<div id="Push" <if condition="!$type['push']">style="display:none"</if>>
+							<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/push')}">
+		            <input type="hidden" name="item_id" value="{$type.id}" />
+              	<input type="text" class="input" name="push_title" placeholder="请填写推送标题" style="width: 144px;">
+              	<input type="text" class="input" name="push_content" placeholder="请填写推送内容" style="width: 144px;">
+        				<if condition="!$type['push']">
+        					<button type="submit" class="btn btn-primary btn_submit J_ajax_submit_btn">推送</button>
+        				</if>
+    					</form>
+							</div>
+              </td>
+            </tr>
+            <!--tr>
+              <td>商品介绍:</td>
+              <td><textarea name="description" rows="5" cols="57">{$type.extraDesc}</textarea></td>
+            </tr-->    
+            <tr>
+              <td>列表图像：</td>
+              <td>
+					      <div style="width: 440px;">
+				        <foreach name="smeta" item="vo">
+		        			<if condition="$vo['subtype'] eq 100">
+													<img src="{$imgtituan}{$vo.filepath}{$vo.filename}" name="{$imgtituan}{$vo.filepath}{$vo.filename}" title="双击查看"height="45" ondblclick="image_priview(this.name);" >
+													<a href="{:U('shop/delete_images',array('id'=>$vo['id']))}" class="btn J_ajax_dialog_btn" data-msg="您确定要删除此商品图像吗？" style="float: right;margin-top: 7px;">删除图片</a>
+		        			</if>
+				        </foreach>
+				        </div>
+              </td>
+			  			</td>
+            </tr>
+            <tr>
+              <td>商品细节：</td>
+              <td>
+		        <ul class="picList unstyled">
+							<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/order_img')}">
+				        <foreach name="smeta" item="vo">
+		        			<if condition="$vo['subtype'] lt 100">
+						        <li style="width: 440px;">
+												<input type="hidden" name="imgid" value="{$vo.id}" />
+												<label style="float: left;margin-top: 10px;margin-right: 15px;">
+													<input name="cover" type="radio" value="{$vo.id}" style="margin-top: -4px;"/>设为封面
+												</label>
+									       排序：<input type="text" name="order[{$vo.id}]" value="{$vo.subtype}" class="input input-order" maxlength="2"style="margin-bottom: 0px;margin-right: 20px;">
+							        	<img src="{$imgtituan}{$vo.filepath}{$vo.filename}" name="{$imgtituan}{$vo.filepath}{$vo.filename}" title="双击查看"height="45" width="45" ondblclick="image_priview(this.name);" >
+												<a href="{:U('shop/delete_images',array('id'=>$vo['id']))}" class="btn J_ajax_dialog_btn" data-msg="您确定要删除此商品图像吗？" style="float: right;">删除图片</a>
+						        </li>
+		        			</if>
+				        </foreach>
+			        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">提交</button>
+							细节显示顺序：(首图为10,以此类推)
+							</form>
+		        </ul>
+			  </td>
+            </tr>
+            <tr>
+              <td>商品详情：</td>
+              <td>
+		        <ul class="picList unstyled">
+							<form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/order_img')}">
+				        <foreach name="smeta" item="vo">
+		        			<if condition="$vo['subtype'] gt 299">
+						        <li style="width: 440px;">
+												<input type="hidden" name="imgid" value="{$vo.id}" />
+									       排序：<input type="text" name="order[{$vo.id}]" value="{$vo.subtype}" class="input input-order" maxlength="3"style="margin-bottom: 0px;margin-right: 20px;">
+							        	<img src="{$imgtituan}{$vo.filepath}{$vo.filename}" name="{$imgtituan}{$vo.filepath}{$vo.filename}" title="双击查看"height="45" width="45" ondblclick="image_priview(this.name);" >
+												<a href="{:U('shop/delete_images',array('id'=>$vo['id']))}" class="btn J_ajax_dialog_btn" data-msg="您确定要删除此商品图像吗？" style="float: right;">删除图片</a>
+						        </li>
+		        			</if>
+				        </foreach>
+			        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">提交</button>
+							详情显示顺序：(首图为300,以此类推)
+							</form>
+		        </ul>
+			  </td>
+            </tr>
+            
+            <tr>
+              <td>添加图片：</td>
+              <td>
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/img_post')}">
+				<label style="float: left;margin-top: 5px;margin-right: 15px;">
+					<input name="shoptype" type="radio" value="20" style="margin-top: -4px;"/>商品细节
+				</label>
+				<label style="float: left;margin-top: 5px;margin-right: 15px;">
+					<input name="shoptype" type="radio" value="300" style="margin-top: -4px;"/>商品详情
+				</label>
+    <input type="hidden" name="typeid" value="{$type.id}" />
+				<fieldset class="blue pad-10">
+		        <ul id="photos" class="picList unstyled"></ul>
+				</fieldset>
+				<a href="javascript:;" onclick="javascript:flashupload('albums_images', '图片上传','photos',change_images,'10,gif|jpg|jpeg|png|bmp,0','','','')" class="btn">增加图片 </a>
+    		<button type="submit" class="btn btn-primary btn_submit J_ajax_submit_btn">保存</button>
+    </form>
+			  </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+<script>
+    window.onload=function(){
+        var OpenPush=document.getElementsByName("OpenPush");
+        var Push=document.getElementById("Push");
+        for(var i=0;i<OpenPush.length;i++){
+            OpenPush[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<OpenPush.length;n++){
+                    if(OpenPush[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    Push.style.display="none";
+                }else{
+                    Push.style.display="";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

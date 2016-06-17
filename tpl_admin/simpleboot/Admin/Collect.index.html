@@ -1,0 +1,76 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('Collect/index')}">商品集列表</a></li>
+     <li><a href="{:U('Collect/add')}">添加商品集</a></li>
+  </ul>
+  <form class="form-horizontal J_ajaxForm" action="{:U('Collect/showorders')}" method="post">
+   <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="50">ID</th>
+            <th>分类ID</th>
+            <th>说明</th>
+            <th>商品列表</th>
+            <th width="120">修改时间</th>
+            <th width="110">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="lists" item="vo">
+	          <tr>
+	            <td>{$vo.id}</td>
+	            <td>{$vo.groupid}</td>
+	            <td>{$vo.description}</td>
+	            <td>
+	    <php>
+			$sids = explode(",",$vo['itemid_list']);
+				for($t=0;$t<count($sids);$t++){
+					for($i=0;$i<count($images);$i++){
+						if($sids[$t] == $images[$i]['relatedID']){
+							$filepath = $images[$i]['filepath'];
+							$filename = $images[$i]['filename'];
+							echo '<img src="'.$imgtituan.$filepath.$filename.'" name="'.$imgtituan.$filepath.$filename.'" title="双击查看" height="40"ondblclick="image_priview(this.name);" >';
+						}
+					}
+				}
+	    </php>
+	            </td>
+	            <td>{$vo.expiredate}</td>
+	            <td>
+								<if condition="$vo['status'] eq 0">
+									<a href="{:U('Collect/open',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要启用此集合吗？"style="color: #FF0000;"><b>已停用</b></a>
+								<else />
+									<a href="{:U('Collect/close',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要停用此集合吗？">已启用 </a>
+								</if>|
+								<a href="{:U('Collect/edit',array('id'=>$vo['id']))}">修改</a>
+							<if condition="$roleid eq 1">
+								 | <a class="J_ajax_del" href="{:U('Collect/delete',array('id'=>$vo['id']))}">删除</a>
+        			</if>
+	            </td>
+	          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="50">ID</th>
+            <th>分类ID</th>
+            <th>说明</th>
+            <th>商品列表</th>
+            <th width="120">修改时间</th>
+            <th width="110">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

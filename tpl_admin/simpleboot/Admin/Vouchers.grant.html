@@ -1,0 +1,94 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Vouchers/index')}">代金卷列表</a></li>
+     <li><a href="{:U('Vouchers/add')}">添加代金卷</a></li>
+     <li class="active"><a>发放代金卷</a></li>
+  </ul>
+  		<form class="well form-search" method="post" action="{:U('Vouchers/grant')}" name="formadd">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+						用户ID：
+						<input type="text" name="userid" value="{$userid}">
+						<input type="submit" class="btn btn-primary" name="search" value="查看" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+						<if condition="$infoid eq 0">
+							<input type="hidden" name="infoid" value="{$info}" />
+						</if>
+						<if condition="$info eq 0">
+							<input type="hidden" name="infoid" value="{$infoid}" />
+						</if>
+		</form>
+  <form class="form-horizontal J_ajaxForm" method="post"action="{:U('Vouchers/grant_post')}" >
+    <div class="table_list">
+		<div class="p10">
+	      	<div class="pages">
+	      		{$Page}
+	        	<button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">发放代金卷</button>
+			</div>
+		</div>
+						<input type="hidden" name="userid" value="{$userid}">
+						<if condition="$infoid eq 0">
+							<input type="hidden" name="infoid" value="{$info}" />
+						</if>
+						<if condition="$info eq 0">
+							<input type="hidden" name="infoid" value="{$infoid}" />
+						</if>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="40">ID</th>
+            <th>代金卷名称</th>
+            <th>代金卷描述</th>
+            <th width="80">代金卷面值</th>
+            <th width="70">可用倍数</th>
+            <th width="130">有效期</th>
+            <th width="110">管理操作</th>
+          </tr>
+        </thead>
+        <foreach name="banner" item="vo">
+        	<tr>
+				<td>{$vo.coupon_id}</td>
+				<td>{$vo.coupon_name}</td>
+				<td>{$vo.enable_text}</td>
+				<td>{$vo.coupon_amount|number_format=2}￥</td>
+				<td>{$vo.enable_times}</td>
+				<td>{$vo.expire}</td>
+				<td>
+					<if condition="$roleid eq 1">
+						<a class="J_ajax_del" href="{:U('Vouchers/deletegrant',array('id'=>$vo['coupon_id']))}">删除</a>
+					<else />
+						权限不足、不可操作
+        			</if>
+				</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="40">ID</th>
+            <th>代金卷名称</th>
+            <th>代金卷描述</th>
+            <th width="80">代金卷面值</th>
+            <th width="70">可用倍数</th>
+            <th width="130">有效期</th>
+            <th width="110">管理操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page}
+        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">发放代金卷</button></div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+
+</body>
+</html>

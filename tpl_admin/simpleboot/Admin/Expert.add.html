@@ -1,0 +1,230 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('expert/index')}">比赛列表</a></li>
+     <li class="active"><a href="{:U('expert/add')}">添加比赛</a></li>
+  </ul>
+    <php>
+  	$j=0;$main_typeid =$temp =  array();
+	for ($i = 0;$i<count($teams);$i++) {
+		if($teams[$i]["status"] == 100){
+			$typeid = $teams[$i]["teamtype"];
+			$main_typeid[$j] = $typeid;
+			$j++;
+		}
+	}
+</php>
+<script language="JavaScript" type="text/javascript">
+<php>
+echo 'var twoclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($teams);$i++) {
+			if($teams[$i]["teamtype"] == $main_typeid[$j] && $teams[$i]["constid"] != 0 && $teams[$i]["teamdesc"] != '球队分类'){
+				if($teams[$i]["extradesc"] == ''){ $teams[$i]["extradesc"]='未分组';}
+				$teamsname =  $teams[$i]["extradesc"].'---'.$teams[$i]["teamname"];
+				echo '"'.preg_replace('/\r|\n/', '', $teamsname).'",';
+			}
+		}
+		echo '],';
+	}
+	echo '];var threeclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($teams);$i++) {
+			if($teams[$i]["teamtype"] == $main_typeid[$j] && $teams[$i]["constid"] != 0 && $teams[$i]["teamdesc"] != '球队分类'){
+				$teamsid = $teams[$i]["constid"];
+				echo '"'.preg_replace('/\r|\n/', '', $teamsid).'",';
+			}
+		}
+		echo '],';
+	}
+	echo '];';
+</php>
+function gettwo(){
+	var sltone=document.formadd.oneclass;
+	var slttwo1=document.formadd.twoclass1;
+	var slttwo2=document.formadd.twoclass2;
+	var sltthree=document.formadd.threeclass;
+	var Onetwo=twoclass[sltone.selectedIndex-1];
+	var Twothree=threeclass[sltone.selectedIndex-1];
+	slttwo1.length=1;
+	slttwo2.length=1;
+	for(var i=0;i<Onetwo.length;i++){
+	slttwo1[i+1]=new Option(Onetwo[i],Twothree[i]);
+	}
+	for(var i=0;i<Onetwo.length;i++){
+	slttwo2[i+1]=new Option(Onetwo[i],Twothree[i]);
+	}
+}
+</script>
+<style>
+input .danxuan{ width:14px; height:14px;float:left;}
+span .text{ margin-right: 30px;}
+.radio {margin-top: 5px;}
+</style>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('expert/add_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 120px;">赛事类型:</td>
+              <td>
+              	<select name="oneclass" onChange="gettwo()">
+				<option value="0">----请选择分类----</option>
+					<foreach name="teams" item="vo">
+						<if condition="$vo['status'] eq 100">
+				        	<option value="{$vo.teamtype}"><if condition="$vo['fullname'] neq ''">{$vo.fullname}<else />{$vo.teamname}</if></option>
+		        		</if>
+                	</foreach>
+               </select>
+            </tr>
+            <tr>
+              <td>对战球队:</td>
+              <td>
+              	<select name="twoclass1" style="width: 160px;">
+					<option value="0">----请选择分类----</option>
+               	</select>
+              	<select name="twoclass2" style="width: 160px;">
+					<option value="0">----请选择分类----</option>
+               	</select>
+              </td>
+            </tr>
+            <tr>
+              <td>比赛类型:</td>
+              <td>
+	          	<span class="switch_list cc">
+	        		<foreach name="type" item="vo">
+	        			<if condition="$vo['id'] eq 99">
+					<label class="radio"><input type="radio" name="oneclasstype" value="{$vo.id}"  onclick="oneclassround.style.display='block'"checked><span>{$vo.name}</span></label>
+		        		<else />
+					<label class="radio"><input type="radio" name="oneclasstype" value="{$vo.id}" onclick="oneclassround.style.display='none'"><span>{$vo.name}</span></label>
+	        			</if>
+	                </foreach>
+				</span>
+              	<select name="oneclassround">
+					<option value="00">----请选择轮次----</option>
+              		<php>
+              			for($i = 1; $i <= 50; $i++){
+              				if($i<10){
+              				echo '<option value="0'.$i.'">第0'.$i.'轮</option>';
+              				}else{
+              				echo '<option value="'.$i.'">第'.$i.'轮</option>';
+              				}
+              			}
+              		</php>
+               	</select>
+              </td>
+            </tr>
+            <tr>
+              <td>竞猜赔率:</td>
+              <td>
+              	<input type="text" class="input" name="odds_w" value="1.5" style="width: 92px;">
+              	<input type="text" class="input" name="odds_d" value="1.6" style="width: 91px;">
+              	<input type="text" class="input" name="odds_l" value="1.5" style="width: 91px;">
+              </td>
+            </tr>
+            <tr>
+              <td>综合指数:启用<input type="checkbox" name="Opencom" value="综合指数"  style="margin-top: -2px;"/></td>
+              <td>
+							<div id="Complex" style="display:none">
+              	<input type="text" class="input" name="complex_w" value="1.5" style="width: 92px;">
+              	<input type="text" class="input" name="complex_d" value="1.6" style="width: 91px;">
+              	<input type="text" class="input" name="complex_l" value="1.5" style="width: 91px;">
+							</div>
+              </td>
+            </tr>
+            <tr>
+              <td>欧洲指数:启用<input type="checkbox" name="Openeur" value="欧洲指数"  style="margin-top: -2px;"/></td>
+              <td>
+							<div id="Europe" style="display:none">
+              	<input type="text" class="input" name="europe_w" value="1.5" style="width: 92px;">
+              	<input type="text" class="input" name="europe_d" value="1.6" style="width: 91px;">
+              	<input type="text" class="input" name="europe_l" value="1.5" style="width: 91px;">
+							</div>
+              </td>
+            </tr>
+            <tr>
+              <td>亚洲指数:启用<input type="checkbox" name="Openasi" value="亚洲指数"  style="margin-top: -2px;"/></td>
+              <td>
+							<div id="Asia" style="display:none">
+              	<input type="text" class="input" name="asia_w" value="1.5" style="width: 92px;">
+              	<input type="text" class="input" name="asia_d" value="1.6" style="width: 91px;">
+              	<input type="text" class="input" name="asia_l" value="1.5" style="width: 91px;">
+							</div>
+              </td>
+            </tr>
+            <tr>
+              <td>比赛时间:</td>
+		      <td><input type="text" name="start_time" value="{:date('Y-m-d H:i:s',strtotime('+7 day'))}" size="21" class="input J_datetime"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+    window.onload=function(){
+        var Opencom=document.getElementsByName("Opencom");
+        var Openeur=document.getElementsByName("Openeur");
+        var Openasi=document.getElementsByName("Openasi");
+        var Complex=document.getElementById("Complex");
+        var Europe=document.getElementById("Europe");
+        var Asia=document.getElementById("Asia");
+        for(var i=0;i<Opencom.length;i++){
+            Opencom[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<Opencom.length;n++){
+                    if(Opencom[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    Complex.style.display="none";
+                }else{
+                    Complex.style.display="";
+                }
+            }
+        }
+        for(var i=0;i<Openeur.length;i++){
+            Openeur[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<Openeur.length;n++){
+                    if(Openeur[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    Europe.style.display="none";
+                }else{
+                    Europe.style.display="";
+                }
+            }
+        }
+        for(var i=0;i<Openasi.length;i++){
+            Openasi[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<Openasi.length;n++){
+                    if(Openasi[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    Asia.style.display="none";
+                }else{
+                    Asia.style.display="";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

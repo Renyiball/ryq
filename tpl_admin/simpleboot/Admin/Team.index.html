@@ -1,0 +1,137 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('team/index')}">专业球队</a></li>
+     <li><a href="{:U('team/amateur')}">业余球队</a></li>
+     <li><a href="{:U('team/add')}">创建球队</a></li>
+  </ul>
+
+		<form class="well form-search" method="post" action="{:U('team/index')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">赛事类型： 
+	              	<select id="province"name="typeclass" class="normal_select index_select"> 
+							<option value="0">全部</option>
+		        		<foreach name="class" item="vo">
+		        			<if condition="$formpost['typeclass'] eq $vo['teamtype']">
+			        			<option selected="selected" value="{$vo.teamtype}"><if condition="$vo['fullname'] neq ''">{$vo.fullname}<else />{$vo.teamname}</if></option>
+			        			<else />
+			        			<option value="{$vo.teamtype}"><if condition="$vo['fullname'] neq ''">{$vo.fullname}<else />{$vo.teamname}</if></option>
+							</if>
+		                </foreach>
+	               	</select>
+						<input type="submit" class="btn btn-primary" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+   <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+			<th width="50"><button class="btn btn-primary btn-small J_articles_move" type="button">分组</button></th>
+            <th width="70">id</th>
+            <th width="200">所属赛事</th>
+            <th width="80">球队赛事id</th>
+            <th>球队名称</th>
+            <th>球队描述</th>
+            <th width="80">队伍分组</th>
+            <th width="60">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="teams" item="vo">
+	          <tr>
+				<td><input type="checkbox" class="J_check" data-yid="J_check_y" data-xid="J_check_x" name="ids[]" value="{$vo.id}" title="ID:{$vo.id}"></td>
+	            <td>{$vo.id}</td>
+        		<td>
+        		<foreach name="class" item="clas">
+        			<if condition=" $clas['teamtype'] eq $vo['teamtype']">
+	        			{$clas.teamname}
+        			</if>
+            </foreach>
+            </td>
+            	<td>{$vo.constid}</td>
+	            <td>{$vo.teamname}</td>
+	            <td>{$vo.teamdesc|msubstr=0,64}</td>
+	            <td>{$vo.extradesc}</td>
+	            <td>
+						<a href="{:U('team/edit',array('id'=>$vo['id'],'p'=>$_GET['p'],'t'=>'index','c'=>$formpost['typeclass']))}">修改</a>
+					<if condition="$roleid eq 1">
+						 |<a class="J_ajax_del" href="{:U('team/delete',array('id'=>$vo['id']))}">删除</a>
+        			</if>
+	            </td>
+	          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+			<th width="50"><button class="btn btn-primary btn-small J_articles_move" type="button">分组</button></th>
+            <th width="70">id</th>
+            <th width="200">所属赛事</th>
+            <th width="80">球队赛事id</th>
+            <th>球队名称</th>
+            <th>球队描述</th>
+            <th width="80">队伍分组</th>
+            <th width="60">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+	<script>
+		function refersh_window() {
+			var refersh_time = getCookie('refersh_time');
+			if (refersh_time == 1) {
+				window.location = "{:U('team/index',$formget)}";
+			}
+		}
+		setInterval(function() {
+			refersh_window();
+		}, 2000);
+		$(function() {
+			setCookie("refersh_time", 0);
+			Wind.use('ajaxForm', 'artDialog', 'iframeTools', function() {
+				//批量移动
+				$('.J_articles_move').click(
+						function(e) {
+							var str = 0;
+							var id = tag = '';
+							$("input[name='ids[]']").each(function() {
+								if ($(this).attr('checked')) {
+									str = 1;
+									id += tag + $(this).val();
+									tag = ',';
+								}
+							});
+							if (str == 0) {
+								art.dialog.through({
+									id : 'error',
+									icon : 'error',
+									content : '您没有勾选信息，无法进行操作！',
+									cancelVal : '关闭',
+									cancel : true
+								});
+								return false;
+							}
+							var $this = $(this);
+							art.dialog.open(
+							
+										"__ROOT__/index.php?g=admin&m=team&a=packet&ids="
+											+ id, {
+										title : "分组",
+										width : "40%"
+									});
+						});
+			});
+		});
+	</script>
+</body>
+</html>

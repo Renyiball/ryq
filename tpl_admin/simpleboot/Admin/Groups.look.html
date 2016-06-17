@@ -1,0 +1,116 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('groups/index')}">球队群组</a></li>
+     <li class="active"><a>球员列表</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('groups/look')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">
+						<input type="hidden" name="id" value="{$id}" />
+						<if condition="$count neq 0">
+							共有 {$count} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+   <div class="table_list">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th>ID：用户昵称</th>
+            <th>来源码</th>
+            <th width="80">球队数</th>
+            <th width="140">用户来源</th>
+            <th>密码</th>
+            <th>设备号</th>
+            <th width="80">出现次数</th>
+          </tr>
+        </thead>
+        <tbody>
+		        	<php>$v=$removed=0;</php>
+	      <foreach name="users" item="user">
+          <tr>
+   						<php>$r=0;</php>
+	        		<td class='emoji'>{$user.id}：
+									<php> 
+										$base64 = $user['nickname'];
+								 	echo $base64 = preg_replace_callback ( '/@E(.{6}==)/', function ($r) {
+													return base64_decode ( $r [1] );
+											}, $base64 );
+										$uid = $user['id'];
+									</php>
+	        		</td>
+	            <td>
+				    		<foreach name="usercodes" item="codes">
+								<if condition="$codes['relateduserid'] eq $user['id']">
+				        			{$codes.invite_me_code}
+				    		</if>
+				        </foreach>
+	            </td>
+	        		<foreach name="roles" item="role">
+							<php>
+								if($role['relatedUserID'] == $user['id']){
+									$rol[$r]=$role['relatedID'];
+									$r++;
+								}
+							</php>
+	            </foreach>
+	        		<td>
+								<a href="{:U('groups/team',array('userid'=>$user['id']))}">查看</a>：
+	            	<php>
+		            	echo count(array_unique($rol));
+		            	$rol=null;
+	            	</php>
+	        		</td>
+	        		<td>
+			    		<foreach name="type" item="typeid">
+								<if condition="$typeid['id'] eq substr($user['regSource'],0,2)">
+				        	{$typeid.name} — {$user.regSource}
+				        </if>
+			       	</foreach>
+	        		</td>
+	        		<td>{$user.password}</td>
+	        		<td>{$user.firstuniqueid}</td>
+            	<php>
+            		$firstuniqueid[$v] = $user['firstuniqueid'];
+            		$temp = $user['firstuniqueid'];
+            		$v++;
+            		if($first[$temp]>0){ $removed++;}
+            		echo "<td>第<b style='color: red;'>";
+	            	$first = array_count_values($firstuniqueid);
+	            	echo $first[$temp];
+            		echo "</b>次出现</td>";
+	            </php>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th>ID：用户昵称</th>
+            <th>来源码</th>
+            <th width="80">球队数</th>
+            <th width="140">用户来源</th>
+            <th>密码</th>
+            <th>设备号</th>
+            <th width="80">出现次数</th>
+          </tr>
+        </thead>
+      </table>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>			<php>
+					if($removed){
+						echo "共有".$removed."个账号注册设备重复!!! ";
+					}
+					echo " 当前球队码共有".($count-$removed)."个有效队员。";
+			</php>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript">
+$('.emoji').emoji();
+</script>
+</body>
+</html>

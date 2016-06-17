@@ -1,0 +1,63 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('home/plate')}">首页板块</a></li>
+     <li class="active"><a href="{:U('home/addplate')}">添加板块</a></li>
+     <li><a href="{:U('home/edit_app_default')}">修改默认</a></li>
+  </ul>
+
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 30px;} 
+.radio {margin-top: 5px;width:100%}
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('home/addplate_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>板块名称:</td>
+              <td><input type="text" class="input" name="title" value=""></td>
+            </tr>
+            <tr>
+              <td>板块描述:</td>
+              <td><input type="text" class="input" name="description" value=""></td>
+            </tr>
+            <tr>
+              <td>样式:</td>
+              <td>
+	          	<span class="switch_list cc">
+	        		<foreach name="style" item="vo">
+					<label class="radio"><input type="radio" name="style" value="{$vo.style}"><span>{$vo.style}</span></label>
+	                </foreach>
+				</span>
+					<label class="radio"><input type="radio" name="style"value="0" checked>
+						<span>其他样式请填写在下方</span>
+					</label>
+					<label>
+						<input type="text" class="input" name="styleelse" value="">
+					</label>
+              </td>
+            </tr>
+            <tr>
+              <td>是否启用:</td>
+              <td><select name="open" >   
+    					<option value='0'>不启用</option>
+    					<option value='100'>启用</option>
+               </select></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

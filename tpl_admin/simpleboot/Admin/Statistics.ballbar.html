@@ -1,0 +1,127 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Statistics/index')}">用户列表</a></li>
+     <li><a href="{:U('Statistics/source')}">来源统计</a></li>
+     <li><a href="{:U('Statistics/month')}">月注册数</a></li>
+     <li><a href="{:U('Statistics/day')}">日注册数</a></li>
+     <li class="active"><a>球帖列表</a></li>
+  </ul>
+
+		<form class="well form-search">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+		
+  <form class="form-horizontal J_ajaxForm" action="{:U('Statistics/index')}" method="post">
+    <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="50">ID</th>
+            <th width="120">所属板块</th>
+            <th width="150">标题</th>
+            <th>内容</th>
+            <th width="50">评论量</th>
+            <th width="50">点赞量</th>
+            <th width="200">ID：用户昵称</th>
+            <th width="120">发布时间</th>
+            <th width="100">操作</th>
+          </tr>
+        </thead>
+        <foreach name="lists" item="vo">
+        	<tr>
+				<td>{$vo.id}</td>
+		        <td>
+		        		<foreach name="class" item="clas">
+		        			<if condition="$vo['parentid'] eq $clas['id']">
+			        			{$clas.title}
+		        			</if>
+		            </foreach>
+		        </td>
+				<td>{$vo.title}</td>
+				<td>{$vo.description|msubstr=0,32}</td>
+				<php>$i=0;</php>
+            	<td>
+			        		<foreach name="parents" item="parent">
+			        			<if condition="$parent['parentid'] eq $vo['id']">
+				        			<php>$i++;</php>
+			        			</if>
+			            </foreach>
+		              <a href="{:U('ballbar/view',array('id'=>$vo['id']))}" title="查看评论">{$i}</a>
+            	</td>
+							<php>$j=0;</php>
+							<td>
+		        		<foreach name="favorites" item="favorite">
+		        			<if condition="$favorite['relatedid'] eq $vo['id']">
+			        			<php>$j++;</php>
+		        			</if>
+		            </foreach>
+		            <a href="{:U('ballbar/attention',array('id'=>$vo['id']))}" title="查看点赞">{$j}</a>
+            	</td>
+						<td>
+								{$vo.userid}：
+		        		<foreach name="users" item="user">
+		        			<if condition="$vo['userid'] eq $user['id']">
+			        			{$user.nickname}
+		        			</if>
+		            </foreach>
+		        </td>
+				<td>{$vo.created}</td>
+            	<td>
+								<if condition="$vo['status'] elt 100">
+									<a href="{:U('ballbar/openbar',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要开启此帖吗？"style="color: #FF0000;"><b>已关闭</b></a>
+								<else />
+									<a href="{:U('ballbar/closebar',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要关闭此帖吗？">未关闭 </a>
+								</if>
+								| <a href="{:U('ballbar/thumbs',array('id'=>$vo['id']))}" class="J_ajax_dialog_btn" data-msg="您确定要为帖子加十个赞吗？">加十个赞</a>
+            	</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="50">ID</th>
+            <th width="120">所属板块</th>
+            <th width="150">标题</th>
+            <th>内容</th>
+            <th width="50">评论量</th>
+            <th width="50">点赞量</th>
+            <th width="200">ID：用户昵称</th>
+            <th width="120">发布时间</th>
+            <th width="100">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+      <div class="form-actions">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+<script>
+setCookie('refersh_time', 0);
+function refersh_window() {
+    var refersh_time = getCookie('refersh_time');
+    if (refersh_time == 1) {
+        window.location.reload();
+    }
+}
+setInterval(function(){
+	refersh_window()
+}, 2000);
+
+</script>
+</body>
+</html>

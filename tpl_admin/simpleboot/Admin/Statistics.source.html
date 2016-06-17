@@ -1,0 +1,90 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Statistics/index')}">用户列表</a></li>
+     <li class="active"><a href="{:U('Statistics/source')}">来源统计</a></li>
+     <li><a href="{:U('Statistics/month')}">月注册数</a></li>
+     <li><a href="{:U('Statistics/day')}">日注册数</a></li>
+  </ul>
+    <!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+    <div id="main" style="height:450px;width: 800px;"></div>
+    <!-- ECharts单文件引入 -->
+    <script src="__ROOT__/statics/js/echarts.js"></script>
+    <script type="text/javascript">
+        // 路径配置
+        require.config({
+            paths: {
+                echarts: 'http://echarts.baidu.com/build/dist'
+            }
+        });
+        
+        // 使用
+        require(
+            [
+                'echarts',
+                'echarts/chart/bar'
+            ],
+            function (ec) {
+                // 基于准备好的dom，初始化echarts图表
+                var myChart = ec.init(document.getElementById('main')); 
+option = {
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+    legend: {
+        data:['手机号码', '微信登陆','QQ登陆']
+    },
+    toolbox: {
+        show : true
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    yAxis : [
+        {
+            type : 'category',
+            data : ['安卓客户端','苹果客户端','h5页面','微信公众平台','pc网站']
+        }
+    ],
+    series : [
+        {
+            name:'手机号码',
+            type:'bar',
+            stack: '总量',
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:[<php>for($i=0;$i<5;$i++){ echo$num[$i].',';}</php>]
+        },
+        {
+            name:'微信登陆',
+            type:'bar',
+            stack: '总量',
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:[<php>for($i=5;$i<10;$i++){ echo$num[$i].',';}</php>]
+        },
+        {
+            name:'QQ登陆',
+            type:'bar',
+            stack: '总量',
+            itemStyle : { normal: {label : {show: true, position: 'insideRight'}}},
+            data:[<php>for($i=10;$i<15;$i++){ echo$num[$i].',';}</php>]
+        }
+    ]
+};
+                    
+                // 为echarts对象加载数据 
+                myChart.setOption(option); 
+            }
+        );
+    </script>
+    
+</div>
+
+</body>
+</html>

@@ -1,0 +1,73 @@
+<admintpl file="header"/>
+<style>
+.home_info li em {
+float: left;
+width: 100px;
+font-style: normal;
+}
+li {
+list-style: none;
+}
+
+</style>
+</head>
+
+<body>
+<div class="wrap">
+  <div id="home_toptip"></div>
+  <h4 class="well">系统信息</h4>
+  <div class="home_info">
+    <ul>
+      <volist name="server_info" id="vo">
+        <li> <em>{$key}</em> <span>{$vo}</span> </li>
+      </volist>
+    </ul>
+  </div>
+  
+    <h4 class="well">本站数据</h4>
+   		<table class="table table-hover">
+  			<tr>
+    			<th>今日下单：</th>
+    			<th>未统计</th>
+    			<th>今日支付：</th>
+    			<th>未统计</th>
+    			<th>今日发货：</th>
+    			<th>未统计</th>
+    			<th>今日退款：</th>
+    			<th>未统计</th>
+    		</tr>
+  			<tr>
+    			<th>商品总数：</th>
+    			<th>未统计</th>
+    			<th>上架商品：</th>
+    			<th>未统计</th>
+    			<th>废弃商品：</th>
+    			<th>未统计</th>
+    			<th>下架商品：</th>
+    			<th>未统计</th>
+    		</tr>
+  			<tr>
+    			<th>用户总数：</th>
+    			<th>未统计</th>
+    			<th>今日新增：</th>
+    			<th>未统计</th>
+    			<th>七天新增：</th>
+    			<th>未统计</th>
+    			<th>本月新增：</th>
+    			<th>未统计</th>
+    		</tr>
+  			<tr>
+    			<th>帖子总数：</th>
+    			<th>未统计</th>
+    			<th>今日发帖：</th>
+    			<th>未统计</th>
+    			<th>今日反馈：</th>
+    			<th>未统计</th>
+    			<th>本月发帖：</th>
+    			<th>未统计</th>
+    		</tr>
+    	</table>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script> 
+</body>
+</html>

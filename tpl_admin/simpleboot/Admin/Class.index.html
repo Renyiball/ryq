@@ -1,0 +1,102 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('class/index')}">分类列表</a></li>
+     <li><a href="{:U('class/add')}">添加分类</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('class/index')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">分类类型： 
+	              	<select name="typeclass" class="normal_select index_select"> 
+			        		<option value="0">全部</option>
+		        		<foreach name="class" item="vo">
+		        			<if condition="$formpost['typeclass'] eq $vo['parent_typeid']">
+			        			<option selected="selected" value="{$vo.parent_typeid}">{$vo.parent_type_text}</option>
+			        			<else />
+			        			<option value="{$vo.parent_typeid}">{$vo.parent_type_text}</option>
+		        			</if>
+		                </foreach>
+	               	</select>
+						<input type="submit" class="btn btn-primary" name="search" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+      <div class="p10"><div class="pages"> {$Page} </div>
+  <form class="form-horizontal J_ajaxForm" action="{:U('class/index')}" method="post">
+    <div class="table_list">
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th width="60">分类ID</th>
+            <th>分类名称</th>
+            <th>分类类型</th>
+            <th>所属分类</th>
+            <th>分组ID</th>
+            <th>所属分组</th>
+            <th width="60">管理操作</th>
+          </tr>
+        </thead>
+        <foreach name="lists" item="vo">
+        	<tr>
+				<td>{$vo.id}</td>
+				<td>{$vo.typeid}</td>
+				<td>{$vo.type_text}</td>
+				<td>{$vo.groupid}</td>
+				<td>{$vo.group_text}</td>
+				<td>{$vo.parent_typeid}</td>
+				<td>{$vo.parent_type_text}</td>
+				<td>
+					<a href="{:U('class/edit',array('id'=>$vo['id'],'p'=>$_GET['p'],'c'=>$formpost['typeclass']))}">修改</a>
+					<if condition="$roleid eq 1">
+						 | <a class="J_ajax_del" href="{:U('class/delete',array('id'=>$vo['id']))}">删除</a> 
+        			</if>
+				</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th width="60">分类ID</th>
+            <th>分类名称</th>
+            <th>分类类型</th>
+            <th>所属分类</th>
+            <th>分组ID</th>
+            <th>所属分组</th>
+            <th width="60">管理操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+
+$(document).ready(function () {
+	Wind.css('treeTable');
+    Wind.use('treeTable', function () {
+        $("#menus-table").treeTable({
+            indent: 20
+        });
+    });
+});
+
+setInterval(function () {
+    var refersh_time = getCookie('refersh_time_admin_menu_index');
+    if (refersh_time == 1) {
+    	reloadPage(window);
+    }
+}, 1000);
+setCookie('refersh_time_admin_menu_index',0);
+
+</script>
+</body>
+</html>

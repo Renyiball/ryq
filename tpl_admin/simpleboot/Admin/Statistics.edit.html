@@ -1,0 +1,145 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Statistics/index')}">用户列表</a></li>
+     <li><a href="{:U('Statistics/source')}">来源统计</a></li>
+     <li><a href="{:U('Statistics/month')}">月注册数</a></li>
+     <li><a href="{:U('Statistics/day')}">日注册数</a></li>
+     <li class="active"><a>修改信息</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Statistics/edit_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td width="100">用户ID:</td>
+              <td><input type="text" class="input" name="userid" value="{$users.id}" readonly="readonly"></td>
+            </tr>
+            <tr>
+              <td>用户名:</td>
+              <td>
+              	<input type="text" class="input"  name="username" value="{$users.username}" maxlength="14">
+              </td>
+            </tr>
+            <tr>
+              <td>密码:</td>
+              <td>
+              	<input type="password" class="input" value="********" readonly="readonly">
+              </td>
+            </tr>
+            <tr>
+              <td>昵称:</td>
+              <td>
+              	<input type="text" class="input" name="nickname" value={$users.nickname}>
+              </td>
+            </tr>
+	        		<if condition="$userdetails">
+            <tr>
+              <td>姓名:</td>
+              <td><input type="hidden" class="input" name="uid" value="{$userdetails.id}">
+              	<input type="text" class="input" name="realname" value="{$userdetails.realname}" maxlength="7">
+              </td>
+            </tr>
+            <tr>
+              <td>性别:</td>
+              <td>
+	              	<select name="gender" class="normal_select">
+			        			<option <if condition="$userdetails['gender'] neq '男' && $userdetails['gender'] neq '女'"> selected="selected"</if>>请选择</option>
+			        			<option value="男" <if condition="$userdetails['gender'] eq '男'"> selected="selected"</if>>男</option>
+			        			<option value="女" <if condition="$userdetails['gender'] eq '女'"> selected="selected"</if>>女</option>
+	               	</select>
+              </td>
+            </tr>
+            <tr>
+              <td>生日:</td>
+              <td>
+              	<input type="text" class="J_date" name="dob" value="{$userdetails.dob}">
+              </td>
+            </tr>
+            <tr>
+              <td>年龄:</td>
+              <td>
+              	<input type="text" class="input" name="age" value="{$userdetails.age}" maxlength="2">
+              </td>
+            </tr>
+            <tr>
+              <td>身份证号:</td>
+              <td>
+              	<input type="text" class="input" name="personid" value="{$userdetails.personid}" maxlength="18">
+              </td>
+            </tr>
+            <tr>
+              <td>身高:(CM)</td>
+              <td>
+              	<input type="text" class="input" name="height" value="{$userdetails.height}" maxlength="3">
+              </td>
+            </tr>
+            <tr>
+              <td>体重:(KG)</td>
+              <td>
+              	<input type="text" class="input" name="weight" value="{$userdetails.weight}" maxlength="3">
+              </td>
+            </tr>
+	        		</if>
+	        		<if condition="$contacts">
+	            <tr>
+	              <td>地址:</td>
+	              <td><input type="hidden" class="input" name="cid" value="{$contacts.id}">
+	              	<input type="text" class="input" name="street1" value="{$contacts.street1}">
+	              </td>
+	            </tr>
+	            <tr>
+	              <td>电话:</td>
+	              <td>
+	              	<input type="text" class="input" name="telephone" value="{$contacts.telephone}">
+	              </td>
+	            </tr>
+	        		</if>
+	        		<if condition="$usercodes">
+            <tr>
+              <td>邀请码:</td>
+              <td>
+              	<input type="text" class="input" value="{$usercodes.my_invite_code}" readonly="readonly">
+              </td>
+            </tr>
+	        		</if>
+            <tr>
+              <td>设备号:</td>
+              <td>
+              	<input type="text" class="input" value="{$users.firstuniqueid}" readonly="readonly">
+              </td>
+            </tr>
+            <tr>
+              <td>注册日期:</td>
+              <td>
+              	<input type="text" class="input" value="{$users.created}" readonly="readonly">
+              </td>
+            </tr>
+						<tr>
+              <td>用户头像:</td>
+              <td>
+		        			<if condition="$image">
+	        					<img src="<if condition="$image['filepath']">{$imgtituan}{$image.filepath}{$image.filename}<else />{$image.filename}</if>" width="324">
+			        			<else />
+              			<input type="file" name="teamimg" accept="image/*" />
+		        			</if>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+			<input type="hidden" name="p" value="{$p}" />
+			<input type="hidden" name="c" value="{$c}" />
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">修改</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<admintpl file="footer"/>
+</body>
+</html>

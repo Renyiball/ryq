@@ -1,0 +1,37 @@
+<tc_include file="Public:head" />
+<body class="body-white">
+	<div class="container tc-main">
+		<div class="row">
+			<div class="span6 offset3">
+				<h2 class="text-center">裁判登录</h2>
+				<form class="form-horizontal J_ajaxForms" action="{:U('index/dologin')}" method="post">
+					<div class="control-group">
+						<label class="control-label" for="input_username">账号</label>
+						<div class="controls">
+							<input type="text" id="input_username" name="username" placeholder="请输入用户名" class="span3" required="required"maxlength="16">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="input_password">密码</label>
+						<div class="controls">
+							<input type="password" id="input_password" name="password" placeholder="请输入密码" class="span3" required="required"maxlength="16">
+						</div>
+					</div>
+					<div class="control-group">
+						<label class="control-label" for="input_repassword"></label>
+						<div class="controls">
+							<button class="btn btn-primary J_ajax_submit_btn" type="submit">登录</button>
+							<a class="btn btn-primary" style="margin-left: 25px;" href="admin/index.php">前往后台</a>
+							<a class="btn btn-primary" style="margin-left: 25px;" href="http://a.app.qq.com/o/simple.jsp?pkgname=net.tituan.app" target="_blank">APP下载</a>
+					</div>
+					</div>
+				</form>
+			<div class="span4 offset1">
+					<p>　　任意球是一款足球爱好者的应用平台，这里有各式各样的足球装备，包括各支著名球队的球服，精彩的比赛门票，相关赛事活动等信息，并提供球鞋，球袜，手套，护腿等运动装备等。</p>
+				</div>
+			</div>
+		</div>
+	</div>
+		<tc_include file="Public:footer" />
+</body>
+</html>

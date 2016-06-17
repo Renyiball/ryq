@@ -1,0 +1,114 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('amateur/index')}">比赛列表</a></li>
+     <li class="active"><a href="{:U('amateur/add')}">添加比赛</a></li>
+     <li><a href="{:U('amateur/old')}">比赛列表(旧)</a></li>
+  </ul>
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 30px;} 
+tr{height: 34px;}
+.radio {margin-top: 5px;}
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('amateur/add_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 120px;">赛事类型:</td>
+              <td><input type="hidden" name="constid" value="{$action.constid}">
+              		<input type="text" name="gname" value="{$action.game_name}" readonly="readonly"></td>
+            </tr> 
+            <tr>
+              <td>比赛类型:</td>
+              <td>
+              	<foreach name="type" item="vo">
+              		<if condition="$fpost['gtype'] eq $vo['id']">
+              			<input type="hidden" name="tid" value="{$vo.id}">
+				        		<input type="text" name="tname" value="{$vo.name}" readonly="readonly" <if condition="$fpost['gtype'] eq 99"> style="width: 146px;" </if>>
+               		</if>
+                </foreach>
+	        			<if condition="$fpost['gtype'] eq 99">
+              	<select name="round" style="width: 160px;">
+									<option value="00">----请选择轮次----</option>
+              		<php>
+              			for($i = 1; $i <= 50; $i++){
+              				if($i<10){
+              				echo '<option value="0'.$i.'">第0'.$i.'轮</option>';
+              				}else{
+              				echo '<option value="'.$i.'">第'.$i.'轮</option>';
+              				}
+              			}
+              		</php>
+               	</select>
+               </if>
+              </td>
+            </tr>
+            <tr>
+              <td>对战球队:</td>
+              <td>
+              	<select name="teamid1" style="width: 160px;">
+									<option value="0">----请选择球队----</option>
+									<foreach name="teams" item="vo">
+				        	<option value="{$vo.teamnumber}">{$vo.teamname}</option>
+                	</foreach>
+               	</select>
+              	<select name="teamid2" style="width: 160px;">
+									<option value="0">----请选择球队----</option>
+									<foreach name="teams" item="vo">
+				        	<option value="{$vo.teamnumber}">{$vo.teamname}</option>
+                	</foreach>
+               	</select>
+              </td>
+            </tr>
+            <tr>
+              <td>比赛时间:</td>
+		      <td><input type="text" name="start_time" value="{:date('Y-m-d H:00',strtotime('+7 day'))}" size="21" class="input J_datetime"></td>
+            </tr>
+            <!--<tr>
+              <td>启用竞猜<input type="checkbox" name="whether" value="0"  style="margin-top: -2px;"/></td>
+              <td>
+							<div id="divcon" style="display:none">
+		          	<input type="text" class="input" name="odds_w" value="1.5" style="width: 92px;">
+		          	<input type="text" class="input" name="odds_d" value="1.5" style="width: 91px;">
+		          	<input type="text" class="input" name="odds_l" value="1.5" style="width: 91px;">
+							</div>
+              </td>
+            </tr>-->
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+    window.onload=function(){
+        var whether=document.getElementsByName("whether");
+        var divcon=document.getElementById("divcon");
+        for(var i=0;i<whether.length;i++){
+            whether[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<whether.length;n++){
+                    if(whether[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    divcon.style.display="none";
+                }else{
+                    divcon.style.display="";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

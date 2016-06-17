@@ -1,0 +1,339 @@
+<admintpl file="apisheader"/>
+<title>商品详情</title>
+<body class="J_scroll_fixed" onselectstart="return true">
+<!--<form method="post" id="addcarpost" class="form-horizontal J_ajaxForm" action="{:U('Detail/addcar_post')}">-->
+<input type="hidden" name="userid" id="userid" value="{$userid}" />
+<input type="hidden" name="itemid" id="itemid" value="{$itemid}" />
+<div class="divOne" id="divOne" style="background-color:#FFFFFF;">
+<ul id="homeslider" class="unstyled">
+    <foreach name="images" item="img">
+        <if condition="$img['subtype'] lt 100">
+        	<li>
+				<img width='100%' src="{$imgtituan}{$img.filepath}{$img.filename}"/>
+			</li>
+		</if>
+    </foreach>
+</ul>
+</div>
+<div class="wrap J_check_wrap">
+    <div class="common-form">
+      <div class="table_list">
+      	<h4 style="color:#333433;">{$iteminfos.itemDesc}</h4>
+		<b style="font-size:30px;color:#FF0F2A;">￥{$price['amount']*$price['repeatType']/100} </b> ￥{$price.amount}
+      </div>
+    </div>
+</div>
+    <script type="text/javascript">
+    function toggle_div(obj)
+    {
+        var divs = document.getElementsByTagName('x');
+        for(var i=0;i<divs.length;i++){
+            (obj.id==divs[i].id)?divs[i].style.display="":divs[i].style.display="none";
+        }
+    }
+    </script>
+<div class="wrap J_check_wrap" style="margin-top:10px;">
+<h4>┃ 颜色</h4><hr>
+<ul class="dowebok">
+    <foreach name="attributes" item="color" key="k">
+	<li <if condition="count($attributes) eq 1"> class="color ccorrect" <else /> class="color" </if>>
+		<input type="radio" id="{$color.itemColor}"name="color" value="{$color.itemColor}" onclick='toggle_div(this)' data-labelauty="{$color.itemColor}" <if condition="count($attributes) eq 1">checked</if>>
+	</li>
+    </foreach>
+</ul>
+</div>
+<div class="wrap J_check_wrap">
+<h4>┃ 尺码</h4><hr>
+<ul class="dowebok">
+    <foreach name="attributes" item="size">
+    	<foreach name="size['itemSize']" item="asize" key="sk">
+	    	<foreach name="size['id']" item="aid" key="ik">
+	    		<if condition="$sk eq $ik">
+					<x id="{$size.itemColor}" <if condition="$sk eq 0 && count($attributes) eq 1"> class="size scorrect" <else /> class="size" </if>>
+						<input type="radio" name="size" value="{$aid}" data-labelauty="{$asize}" <if condition="$sk eq 0 && count($attributes) eq 1">checked</if>>
+					</x>
+				</if>
+	    	</foreach>
+    	</foreach>
+    </foreach>
+</div>
+<div class="wrap J_check_wrap" style="margin-bottom: 50px;">
+<div class="investment_f">
+  <div class="investment_title">
+
+    <div class="on"><h4>图文详情</h4></div>
+
+    <div class=""><h4>评价({:count($comments)})</h4></div>
+
+  </div>
+  <div class="investment_con">
+    <div class="investment_con_list" style="display: block;">
+
+    	<ul class="unstyled">
+    		<li>产品名称：<b>{$iteminfos.itemDesc}</b></li>
+    		<li>颜色分类：<foreach name="attributes" item="color"><b>{$color.itemColor}　</b></foreach></li>
+    		<li>货号：<foreach name="attributes" item="extra"><b>{$extra.extraClass}　</b></foreach></li>
+    		<li>品牌：<b>{$itemtypes.type_text}</b></li>
+    		<li>吊牌价：<b>{$price.amount}</b></li>
+    		<li>尺码：<foreach name="attributes" item="size"><foreach name="size['itemSize']" item="attr"><b>{$attr}　</b></foreach></foreach></li>
+    	</ul>
+		<div class="common-form">
+	        <foreach name="images" item="img">
+		        <if condition="$img['subtype'] gt 100">
+					<img width='100%' src="{$imgtituan}{$img.filepath}{$img.filename}" />
+				</if>
+	        </foreach>
+	    </div>
+    </div>
+    <div class="investment_con_list" style="display: none;">
+		<div class="common-form emoji"><hr>	
+			<php>	
+				foreach($comments as $com){
+					echo "<div style='float: left;width: 100%;'><div style='width: 100%;'><b style='color:#fece4d;'>";
+					for($i=0;$i<$com['starScore'];$i++){
+						echo "★";
+					}
+					echo "</b>";
+					foreach($users as $use){
+						if($com['userid'] == $use['id']){
+							echo "<p style='float: right;'>".preg_replace_callback ( '/@E(.{6}==)/', function ($b) {
+								return base64_decode ( $b [1] );
+							},$use['nickname'])." ".substr($com['modified'], 5, 11)."</p><br>";
+						}
+					}
+					echo "</div><div style='float: left;'>";
+					echo preg_replace_callback ( '/@E(.{6}==)/', function ($b) {
+								return base64_decode ( $b [1] );
+							},$com['commentText']);
+					foreach($useractions as$actions){
+						if($actions['parentID'] == $com['transid']){
+							echo "<p>颜色类型：";
+							foreach($uidetails as $uid){
+								if($uid['id'] == $actions['actionID']){
+									echo $uid['itemColor'];
+								}
+							}
+							echo "　　　尺码：";
+							foreach($uidetails as $uid){
+								if($uid['id'] == $actions['actionID']){
+									echo $uid['itemSize'];
+								}
+							}
+							echo "</p>";
+						}
+					}
+					echo "</div></div><hr>";
+				}
+			</php>
+	    </div>
+    </div>
+  </div>
+</div>
+<admintpl file="apisfooter"/>
+</div>
+<!--</form>-->
+<script src="__TMPL__assets/js/labelauty.js"></script>
+<script>
+var divOne=document.getElementById('divOne');
+divOne.style.height=divOne.offsetWidth+'px';
+
+$(function(){
+	$(':input').labelauty();
+});
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+$('.emoji').emoji();
+$(function() {
+	var demo1 = $("#homeslider").slippry({
+		transition: 'fade',
+		useCSS: true,
+		captions: false,
+		speed: 1000,
+		pause: 3000,
+		auto: true,
+		preload: 'visible'
+	});
+});
+	$(function() {
+	$(".color").on("click", function(){
+		$(this).addClass('ccorrect').siblings().removeClass("ccorrect");
+	});
+});
+	var index = 'color';
+    window.onload = function (){
+        var divs = document.getElementsByTagName ('color');
+        for ( var i = 0; i < divs.length; i++){
+            divs[i]._index = i;
+            divs[i].onclick = function (){
+                if (index > -1){
+                    divs[index].style.border = '';
+                }
+                this.style.border = 'ccorrect';
+                index = this._index;
+            }
+        }
+    }
+	$(function() {
+	$(".size").on("click", function(){
+		$(this).addClass('scorrect').siblings().removeClass("scorrect");
+	});
+});
+	var index = 'size';
+    window.onload = function (){
+        var divs = document.getElementsByTagName ('size');
+        for ( var i = 0; i < divs.length; i++){
+            divs[i]._index = i;
+            divs[i].onclick = function (){
+                if (index > -1){
+                    divs[index].style.border = '';
+                }
+                this.style.border = 'scorrect';
+                index = this._index;
+            }
+        }
+    }
+
+	$("#addcar").on("click", function(){
+		$userid = $("#userid").val();
+		$itemid = $("#itemid").val();
+		$color = $(".color.ccorrect input").val();
+		$size = $(".size.scorrect input").val();
+		
+		if ($color === undefined || $size === undefined) {
+			swal({
+				title: "请选中颜色和尺码！",
+				confirmButtonColor: "#FF0F2A",
+				confirmButtonText: "确认"
+			});
+		} else {
+			var $data = {
+				'userid':	$userid,
+				'itemid': 	$itemid,
+				'color': 	$color, 
+				'size': 	$size
+			};
+			
+			// alert($data["userid"] + ":" + $data["itemid"] + ":" + $data["color"] + ":" + $data["size"] );
+
+			$.post("{:U('Detail/addcar_post')}", $data, function(data, status) {
+				if (status == "success") {
+					swal({
+					  	title: data['data'],
+						text: "",
+						showCancelButton: false,
+						confirmButtonColor: "#FF0F2A",
+						confirmButtonText: "确认",
+						closeOnConfirm: false
+					  	//imageUrl: "images/thumbs-up.jpg"
+					});
+				} else {
+					swal({
+					  	title: data['data'],
+						text: "",
+						showCancelButton: false,
+						confirmButtonColor: "#FF0F2A",
+						confirmButtonText: "确认",
+						closeOnConfirm: false
+					  	//imageUrl: "images/thumbs-up.jpg"
+					});
+				}
+			});
+		}
+
+		
+	});
+
+	$("#scollect").on("click", function(){
+		$userid = $("#userid").val();
+		$itemid = $("#itemid").val();
+		$color = $(".color.ccorrect input").val();
+		$size = $(".size.scorrect input").val();
+		
+		if ($color === undefined || $size === undefined) {
+			swal({
+				title: "请选中颜色和尺码！",
+				confirmButtonColor: "#FF0F2A",
+				confirmButtonText: "确认"
+			});
+		} else {
+			var $data = {
+				'userid':	$userid,
+				'itemid': 	$itemid,
+				'color': 	$color, 
+				'size': 	$size
+			};
+			
+			// alert($data["userid"] + ":" + $data["itemid"] + ":" + $data["color"] + ":" + $data["size"] );
+
+			$.post("{:U('Detail/collect_post')}", $data, function(data, status) {
+				if (status == "success") {
+					swal({
+					  	title: data['data'],
+						text: "",
+						showCancelButton: false,
+						confirmButtonColor: "#FF0F2A",
+						confirmButtonText: "确认",
+						closeOnConfirm: false
+					  	//imageUrl: "images/thumbs-up.jpg"
+					});
+				} else {
+					swal({
+					  	title: data['data'],
+						text: "",
+						showCancelButton: false,
+						confirmButtonColor: "#FF0F2A",
+						confirmButtonText: "确认",
+						closeOnConfirm: false
+					  	//imageUrl: "images/thumbs-up.jpg"
+					});
+				}
+			});
+		}
+
+		
+	});
+
+
+	//ajax提交表单
+//	$("#addcar").click(function(){
+//        $.ajax({
+ //           type: "post",
+ //           url: "{:U('Detail/addcar_post')}",     
+ //           data: $("#addcarpost").serialize(),    
+ //           success: function(data) {
+ //               alert(data['data']);
+ //               window.history.go(0);
+ //              	window.location.href=data['referer'];
+ //           },
+ //           error: function(data) {
+ //               alert(data['data']);
+ //               window.history.go(0);
+ //              	window.location.href=data['referer'];
+ //           }
+ //       })
+ //  });
+
+	//ajax提交表单
+	//$("#scollect").click(function(){
+        //$.ajax({
+            //type: "post",
+            //url: "{:U('Detail/collect_post')}",     
+            //data: $("#addcarpost").serialize(),    
+            //success: function(data) {
+                //alert(data['data']);
+                //window.history.go(0);
+               	//window.location.href=data['referer'];
+            //},
+            //error: function(data) {
+                //alert(data['data']);
+                //window.history.go(0);
+               	//window.location.href=data['referer'];
+            //}
+        //})
+
+    //});
+	</script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li class="active"><a href="{:U('groups/index')}">球队群组</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('groups/index')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">球队ID：
+						<input type="text" name="teamid" value="{$formpost.teamid}"  style="width: 80px;">
+							球队简称：
+						<input type="text" name="teamname" value="{$formpost.teamname}"  style="width: 160px;">
+	           	创建时间：
+						<input type="text" name="start_time" value="{$formpost.start_time}" class="J_date" style="width: 80px;">~
+						<input type="text" name="end_time" value="{$formpost.end_time}" class="J_date" style="width: 80px;"> &nbsp; &nbsp;
+						<input type="submit" class="btn btn-primary" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+   <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="70">球队id</th>
+            <th>球队简称</th>
+            <th>球队全称</th>
+            <th>球队描述</th>
+            <th>队长ID：用户昵称</th>
+            <th width="60">球队人数</th>
+            <th width="120">创建时间</th>
+            <th width="60">查看球员</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="teams" item="vo">
+          <tr>
+          	<td>{$vo.id}</td>
+        		<td>{$vo.teamname}</td>
+            <td>{$vo.fullname}</td>
+	          <td>{$vo.teamdesc|msubstr=0,48}</td>
+            <php> $u=$uid=0;</php>
+            <td class='emoji'>
+						<foreach name="userroles" item="userrole">
+							<if condition="$userrole['relatedID'] eq $vo['id'] && $userrole['roleTypeID'] eq 20300">	
+		        		<foreach name="users" item="user">
+									<if condition="$user['id'] eq $userrole['relatedUserID'] && $uid == 0">
+										{$user.id}：
+									<php> 
+										$base64 = $user['nickname'];
+								 	echo $base64 = preg_replace_callback ( '/@E(.{6}==)/', function ($r) {
+													return base64_decode ( $r [1] );
+											}, $base64 );
+										$uid = $user['id'];
+									</php>
+				        	</if>
+		            </foreach>
+							</if>
+								<php>
+									if($userrole['relatedID'] == $vo['id']){
+										$role[$u]=$userrole['relatedUserID'];
+										$u++;
+									}
+								</php>
+						</foreach>
+						</td>
+            <td>
+            	<php>
+	            	echo count(array_unique($role));
+	            	$role=null;
+            	</php>
+            </td>
+            <td>{$vo.created}</td>
+            <td>
+							<a href="{:U('groups/look',array('id'=>$vo['id']))}">球员列表</a>
+            </td>
+          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="70">球队id</th>
+            <th>球队简称</th>
+            <th>球队全称</th>
+            <th>球队描述</th>
+            <th>队长ID：用户昵称</th>
+            <th width="60">球队人数</th>
+            <th width="120">创建时间</th>
+            <th width="60">查看球员</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+	<script>
+		function refersh_window() {
+			var refersh_time = getCookie('refersh_time');
+			if (refersh_time == 1) {
+				window.location = "{:U('team/index',$formget)}";
+			}
+		}
+		setInterval(function() {
+			refersh_window();
+		}, 2000);
+		$(function() {
+			setCookie("refersh_time", 0);
+			Wind.use('ajaxForm', 'artDialog', 'iframeTools', function() {
+				//批量移动
+				$('.J_articles_move').click(
+						function(e) {
+							var str = 0;
+							var id = tag = '';
+							$("input[name='ids[]']").each(function() {
+								if ($(this).attr('checked')) {
+									str = 1;
+									id += tag + $(this).val();
+									tag = ',';
+								}
+							});
+							if (str == 0) {
+								art.dialog.through({
+									id : 'error',
+									icon : 'error',
+									content : '您没有勾选信息，无法进行操作！',
+									cancelVal : '关闭',
+									cancel : true
+								});
+								return false;
+							}
+							var $this = $(this);
+							art.dialog.open(
+							
+										"{:U('Team/packet',array('ids'=> ''))}"
+											+ id, {
+										title : "分组",
+										width : "40%"
+									});
+						});
+			});
+		});
+		
+$('.emoji').emoji();
+	</script>
+</body>
+</html>

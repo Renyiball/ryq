@@ -1,0 +1,10 @@
+<foreach name="userbets" item="vo">
+	<tr>
+		<td>{$vo.created}<br>{$vo.explanation}</td>
+		<td>{$vo.status}</td>
+		<td>{$vo.money}</td>
+	</tr>
+</foreach>
+<if condition="$over">
+	{$over}
+</if>

@@ -1,0 +1,128 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('amateur/index')}">比赛列表</a></li>
+     <li><a href="{:U('amateur/index')}">比赛列表</a></li>
+     <li><a href="{:U('amateur/add')}">添加比赛</a></li>
+     <li class="active"><a>修改比赛</a></li>
+     <li><a href="{:U('amateur/old')}">比赛列表(旧)</a></li>
+  </ul>
+ 
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 30px;} 
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('amateur/edit_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 80px;">赛事类型:</td>
+              <td>
+								<if condition="$action">
+									<input type="text" name="oneclass" value={$action.actionName} class="input" readonly="readonly">
+								<else />
+									<input type="text" name="oneclass" value={$ginfos.game_name} class="input" readonly="readonly">
+		        		</if>
+              </td>
+            </tr>
+            <tr>
+              <td>对战球队:</td>
+              <td>
+        			<foreach name="teams" item="vo">
+								<if condition="$vo['constid'] eq $infos['teamid1'] || $vo['teamnumber'] eq $infos['teamid1']">
+              		<input type="text" class="input" name="teamid1" value="{$vo.teamname}" style="width: 146px;" readonly="readonly">
+		        		</if>
+        			</foreach>
+        			<foreach name="teams" item="vo">
+								<if condition="$vo['constid'] eq $infos['teamid2'] || $vo['teamnumber'] eq $infos['teamid2']">
+              		<input type="text" class="input" name="teamid2" value="{$vo.teamname}" style="width: 146px;" readonly="readonly">
+		        		</if>
+        			</foreach>
+              </td>
+            </tr>
+            <tr>
+              <td>比分:</td>
+              <td>
+						      	<input type="text" class="input" name="score1" value="{$infos.score1}" style="width: 146px;">
+						      	<input type="text" class="input" name="score2" value="{$infos.score2}" style="width: 146px;">
+              </td>
+            </tr>
+					<!--<if condition="$bets neq ''">
+				    <tr>
+						  <td>竞猜赔率:</td>
+							<input  type="hidden" name="whether" value="1">
+							<if condition="$infos['matchdatetime'] gt $datetime">
+		              <td>
+		              	<input type="text" class="input" name="odds_w" value="{$bets.odds_w}" style="width: 92px;">
+		              	<input type="text" class="input" name="odds_d" value="{$bets.odds_d}" style="width: 91px;">
+		              	<input type="text" class="input" name="odds_l" value="{$bets.odds_l}" style="width: 91px;">
+		              </td>
+            	<else />
+		              <td>
+		              	<input type="text" class="input" name="odds_w" value="{$bets.odds_w}" style="width: 92px;" readonly="readonly">
+		              	<input type="text" class="input" name="odds_d" value="{$bets.odds_d}" style="width: 91px;" readonly="readonly">
+		              	<input type="text" class="input" name="odds_l" value="{$bets.odds_l}" style="width: 91px;" readonly="readonly">
+		              </td>
+							</if>
+				   <else />
+									<if condition="$infos['matchdatetime'] gt $datetime">
+			              <td>创建竞猜<input type="checkbox" name="whether" value="0" style="margin-top: -2px;"/></td>
+			              <td>
+											<div id="divcon" style="display:none">
+						              	<input type="text" class="input" name="odds_w" value="1.5" style="width: 92px;">
+						              	<input type="text" class="input" name="odds_d" value="1.5" style="width: 91px;">
+						              	<input type="text" class="input" name="odds_l" value="1.5" style="width: 91px;">
+											</div>
+			              </td>
+			            </if>
+            </tr>
+					</if>-->
+				 <tr>
+              <td>比赛时间:</td>
+				      <td>
+								<input type="text" name="start_time" value="{$infos.matchdatetime}" size="21" class="input J_datetime">
+				      </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+		<input type="hidden" name="info_id" value="{$infos.id}" />
+		<input type="hidden" name="bets_mid" value="{$bets.matchinfoid}" />
+		<input type="hidden" name="matc_mid" value="{$infos.matchconstid}" />
+		<input type="hidden" name="bets_id" value="{$bets.id}" />
+		<input type="hidden" name="c" value="{$c}" />
+		<input type="hidden" name="p" value="{$p}" />
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">更新</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+    window.onload=function(){
+        var whether=document.getElementsByName("whether");
+        var divcon=document.getElementById("divcon");
+        for(var i=0;i<whether.length;i++){
+            whether[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<whether.length;n++){
+                    if(whether[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    divcon.style.display="none";
+                }else{
+                    divcon.style.display="";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>

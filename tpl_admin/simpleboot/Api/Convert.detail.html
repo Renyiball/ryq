@@ -1,0 +1,95 @@
+<admintpl file="apiheader"/>
+<title>装备信息</title>
+<body class="J_scroll_fixed" onselectstart="return true">
+<style>
+	.wrap{padding: 0 20px;margin-top: 50px;}
+	.navbar-fixed-top{
+		margin-right: 0px;
+		margin-left: 0px;
+		position: fixed;
+		right: 0;
+		left: 0;
+		z-index: 1030;
+		margin-bottom: 0;
+	}
+	.navbar {
+		background: #FFFFFF;
+		-webkit-box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		-moz-box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		top: 0;
+		overflow: visible;
+	}
+	h5{
+		margin:10px 20px;
+	}
+</style>
+    <div class="navbar navbar-fixed-top">
+    	<h5>装备详情<a style="float: right;"href="{:U('Convert/index',array('userid'=>$userid))}">返回</a></h5>
+    </div>
+<div class="wrap J_check_wrap">
+    <div class="common-form">
+      <div class="table_list">
+          	<table cellpadding="2" cellspacing="2" width="100%" class="table table-hover"><tbody>
+	          		<tr><td colspan="3">
+				        <foreach name="images" item="img">
+					        <if condition="$img['subtype'] lt 100">
+								<img width='100%' src="{$imgtituan}{$img.filepath}{$img.filename}" />
+							</if>
+				        </foreach>
+	          		</td></tr>
+					<tr><td colspan="3">
+						<b>{$iteminfos.itemDesc}</b>
+					</td></tr>
+		          	<tr><td>
+		          		所需球币:<b>{$exchanges.points}</b>
+		          	</td><td style="padding: 3px 0px;text-align: center;">
+		          		<a class="btn btn-primary" href="{:U('Convert/order',array('userid'=>$userid,'exchid'=>$exchid))}">兑换</a>
+		          	</td>
+		          	<td>
+				        <foreach name="typeconfigs" item="config">
+					        <if condition="$config['typeID'] eq $exchanges['point_level']">
+								<a href="{:U('Convert/level',array('userid'=>$userid,'exchid'=>$exchid))}">→ <b>{$config.typeName}</b> 专享商品 ←</a>
+							</if>
+				        </foreach>
+		          	</td>
+		          	</tr>
+	        </tbody></table>
+      </div>
+    </div>
+	<div class="common-form">
+        <foreach name="images" item="img">
+	        <if condition="$img['subtype'] gt 100">
+				<img width='100%' src="{$imgtituan}{$img.filepath}{$img.filename}" />
+			</if>
+        </foreach>
+    </div>
+	<div class="common-form emoji">
+		<php>
+			echo "<h5>商品评价<p style='float: right;color: #555;'>".count($comments)."条评论</p></h5><hr>";		
+			foreach($comments as $com){
+			for($i=0;$i<$com['starScore'];$i++){
+				echo "<b style='color: red;'>★</b>";
+			}
+				foreach($users as $use){
+					if($com['userid'] == $use['id']){
+						echo "<p style='float: right;'>".preg_replace_callback ( '/@E(.{6}==)/', function ($b) {
+							return base64_decode ( $b [1] );
+						},$use['nickname'])." ".substr($com['modified'], 5, 11)."</p><br>";
+					}
+				}
+				echo $com['commentText']."<hr>";
+			}
+		</php>
+    </div>
+</div>
+<script>
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+$('.emoji').emoji();
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

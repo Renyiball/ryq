@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="author" content="Powerless">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta name = "format-detection" content = "telephone=no">
+    <!-- HTML5 shim for IE8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <![endif]-->
+
+	<link href="__ROOT__/statics/simpleboot/bluesky/theme.min.css" rel="stylesheet">
+    <link href="__ROOT__/statics/simpleboot/css/font-awesome.min.css"  rel="stylesheet" type="text/css">
+	<link href="__ROOT__/tpl/simplebootx/Public/css/slippry/slippry.css" rel="stylesheet">
+	<!--[if IE 7]>
+	<link rel="stylesheet" href="__ROOT__/statics/simpleboot/css/font-awesome-ie7.min.css">
+	<![endif]-->
+<script type="text/javascript">
+//全局变量
+var GV = {
+    DIMAUB: "__ROOT__/",
+    JS_ROOT: "statics/js/",
+    TOKEN: ""
+};
+</script>
+<!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="__ROOT__/statics/js/jquery.js"></script>
+    <script src="__ROOT__/statics/simpleboot/js/bootstrap.min.js"></script>
+	<script src="__ROOT__/statics/js/emoji.js"></script>
+	<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+	<script src="__ROOT__/tpl/simplebootx/Public/js/slippry.min.js"></script>
+
+    <script src="__ROOT__/statics/js/sweetalert/lib/sweet-alert.min.js"></script>
+    <link type="text/css" rel="stylesheet" href="__ROOT__/statics/js/sweetalert/lib/sweet-alert.css">
+
+<if condition="APP_DEBUG">
+	<style>
+		#think_page_trace_open{
+			z-index:9999;
+		}
+	</style>
+</if>
+<style type="text/css">
+h1, h2, h3, h4, h5, h6,a{color:#1BAD4E ;}
+body{background-color: #F0F7F4;}
+h4{color:#FF0F2A;font-family: "Microsoft YaHei";}
+.span4{text-align: center;}
+.wrap {padding: 10px 20px;background-color: #FFFFFF;margin-bottom: 20px;}
+.sy-box{height: inherit;}
+.sy-pager {margin-top: 0px;padding-top: 5px;height: 8px;background-color: #ffffff;}
+b{color:#333433;}
+p{margin: 0;}
+hr {width: 100%;}
+.bsty{width: 100%;height: 100%;border:0px;background:#000000;color: #FFFFFF; }
+.dsty{text-align: center;border:0px;background:#000000;color: #FFFFFF; }
+.bdv{height:50px;float: left;}
+.fa{padding-top: 9px;}
+.investment_f .investment_title{height:44px; overflow:hidden}
+.investment_title div{ width:50%; height:44px; float:left; display:inline; font-size:14px; font-weight:bold; text-align:center; line-height:46px; color:#555; cursor:pointer;}
+.investment_title a,.investment_title a:link,.investment_title a:visited,.investment_title a:hover{ color:#555;width:131px; height:44px;display:inline-block}
+.investment_title div.on a,.investment_title div.on a:link,.investment_title div.on a:visited,.investment_title div.on a:hover{ color:#FF0F2A}
+.investment_title div.on{text-decoration:underline;color:#FF0F2A}
+.investment_con_list{display:none;}
+.color { display:inline-block; border:1px solid #000; margin:5px;border-radius:5px;display: inline-block;}
+.size { display:inline-block; border:1px solid #000; margin:5px;border-radius:5px;display: inline-block;}
+.ccorrect { background:url("__ROOT__/tpl_admin/simpleboot/Api/images/correct.png") no-repeat right bottom; border:1px solid #FF0F2A; }
+.scorrect { background:url("__ROOT__/tpl_admin/simpleboot/Api/images/correct.png") no-repeat right bottom; border:1px solid #FF0F2A; }
+ul { list-style-type: none;}
+label {
+margin-bottom: 0px;
+padding: 5px 10px;
+}
+label, input, button, select, textarea {
+font-size: 14px;
+font-weight: normal;
+line-height: 16px;
+}
+/* Prevent text and blocks selection */
+input.labelauty + label ::selection { background-color: rgba(255, 255, 255, 0); }
+input.labelauty + label ::-moz-selection { background-color: rgba(255, 255, 255, 0); }
+
+/* Hide original checkboxes. They are ugly! */
+input.labelauty { display: none !important; }
+
+
+/* Stylish text inside label */
+
+input.labelauty + label > span.labelauty-unchecked,
+input.labelauty + label > span.labelauty-checked
+{
+	display: inline-block;
+	line-height: 16px;
+	vertical-align: bottom;
+}
+
+input.labelauty:not(:checked) + label > span.labelauty-checked-image
+{
+	display: none;
+}
+
+input.labelauty:not(:checked) + label > span.labelauty-checked
+{
+	display: none;
+}
+input.labelauty:checked + label > span.labelauty-unchecked-image
+{
+	display: none;
+}
+
+input.labelauty:checked + label > span.labelauty-unchecked
+{
+	display: none;
+}
+
+input.labelauty:checked + label > span.labelauty-checked
+{
+	display: inline-block;
+}
+
+input.labelauty.no-label:checked + label > span.labelauty-checked
+{
+	display: block;
+}
+
+/* When Disabled */
+input.labelauty[disabled] + label
+{
+	opacity: 0.5;
+}
+
+</style>
+</head>

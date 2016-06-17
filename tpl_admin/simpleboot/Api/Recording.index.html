@@ -1,0 +1,289 @@
+<admintpl file="apiheader"/>
+<title>猜球记录</title>
+<script type="application/javascript" src="__ROOT__/tpl_admin/simpleboot/assets/js/iscroll.js"></script>
+<script>
+	function submit_date() {
+		document.getElementById('myform').submit();
+	}
+	
+	$(function() {
+		$(".download").on("click", function() {
+			window.location = "{:U('recording/index',array('userid'=>$userid))}";
+		});
+	});
+</script>
+<script type="text/javascript">
+var myScroll,
+	pullDownEl, pullDownOffset,
+	pullUpEl, pullUpOffset,
+	generatedCount = 1;
+function pullDownAction () {
+	setTimeout(document.getElementById('myform').submit(), 1000);
+	//setTimeout(window.location = "{:U('recording/index',array('userid'=>$userid))}", 1000);
+}
+function pullUpAction () {
+	setTimeout(function(){getData(++generatedCount);}, 1000);
+}
+
+function getData(page){
+	$.ajax({
+		url: "index.php?g=api&m=Recording&a=repage&userid={$userid}&tclass={$formpost.typeclass}&p="+page,
+		type: 'get',
+		dataType: 'html',
+		success: function(data){
+			var el, li, i;
+			el = document.getElementById('thelist');
+			li = document.createElement('tbody');
+			li.innerHTML = data;
+			el.appendChild(li, el.childNodes[0]);
+			myScroll.refresh();	
+		}
+	})
+}
+function loaded() {
+	pullDownEl = document.getElementById('pullDown');
+	pullDownOffset = pullDownEl.offsetHeight;
+	pullUpEl = document.getElementById('pullUp');	
+	pullUpOffset = pullUpEl.offsetHeight;
+	myScroll = new iScroll('wrapper', {
+		useTransition: false,
+		topOffset: pullDownOffset,
+		onRefresh: function () {
+			if (pullDownEl.className.match('loading')) {
+				pullDownEl.className = '';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+			} else if (pullUpEl.className.match('loading')) {
+				pullUpEl.className = '';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
+			}
+		},
+		onScrollMove: function () {
+			if (this.y > 5 && !pullDownEl.className.match('flip')) {
+				pullDownEl.className = 'flip';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = '松手开始更新...';
+				this.minScrollY = 0;
+			} else if (this.y < 5 && pullDownEl.className.match('flip')) {
+				pullDownEl.className = '';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = '下拉刷新...';
+				this.minScrollY = -pullDownOffset;
+			} else if (this.y < (this.maxScrollY - 5) && !pullUpEl.className.match('flip')) {
+				pullUpEl.className = 'flip';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = '松手开始更新...';
+				this.maxScrollY = this.maxScrollY;
+			} else if (this.y > (this.maxScrollY + 5) && pullUpEl.className.match('flip')) {
+				pullUpEl.className = '';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = '上拉加载更多...';
+				this.maxScrollY = pullUpOffset;
+			}
+		},
+		onScrollEnd: function () {
+			if (pullDownEl.className.match('flip')) {
+				pullDownEl.className = 'loading';
+				pullDownEl.querySelector('.pullDownLabel').innerHTML = '加载中...';				
+				pullDownAction();
+			} else if (pullUpEl.className.match('flip')) {
+				pullUpEl.className = 'loading';
+				pullUpEl.querySelector('.pullUpLabel').innerHTML = '加载中...';				
+				pullUpAction();
+			}
+		}
+	});
+	setTimeout(function () { document.getElementById('wrapper').style.left = '0'; }, 800);
+}
+document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+document.addEventListener('DOMContentLoaded', loaded, false); 
+</script>
+
+<style type="text/css" media="all">
+.J_check_wrap{margin:0 1%;width: 98%;}
+.table{margin:0 1%;width: 98%;}.table tbody+tbody {
+	border-top: 1px solid #ddd;
+}
+#wrapper {
+	position:absolute; z-index:1;
+	top:70px; bottom: 0px;left:0;
+	width:100%;
+	overflow: hidden;
+}
+#scroller {
+	position:relative;
+/*	-webkit-touch-callout:none;*/
+	-webkit-tap-highlight-color:rgba(0,0,0,0);
+	float:left;
+	width:100%;
+	padding:0;
+}
+#pullDown, #pullUp {
+	background:#fff;
+	height:40px;
+	line-height:40px;
+	padding:5px 10px;
+	border-bottom:1px solid #ccc;
+	font-weight:bold;
+	font-size:14px;
+	color:#888;
+	text-align: center;
+}
+#pullDown .pullDownIcon, #pullUp .pullUpIcon  {
+	display:block; float:left;
+	width:40px; height:40px;
+	-webkit-background-size:32px 32px; background-size:32px 32px;
+	-webkit-transition-property:-webkit-transform;
+	-webkit-transition-duration:250ms;	
+}
+#pullDown .pullDownIcon {
+	-webkit-transform:rotate(0deg) translateZ(0);
+}
+#pullUp .pullUpIcon  {
+	-webkit-transform:rotate(-180deg) translateZ(0);
+}
+#pullDown.flip .pullDownIcon {
+	-webkit-transform:rotate(-180deg) translateZ(0);
+}
+#pullUp.flip .pullUpIcon {
+	-webkit-transform:rotate(0deg) translateZ(0);
+}
+#pullDown.loading .pullDownIcon, #pullUp.loading .pullUpIcon {
+	background-position:0 100%;
+	-webkit-transform:rotate(0deg) translateZ(0);
+	-webkit-transition-duration:0ms;
+
+	-webkit-animation-name:loading;
+	-webkit-animation-duration:2s;
+	-webkit-animation-iteration-count:infinite;
+	-webkit-animation-timing-function:linear;
+}
+@-webkit-keyframes loading {
+	from { -webkit-transform:rotate(0deg) translateZ(0); }
+	to { -webkit-transform:rotate(360deg) translateZ(0); }
+}
+</style>
+<body class="J_scroll_fixed">
+<div class="J_check_wrap">
+	<form class="well form-search" method="post" action="{:U('recording/index',array('userid'=>$userid))}"id="myform">
+		<div class="search_type cc mb10">
+			<div class="mb10">
+				<span class="mr20">选择赛事： 
+	              	<select name="typeclass" style="width: 70%;"onchange="submit_date();"> 
+					<option value="0">全部</option>
+	        		<foreach name="class" item="vo">
+	        			<if condition="$formpost['typeclass'] eq $vo['teamtype']">
+		        			<option selected="selected" value="{$vo.teamtype}">{$vo.teamname}</option>
+		        			<else />
+		        			<option value="{$vo.teamtype}">{$vo.teamname}</option>
+						</if>
+	                </foreach>
+	        		<foreach name="action" item="vo">
+	        			<if condition="$formpost['typeclass'] eq $vo['constid']">
+		        			<option selected="selected" value="{$vo.constid}">{$vo.actionName}</option>
+		        			<else />
+		        			<option value="{$vo.constid}">{$vo.actionName}</option>
+	        			</if>
+	                </foreach>
+	            	</select>
+				</span>
+			</div>
+		</div>
+	</form>
+    <div class="common-form">
+    <if condition="$out401 || $out402">
+        <table cellpadding="2" cellspacing="2" class="table table-hover">
+          <tbody>
+          	<if condition="$out401">
+	            <tr><td>
+	   					{$out401.code} - {$out401.info}
+		        </td></tr>
+			</if>
+          	<if condition="$out402">
+	            <tr><td>
+	   					{$out402.code} - {$out402.info}
+		        </td></tr>
+			</if>
+          </tbody>
+        </table>
+	</if>
+<div id="wrapper">
+	<div id="scroller" style="-webkit-transition: -webkit-transform 0ms; transition: -webkit-transform 0ms; -webkit-transform-origin: 0px 0px; -webkit-transform: translate(0px, -51px) scale(1) translateZ(0px);">
+		<div id="pullDown">
+			<span class="pullDownIcon"></span><span class="pullDownLabel">下拉刷新...</span>
+		</div>
+	<table class="table" id="thelist">
+        <foreach name="userbets" item="vo">
+				<php>
+				for($b=0;$b<count($bets);$b++){
+					if($bets[$b]['id'] == $vo['betid']){
+						for($m=0;$m<count($matchinfos);$m++){
+							if($bets[$b]['matchinfoid'] == $matchinfos[$m]['matchconstid']){
+								echo "<tr>";
+								if($vo['status'] == 140){
+									echo "<td style='width: 40%;'>投注 ".$vo['points'];
+								}
+								if($vo['status'] == 150){
+									echo "<td style='background-color: #6dbb00;width: 40%;'>痛失 ".$vo['points'];
+								}
+								if($vo['status'] == 160){
+									echo "<td style='background-color: #ee9900;width: 40%;'>赢得 ".$vo['points']*$vo['odds'];
+								}
+								echo " 球币<br />竞猜 ";
+								if($vo['betoption'] == 'w'){
+									echo "主队获胜";
+								}
+								if($vo['betoption'] == 'd'){
+									echo "两队战平";
+								}
+								if($vo['betoption'] == 'l'){
+									echo "客队获胜";
+								}
+								echo "</td><td style='width: 60%;'>";
+								for($t=0;$t<count($teams);$t++){
+									if($teams[$t]['constid'] == $matchinfos[$m]['teamid1'] || $teams[$t]['teamnumber'] == $matchinfos[$m]['teamid1']){
+										echo $teams[$t]['teamname'].' VS ';
+									}
+								}
+								for($t=0;$t<count($teams);$t++){
+									if($teams[$t]['constid'] == $matchinfos[$m]['teamid2'] || $teams[$t]['teamnumber'] == $matchinfos[$m]['teamid2']){
+										echo $teams[$t]['teamname'];
+									}
+								}
+								echo "<br />".mb_substr($matchinfos[$m]['matchdatetime'],5,11,'utf-8');
+								if($matchinfos[$m]['score1']!='' && $matchinfos[$m]['score2'] !=''){
+									echo " 比分 ".$matchinfos[$m]['score1']." : ".$matchinfos[$m]['score2'];
+								}else{
+									echo " 等待开奖";
+								}
+								echo "</td></tr>";
+							}
+						}
+					}
+				}
+				</php>
+        </foreach>
+    </table>
+    <if condition="$num gt 20">
+		<div id="pullUp">
+			<span class="pullUpIcon"></span><span class="pullUpLabel">上拉加载更多...</span>
+		</div>
+	</if>
+    <if condition="$num elt 20 && $num neq 0">
+		<div id="pullUp">
+			<span class="pullUpIcon"></span><span class="pullUpLabel">没有更多信息了...</span>
+		</div>
+	</if>
+    <if condition="$num eq 0">
+		<div id="pullUp">
+			<span class="pullUpIcon"></span><span class="pullUpLabel">当前暂无数据...</span>
+		</div>
+	</if>
+	</div>
+</div>
+    </div>
+	</div>
+<script>
+function stop(){
+return true;
+}
+document.oncontextmenu=stop;
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

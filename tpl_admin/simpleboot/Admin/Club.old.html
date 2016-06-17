@@ -1,0 +1,84 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Club/index')}">培训报名</a></li>
+     <li class="active"><a href="{:U('Club/old')}">培训报名(旧)</a></li>
+  </ul>
+  		<form class="well form-search" method="post" action="{:U('Club/old')}" name="formadd">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">俱乐部名称： 
+	              	<select id="province"name="trainId" class="action_select index"> 
+							<option value="0">全部</option>
+		        		<foreach name="arrs" item="arr">
+		        			<if condition="$formpost['trainId'] eq $arr['id']">
+			        			<option selected="selected" value="{$arr.id}">{$arr.name}</option>
+			        			<else />
+			        			<option value="{$arr.id}">{$arr.name}</option>
+									</if>
+		            </foreach>
+	               	</select>
+						<input type="submit" class="btn btn-primary" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+  <form class="form-horizontal J_ajaxForm" method="post">
+    <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div>
+      </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="40">ID</th>
+            <th>活动名称</th>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>家长姓名</th>
+            <th>参与电话</th>
+            <th>参加时间</th>
+          </tr>
+        </thead>
+        <foreach name="childrens" item="children">
+        	<tr>
+								<td>{$children.childId}</td>
+								<td>
+			        		<foreach name="arrs" item="ar">
+			        			<if condition="$children['trainId'] eq $ar['id']">
+				        			{$ar.name}
+										</if>
+			            </foreach>
+								</td>
+								<td>{$children.realName}</td>
+								<td>{$children.age}</td>
+								<td>{$children.contactName}</td>
+								<td>{$children.contactTel}</td>
+								<td>{$children.fillTimeStamp}</td>
+					</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="40">ID</th>
+            <th>活动名称</th>
+            <th>姓名</th>
+            <th>年龄</th>
+            <th>家长姓名</th>
+            <th>参与电话</th>
+            <th>参加时间</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div>
+      </div>
+    </div>
+  </form>
+
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+</body>
+</html>

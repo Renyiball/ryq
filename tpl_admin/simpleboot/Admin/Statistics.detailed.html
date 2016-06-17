@@ -1,0 +1,85 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Statistics/index')}">用户列表</a></li>
+     <li><a href="{:U('Statistics/source')}">来源统计</a></li>
+     <li><a href="{:U('Statistics/month')}">月注册数</a></li>
+     <li><a href="{:U('Statistics/day')}">日注册数</a></li>
+     <li class="active"><a>用户详情</a></li>
+  </ul>
+  <div class="common-form">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>用户ID:</td>
+              <td>{$users.id}</td>
+              <td>用户昵称:</td>
+              <td class='emoji'>
+									<php> 
+										$base64 = $users['nickname'];
+								 	echo $base64 = preg_replace_callback ( '/@E(.{6}==)/', function ($r) {
+													return base64_decode ( $r [1] );
+											}, $base64 );
+										$uid = $user['id'];
+									</php>
+              </td>
+              <td>设备号:</td>
+              <td>{$users.firstuniqueid}</td>
+            </tr>
+            <tr>
+              <td>注册日期:</td>
+              <td>{$users.created}</td>
+              <td>电话:</td>
+              <td>{$contacts.telephone}</td>
+              <td>地址:</td>
+              <td>{$contacts.street1|msubstr=0,64}</td>
+            </tr>
+            <tr>
+              <td>邀请码:</td>
+              <td>{$usercodes.my_invite_code} <a href="{:U('please/look',array('code'=>$usercodes['my_invite_code']))}">查看邀请</a></td>
+              <td>优惠券:</td>
+              <td>共有 {$bannercount} 张优惠券<a href="{:U('Vouchers/grant',array('userid'=>$users['id']))}">查看优惠券</a></td>
+              <td>粉丝:</td>
+              <td>{$favorites}</td>
+            </tr>
+            <tr>
+              <td>订单列表：</td>
+              <td>已生成 {$actionscount} 个订单。<a href="{:U('Statistics/order',array('id'=>$users['id']))}">查看订单</a></td>
+              <td>发布帖子:</td>
+              <td>已发布 {$forumsrelease} 个帖子。<a href="{:U('Statistics/ballbar',array('id'=>$users['id']))}">查看发布</a></td>
+              <td>回复帖子:</td>
+              <td>已回复 {$forumsreply} 次帖子。<a href="{:U('Statistics/reply',array('id'=>$users['id']))}">查看回复</a></td>
+            </tr>
+            <tr>
+              <td>球队列表:</td>
+              <td>已加入 {$userrolescount} 个球队。<a href="{:U('Statistics/team',array('id'=>$users['id']))}">查看球队</a></td>
+              <td>猜球参与:</td>
+              <td>已参与 {$guesscount} 场竞猜。<a href="{:U('Statistics/guess',array('id'=>$users['id']))}">查看猜球</a></td>
+              <td>猜球兑换:</td>
+              <td>已兑换 {$winningcount} 次话费。<a href="{:U('Statistics/exchange',array('id'=>$users['id']))}">查看兑换</a></td>
+            </tr>
+            <tr>
+              <td>猜球猜中:</td>
+              <td>已猜中 {$correctcount} 场比赛。<a href="{:U('Statistics/correct',array('id'=>$users['id']))}">查看竞猜</a></td>
+              <td>猜球猜错:</td>
+              <td>已猜错 {$errorcount} 场比赛。<a href="{:U('Statistics/wrong',array('id'=>$users['id']))}">查看竞猜</a></td>
+              <td>现有球币:</td>
+              <td>{$currency}。<a href="{:U('Statistics/money',array('id'=>$users['id']))}">查看球币</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="form-actions">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+$('.emoji').emoji();
+</script>
+</body>
+</html>

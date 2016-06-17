@@ -1,0 +1,132 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Statistics/index')}">用户列表</a></li>
+     <li><a href="{:U('Statistics/source')}">来源统计</a></li>
+     <li><a href="{:U('Statistics/month')}">月注册数</a></li>
+     <li><a href="{:U('Statistics/day')}">日注册数</a></li>
+     <li class="active"><a>用户订单</a></li>
+  </ul>
+		<form class="well form-search">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+  <form class="form-horizontal J_ajaxForm" action="{:U('Statistics/index')}" method="post">
+    <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="60px">ID</th>
+            <th width="220px">ID：用户昵称</th>
+            <th>订单信息</th>
+            <th width="60px">商品数量</th>
+            <th width="60px">订单总价</th>
+            <th width="60px">支付金额</th>
+            <th width="120px">下单时间</th>
+            <th width="60px">订单状态</th>
+            <th width="110px">订单详情</th>
+          </tr>
+        </thead>
+        <foreach name="lists" item="vo">
+        	<tr>
+				<td>{$vo.id}</td>
+		        <td>
+		        		<php>$d=$e=0;</php>
+        		<foreach name="users" item="user">
+							<if condition="$user['id'] eq $vo['userid']">
+	        			{$user.id}：{$user.nickname}
+	        		</if>
+                </foreach>
+                </td>
+		        		<foreach name="detailed" item="deta">
+		        			<if condition="$deta['parentID'] eq $vo['id']">
+		        				<php>
+		        					$d=$d+$deta['unit'];
+											$e=$e+$deta['amount']*$deta['unit'];
+		        				</php>
+		        			</if>
+		              </foreach>
+									<td>{$vo.description}</td>
+		              <td>{$d}</td>
+									<td>{$e|number_format=2}￥</td>
+									<td>
+				        			<foreach name="pays" item="pay">
+				        			<if condition="$pay['parentID'] eq $vo['id']">
+														{$pay.amount|number_format=2}￥
+		        					<php>break;</php>
+				        			</if>
+				              </foreach>
+		              </td>
+				
+								<td>{$vo.created}</td>
+                <td>
+        			<foreach name="type" item="typ">
+							<if condition="$typ['typeID'] eq $vo['status']">
+									<if condition="$vo['status'] eq 150">
+										<font color="#FF0150">{$typ.typeName}</font>
+			        		</if>
+									<if condition="$vo['status'] eq 160">
+										<font color="#EAB65B">{$typ.typeName}</font>
+			        		</if>
+									<if condition="$vo['status'] eq 170">
+										<font color="#008200">{$typ.typeName}</font>
+			        		</if>
+									<if condition="$vo['status'] neq 150 && $vo['status'] neq 160 && $vo['status'] neq 170">
+									{$typ.typeName}
+			        		</if>
+		        		</if>
+           		</foreach>
+           		</td>
+				<td>
+					<a href="{:U('order/look',array('id'=>$vo['id']))}">订单内容</a>
+					|
+					<a href="{:U('order/detailed',array('id'=>$vo['id']))}">订单详情</a>
+				</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="60px">ID</th>
+            <th width="220px">ID：用户昵称</th>
+            <th>订单信息</th>
+            <th width="60px">商品数量</th>
+            <th width="60px">订单总价</th>
+            <th width="60px">支付金额</th>
+            <th width="120px">下单时间</th>
+            <th width="60px">订单状态</th>
+            <th width="110px">订单详情</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+      <div class="form-actions">
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script>
+setCookie('refersh_time', 0);
+function refersh_window() {
+    var refersh_time = getCookie('refersh_time');
+    if (refersh_time == 1) {
+        window.location.reload();
+    }
+}
+setInterval(function(){
+	refersh_window()
+}, 2000);
+
+</script>
+</body>
+</html>

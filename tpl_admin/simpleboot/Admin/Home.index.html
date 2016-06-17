@@ -1,0 +1,82 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('home/plate')}">板块管理</a></li>
+     <li class="active"><a href="{:U('home/index',array('itemid'=>$formget['itemid']))}">模块管理</a></li>
+     <li><a href="{:U('home/add',array('itemid'=>$formget['itemid']))}">添加模块</a></li>
+  </ul>
+  <form class="form-horizontal J_ajaxForm" action="{:U('home/showorders')}" method="post">
+   <div class="table_list">
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="50">排序</th>
+            <th width="50">ID</th>
+            <th>所属板块</th>
+            <th>模块名称</th>
+            <th width="120">展示图像</th>
+            <th width="150">样式</th>
+            <th width="160">事件</th>
+            <th>参数</th>
+            <th width="60">操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        <foreach name="lists" item="vo">
+	          <tr>
+	            <td><input name="showorder[{$vo.id}]" type="text" maxlength="5" value="{$vo.showorder}" class="input"style="width: 50px;"></td>
+							<td>{$vo.id}</td>
+	            <td>
+		        		<foreach name="class" item="clas">
+		        			<if condition="$clas['itemid'] eq $vo['parentid']">
+			        			{$clas.description}
+									</if>
+		            </foreach>
+	            </td>
+	            <td>{$vo.title}</td>
+	            <td>
+	            	<img src="{$imgtituan}{$vo.img_path}{$vo.img_name}" name="{$imgtituan}{$vo.img_path}{$vo.img_name}" title="双击查看" height="40px" ondblclick="image_priview(this.name);" >
+	        	</td>
+	            <td>
+		        		<foreach name="class" item="clas">
+		        			<if condition="$clas['itemid'] eq $vo['parentid']">
+			        			{$clas.style}
+							</if>
+		                </foreach>
+	            </td>
+	            <td>{$vo.click}</td>
+	            <td>{$vo.parameter}</td>
+	            <td>
+								<a href="{:U('home/edit',array('id'=>$vo['id'],'itemid'=>$formget['itemid']))}">修改</a>
+								 | <a class="J_ajax_del" href="{:U('home/delete',array('id'=>$vo['id']))}">删除</a>
+	            </td>
+	          </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="50">排序</th>
+            <th width="50">ID</th>
+            <th>所属板块</th>
+            <th>模块名称</th>
+            <th width="120">展示图像</th>
+            <th width="150">样式</th>
+            <th width="160">事件</th>
+            <th>参数</th>
+            <th width="60">操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} 
+        <button class="btn btn-primary btn_submit mr10 J_ajax_submit_btn" type="submit">排序</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button></div> </div>
+   </div>
+  </form>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

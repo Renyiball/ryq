@@ -1,0 +1,56 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Collect/index')}">商品集列表</a></li>
+     <li class="active"><a href="{:U('Collect/add')}">添加商品集</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Collect/add_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+            	<td>关联操作</td>
+            	<td>
+									<if condition="$sids">
+						        <foreach name="sids" item="sid">
+							        <foreach name="images" item="img">
+												<if condition="$img['relatedID'] eq $sid">
+								        	<img src="{$imgtituan}{$img.filepath}{$img.filename}" name="{$imgtituan}{$img.filepath}{$img.filename}" title="双击查看" width="80" height="45"ondblclick="image_priview(this.name);" >
+													<input type="hidden" name="ids[]" value="{$sid}">
+												</if>
+							        </foreach>
+						        </foreach>
+										<a href="{:U('Collect/shop',array('source'=>'add'))}">修改</a>
+									<else/>
+										<a href="{:U('Collect/shop',array('source'=>'add'))}">关联商品</a>
+									</if>
+            	</td>
+            </tr>
+            <tr>
+              <td>商品集说明</td>
+              <td><input type="text" class="input" name="title" value=""></td>
+            </tr>   
+            <tr>
+              <td>是否启用</td>
+              <td><select name="updown" >   
+    					<option value='0'>不启用</option>
+    					<option value='100'>启用</option>
+              </select></td>
+            </tr>         
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

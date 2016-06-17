@@ -1,0 +1,57 @@
+<admintpl file="apiheader"/>
+</head>
+<body class="J_scroll_fixed">
+	<div class="J_check_wrap">
+		<form method="post" class="J_ajaxForm">
+			<div class="table_list">
+				<table cellpadding="2" cellspacing="2" width="100%" class="table table-hover" style="margin: 0;">
+					<tbody>
+					<php>
+						for ($r = 0;$r<count($userroles);$r++) {
+							for ($u = 0;$u<count($users);$u++) {
+								if($userroles[$r]['relatedUserID'] == $users[$u]['id']){
+									$userselect[$r]['id'] = $userroles[$r]['id'];
+									$userselect[$r]['nickname'] = $users[$u]['nickname'];
+								 	$userselect[$r]['content'] = preg_replace_callback ( '/@E(.{6}==)/', function ($b) {
+										return base64_decode ( $b [1] );
+									},$users[$u]['nickname']);
+								}
+							}
+						}
+					</php>
+						<foreach name="userselect" item="uselect">
+							<tr class="emoji">
+								<td>
+									<label class="radio">
+										<input type="radio" name="uid" value='{$uselect.id}'style="margin-top: 5px;">
+										<span>{$uselect.content}</span>
+										<input type="hidden" name="uname" value="{$uselect.nickname}" />
+									</label>
+								</td>
+							</tr>
+						 </foreach>
+						<tr>
+							<td style="text-align: center;">
+						<if condition="$userselect">
+							<button class="btn btn-primary btn_submit J_ajax_submit_btn" type="submit">确定</button>
+						<else/>
+							您的球队目前没有球员。
+						</if>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</form>
+	</div>
+	
+<script>
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+$('.emoji').emoji();
+</script>
+	<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

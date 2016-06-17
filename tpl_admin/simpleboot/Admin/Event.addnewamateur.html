@@ -1,0 +1,153 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('event/expert')}">专业赛事</a></li>
+     <li><a href="{:U('event/amateur')}">业余赛事</a></li>
+     <li><a href="{:U('event/old')}">业余赛事(旧)</a></li>
+     <li><a href="{:U('event/addamateur')}">添加业余赛事(旧)</a></li>
+     <li class="active"><a href="{:U('event/addnewamateur')}">添加业余赛事</a></li>
+     <li><a href="{:U('event/newamateur')}">新版业余赛事</a></li>
+  </ul>
+ 
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 30px;} 
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('event/addnewamateur_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 80px;">赛事名称:</td>
+              <td>
+                  <input type="text" name="game_name" value="">
+              </td>
+            </tr>
+            <tr>
+              <td>赛事广告:</td>
+              <td><input type="file" name="game_adv"  accept="image/*" /></td>
+            </tr>
+            <tr>
+              <td>广告是否显示:</td>
+              <td><input type="radio" name="is_show" checked value="1" />是&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="radio" name="is_show" value="0" />否</td>
+            </tr>
+             <tr>
+              <td>赛事LOGO:</td>
+              <td><input type="file" name="game_logo"  accept="image/*" /></td>
+            </tr>
+            <tr>
+              <td>赛事规则:</td>
+              <td>
+                  <input type="text" name="rules_url" value="">
+              </td>
+            </tr>
+            <tr>
+              <td>赛制:</td>
+              <td>
+                  <input type="text" name="play_type" value="">
+              </td>
+            </tr>
+            <tr>
+              <td>主办方:</td>
+              <td>
+                  <input type="text" name="host_title" value="">
+              </td>
+            </tr>
+            <tr>
+              <td>协办方:</td>
+              <td>
+                  <input type="text" name="host_field" value="">
+              </td>
+            </tr>
+            <tr>
+              <td>活动地点:</td>
+              <td>
+                  <input type="text" name="area" value="">
+              </td>
+            </tr>
+            <tr>
+              <td>开始时间:</td>
+              <td>
+                <input type="text" name="startdate" value="{:date('Y-m-d')}" size="21" class="input J_date">
+              </td>
+            </tr>
+            <tr>
+              <td>比赛开始:</td>
+              <td>
+                <input type="text" name="gamedate" value="{:date('Y-m-d',strtotime('+15 day'))}" size="21" class="input J_date">
+              </td>
+            </tr>
+            <tr>
+              <td>结束时间:</td>
+              <td>
+                <input type="text" name="enddate" value="{:date('Y-m-d',strtotime('+2 month'))}" size="21" class="input J_date">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<!--<script>
+    window.onload=function(){
+        var enroll=document.getElementsByName("enroll");
+        var enrollstart=document.getElementById("enrollstart");
+        var ready=document.getElementsByName("ready");
+        var readystart=document.getElementById("readystart");
+        for(var i=0;i<enroll.length;i++){
+            enroll[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<enroll.length;n++){
+                    if(enroll[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    enrollstart.style.display="none";
+                }else{
+                    enrollstart.style.display="";
+                }
+            }
+        }
+        for(var i=0;i<ready.length;i++){
+            ready[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<ready.length;n++){
+                    if(ready[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    readystart.style.display="none";
+                }else{
+                    readystart.style.display="";
+                }
+            }
+        }
+        for(var i=0;i<match.length;i++){
+            match[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<match.length;n++){
+                    if(match[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    matchstart.style.display="none";
+                }else{
+                    matchstart.style.display="";
+                }
+            }
+        }
+    }
+</script>-->
+</body>
+</html>

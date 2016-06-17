@@ -1,0 +1,58 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Ballbar/index')}">球帖列表</a></li>
+     <li><a href="{:U('Ballbar/add')}">发布球帖</a></li>
+     <li class="active"><a>回复球帖</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Ballbar/reply_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+						<input type="hidden" name="id" value="{$id}" />
+            <tr>
+              <td>标题:</td>
+              <td><input type="text"  name="post_title" value="{$class.title}" class="input input_hd J_title_color"  readonly="readonly"></td>
+            </tr>
+            <tr>
+              <td>帖子内容:</td>
+              <td><textarea style="height:100px;" readonly="readonly">{$class.description}</textarea></td>
+            </tr>
+            <tr>
+              <td>帖子图像：</td>
+              <td>
+		        	<ul class="picList unstyled">
+				        <foreach name="smeta" item="vo">
+						      <li style="width: 440px;">
+										<img src="{$imgtituan}{$vo.filepath}{$vo.filename}" name="{$imgtituan}{$vo.filepath}{$vo.filename}" title="双击查看"height="90" ondblclick="image_priview(this.name);" >
+					        </li>
+				        </foreach>
+		        	<if condition="!$smeta">
+		        			未上传图像
+		        	</if>
+				      </ul>
+              </td>
+			  			</td>
+            </tr>
+            <tr>
+              <td>回复内容:</td>
+              <td><textarea name="post_excerpt" style="height:100px;" ></textarea></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+					<input type="hidden" name="p" value="{$p}" />
+					<input type="hidden" name="c" value="{$c}" />
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">回复</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<admintpl file="header" />
+</head>
+<body class="J_scroll_fixed">
+	<div class="wrap J_check_wrap">
+		<ul class="nav nav-tabs">
+			<li><a href="{:U('Push/index')}">推送列表</a></li>
+			<li class="active"><a href="{:U('Push/push')}">消息推送</a></li>
+		</ul>
+<style type="text/css">
+.radio, .checkbox {
+width: 80px;
+float: left;
+}
+</style>
+<form action="{:u('Push/push_post')}" method="post" class="form-horizontal J_ajaxForm" enctype="multipart/form-data">
+<div class="col-auto">
+	<div class="table_full">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+	    <tr>
+	      <th>设备类型</th>
+	      <td>
+			<label class="radio"><input type="radio" name="pform" value="0" checked><span>all</span></label>
+			<label class="radio"><input type="radio" name="pform" value="1" ><span>android</span></label>
+			<label class="radio"><input type="radio" name="pform" value="2" ><span>ios</span></label>
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>用户ID</th>
+	      <td><input type='text' name='uid'>多个id用,分隔。填写0为全部用户</td>
+	    </tr>
+	    <tr>
+	      <th>推送内容</th>
+	      <td><input type='text' name='content'></td>
+	    </tr>
+	    <tr>
+	      <th>单个类型</th>
+	      <td><input id="s_id" type='text' name='mtype'></td>
+	    </tr>
+	    <tr id="shop_l" style="display:none;">
+	      <th>列表类型</th>
+	      <td>
+			<label class="radio"><input type="radio" name="mtype" value="10001" ><span>儿童推荐</span></label>
+			<label class="radio"><input type="radio" name="mtype" value="10002" ><span>尾货横扫</span></label>
+			<label class="radio"><input type="radio" name="mtype" value="10003" ><span>夏季队服</span></label>
+			<label class="radio"><input type="radio" name="mtype" value="10004" ><span>新品首发</span></label>
+			<label class="radio"><input type="radio" name="mtype" value="10005" ><span>主-题-街</span></label>
+			<label class="radio"><input type="radio" name="mtype" value="10006" ><span>品牌推荐</span></label>
+	      </td>
+	    </tr>
+	    <tr>
+	      <th>操作</th>
+	      <td>
+			<label class="radio"><input type="radio" name="mid" value="0" checked><span>不操作</span></label>
+			<label class="radio"><input type="radio" name="mid" value="1" ><span>帖子列表</span></label>
+			<label class="radio"><input type="radio" name="mid" value="2" ><span>单个商品</span></label>
+			<label class="radio"><input type="radio" id="shop_list" name="mid" value="3" ><span>商品列表</span></label>
+			<label class="radio"><input type="radio" name="mid" value="4" ><span>赛事列表</span></label>
+	      </td>
+	    </tr>
+	  </table>
+	</div>
+</div>
+<div class="form-actions">
+	<button class="btn btn-primary btn_submit J_ajax_submit_btn" type="submit">提交</button>
+	<button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+</div>
+</form>
+
+	</div>
+	<script src="__ROOT__/statics/js/common.js"></script>
+	<script>
+		$(function(){
+			$("#shop_l").hide();
+			$("input[type='radio']").click(function(){
+				if($("#shop_list").attr("checked")=="checked"){
+					$("#shop_l").show();
+					$("#s_id").attr('disabled',true);
+				}else{
+					$("#shop_l").hide();
+					$("#s_id").attr('disabled',false);
+				}
+			})
+			
+		})
+	</script>
+</body>
+</html>

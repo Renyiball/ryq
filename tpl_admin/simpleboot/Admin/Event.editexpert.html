@@ -1,0 +1,53 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('event/expert')}">专业赛事</a></li>
+     <li><a href="{:U('event/amateur')}">业余赛事</a></li>
+     <li><a href="{:U('event/addexpert')}">添加专业赛事</a></li>
+     <li class="active"><a>修改专业赛事</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('event/editexpert_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 80px;">赛事类型:</td>
+              <td>
+              			<input type="text" class="input" name="item_Desc" id="action" value="{$team.teamname}" readonly="readonly">
+              			<input type="hidden" name="id" value="{$team.id}" />
+              </td>
+            </tr>
+            <tr>
+              <td>所属赛季:</td>
+              <td><input type="text" class="input" name="fullname" id="action" value="{$team.fullname}">
+              </td>
+            </tr>
+            <tr>
+              <td style="width: 80px;">排序标识:</td>
+              <td>
+	              	<select name="extradesc" class="normal_select">
+		        		<foreach name="extras" item="extra">
+		        			<if condition="$team['extradesc'] eq $extra['id']">
+			        				<option selected="selected" value="{$extra.id}">{$extra.name}</option>
+			        			<else />
+			        				<option value="{$extra.id}">{$extra.name}</option>
+							</if>
+		                </foreach>
+	               	</select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">修改</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<admintpl file="apiheader"/>
+<title>查看物流</title>
+<body class="J_scroll_fixed" onselectstart="return true">
+<style>
+	.wrap{padding: 0 20px;margin-top: 50px;}
+	p{float: right;margin: 0; color: red;}
+	.navbar-fixed-top{
+		margin-right: 0px;
+		margin-left: 0px;
+		position: fixed;
+		right: 0;
+		left: 0;
+		z-index: 1030;
+		margin-bottom: 0;
+	}
+	.navbar {
+		background: #FFFFFF;
+		-webkit-box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		-moz-box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		top: 0;
+		overflow: visible;
+	}
+	h5{
+		margin:10px 20px;
+	}
+</style>
+    <div class="navbar navbar-fixed-top">
+    	<h5>查看物流<a style="float: right;"href="{:U('Convert/myorder',array('userid'=>$userid))}">返回</a></h5>
+    </div>
+<div class="wrap J_check_wrap">
+    <div class="common-form">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+				    <tr>
+				    	<td>电话</td>
+				    	<td colspan="3">{$uexchanges.telephone}</td>
+				    </tr>
+				    <tr>
+				    	<td>地址</td>
+				    	<td colspan="3">{$uexchanges.street1}</td>
+				    </tr>
+        		<if condition="$data">
+				    <tr>
+				    	<td>商家</td>
+				    	<td>{$text}</td>
+				    	<td>单号</td>
+				    	<td>{$code}</td>
+				    </tr>
+					<foreach name="data" item="da">
+					    <tr>
+					    	<td>{$da.time}</td>
+					    	<td colspan="3">{$da.context}</td>
+					    </tr>
+					</foreach>
+        		<else />
+				    <tr>
+				    	<td colspan="4">暂无物流信息。</td>
+				    </tr>
+		        </if>
+ 		  </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<script>
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

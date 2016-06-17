@@ -1,0 +1,69 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Currency/index')}">每日登录</a></li>
+     <li><a href="{:U('Currency/guess')}">每周猜球</a></li>
+     <li><a href="{:U('Currency/record')}">发放记录</a></li>
+     <li class="active"><a>修改猜球</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Currency/edit_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+							<input type="hidden" name="id" value="{$bets.id}" />
+            <tr>
+              <td>用户ID:</td>
+              <td><input type="text" class="input" name="userid" maxlength="8" readonly="readonly"  value="{$bets.userid}"></td>
+            </tr>
+            <tr>
+              <td>下注类别:</td>
+              <td>
+								<if condition="$bets['betoption'] eq 'w'">
+									<input type="text" class="input" name="betoption" value="w">主队获胜
+								</if>
+								<if condition="$bets['betoption'] eq 'd'">
+									<input type="text" class="input" name="betoption" value="d">两队战平
+								</if>
+								<if condition="$bets['betoption'] eq 'l'">
+									<input type="text" class="input" name="betoption" value="l">客队获胜
+								</if>
+             </td>
+            </tr>
+            <tr>
+              <td>下注金额:</td>
+              <td><input type="text" class="input" name="points" value="{$bets.points}"></td>
+            </tr> 
+            <tr>
+              <td>下注倍数:</td>
+              <td><input type="text" class="input" name="odds" value="{$bets.odds}" readonly="readonly"></td>
+            </tr> 
+            <tr>
+              <td>下注状态:</td>
+              <td>
+								<if condition="$bets['status'] eq '140'">
+									<input type="text" class="input" name="status" value="140" readonly="readonly">下注
+								</if>
+								<if condition="$bets['status'] eq '150'">
+									<input type="text" class="input" name="status" value="150" readonly="readonly">猜错
+								</if>
+								<if condition="$bets['status'] eq '160'">
+									<input type="text" class="input" name="status" value="160" readonly="readonly">猜中
+								</if>
+              </td>
+            </tr> 
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+
+</body>
+</html>

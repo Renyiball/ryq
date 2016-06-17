@@ -1,0 +1,53 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('amateur/index')}">比赛列表</a></li>
+     <li class="active"><a href="{:U('amateur/add')}">添加比赛</a></li>
+     <li><a href="{:U('amateur/old')}">比赛列表(旧)</a></li>
+  </ul>
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 20px;} 
+tr{height: 34px;}
+.radio {margin-top: 5px;}
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForms" action="{:U('amateur/vsteam')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 120px;">赛事类型:</td>
+              <td>
+              	<select name="constid">
+									<option value="0">--请选择赛事类型--</option>   
+									<foreach name="action" item="vo">
+				        	<option value="{$vo.constid}">{$vo.game_name}</option>
+                	</foreach>
+              	</select>
+              </td>
+            </tr>
+            <tr>
+              <td>比赛类型:</td>
+              <td>
+	          	<span class="switch_list cc">
+	        		<foreach name="type" item="vo">
+								<label class="radio"><input type="radio" name="gtype" value="{$vo.id}"><span>{$vo.name}</span></label>
+	            </foreach>
+							</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">下一步</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

@@ -1,0 +1,206 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+<table>
+  <tr>
+    <td>
+      <form class="form-horizontal J_ajaxForm" action="{:U('guessing/add_single_pbinfos')}" method="post" style="float: left">
+          <button type="submit" class="btn btn-primary btn_submit">新建单场</button>
+      </form><br />
+    </td>
+    <td>
+      <form class="form-horizontal J_ajaxForm" action="{:U('guessing/add_multi_pbinfos')}" method="post" style="float: left;">
+          <button type="submit" class="btn btn-primary btn_submit">新建组合</button>
+      </form>
+    </td>
+  </tr>
+</table>
+  
+  
+   <div class="table_list">
+   <div class="p10">
+	   	<div class="pages">{$Page}</div>
+   </div>
+   <table width="100%" cellspacing="0" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="50">No.</th>
+            <th width="180">对战球队</th>
+            <th width="120">比分状态</th>
+            <th width="180">竞猜描述</th>
+            <th width="80">期数</th>
+            <th width="80">场数</th>
+            <th width="180">开赛时间</th>
+            <th width="180">状态</th>
+            
+            <th width="120">操作</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+       <!-- {$i=1} -->
+        <foreach name="data" item="vo">
+              <tr>
+                
+                <td>{$i++}</td>
+
+                <if condition="$vo['pb_type'] eq 'single'">
+
+                    <td>{$vo.pb_name}</td>
+                      <eq name="vo.pb_status" value="enable">
+                        <td>比分未更新</td>
+                      </eq>
+                      <eq name="vo.pb_status" value="disabled">
+                        <td>竞猜未开放</td>
+                      </eq>
+                      <eq name="vo.pb_status" value="updated">
+                        <td><font color="red">等待客服结算竞猜</font></td>
+                      </eq>
+                      <eq name="vo.pb_status" value="closed">
+                        <td><font color="red">奖金结算完毕</font></td>
+                      </eq>
+                <else />
+                    <td><a href="{:U('guessing/getlist',array('pb_id'=>$vo['id']))}">{$vo.pb_name}</a></td>
+                    <if condition="$vo['pb_status'] eq 'enable'">
+                      <td><font color="red">本轮尚有<a href="{:U('guessing/getlist',array('pb_id'=>$vo['id']))}">比赛</a>未完成</font></td>
+                    <else/>
+                      <td><font color="red">竞猜尚未开放</font></td>
+                    </if>
+                </if>
+                <td>{$vo.desc1}</td>
+                <td>{$vo.desc2}</td>
+                <td>{$vo.desc3}</td>
+                <td>{$vo.match_time}</td>
+                <if condition="$vo['pb_status'] eq 'enable' && $vo['match_time'] lt $time">
+                      <td>已开放</td><td><button width="50px;" id="update_result" value="{$vo.id}" type="button" class="btn btn-primary btn_submit">更新结果</button></td>
+                <elseif condition="$vo['pb_status'] eq 'updated'" />
+                      <td>已开放</td><td><button width="50px;" id="bonus_settle" value="{$vo.id}" type="button" class="btn btn-primary btn_submit">结算奖金</button></td>
+                <elseif condition="$vo['pb_status'] eq 'closed'" />
+                      <td>奖金结算完毕<button width="50px;" id="bttn" value="{$vo.id}" type="button" class="btn btn-primary btn_submit">删除竞猜</button></td>
+                <elseif condition="$vo['pb_status'] eq 'enable' && $vo['match_time'] gt $time"/>
+                      <td>未开放</td><td>比赛未开始</td>
+                <else/>
+                    <td>未开放&nbsp;&nbsp;<button width="50px;" id="btn" value="{$vo.id}" type="button" class="btn btn-primary btn_submit">启用竞猜</button>&nbsp;&nbsp;</td>
+                    <td><button width="50px;" id="bttn" value="{$vo.id}" type="button" class="btn btn-primary btn_submit">删除竞猜</button></td>
+                </if>
+                
+                <td></td>
+
+              </tr>
+         </foreach>
+        </tbody>
+        <thead>
+          <tr>
+            <th width="50">No.</th>
+            <th width="180">对战球队</th>
+            <th width="120">比分状态</th>
+            <th>竞猜描述</th>
+            <th width="80">期数</th>
+            <th width="80">场数</th>
+            <th width="120">开赛时间</th>
+            <th width="120">状态</th>
+            
+            <th width="120">操作</th>
+            <th></th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+   </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/jquery.js"></script>
+<script>
+  $(function(){
+
+      /*
+       *启用竞猜
+       */
+      $("#btn").live("click",function(){
+          if(confirm("要启用这个竞猜，请确认信息全部配置正确!")){
+              var status = $(this).val();
+              $.ajax({
+                type:"get",
+                url:"{:U('Guessing/upd_ajax')}",
+                data:{"status":status},
+                success:function(msg){
+                  if(msg==1){
+                      history.go(0);
+                  }else if(msg==2){
+                    alert("还有未关闭的竞猜，请联系管理员关闭");
+                  }
+                }
+              })
+          }else{
+              return false;
+          }
+      });
+      /*
+       *删除竞猜（修改状态，非物理删除）
+       */
+      $("#bttn").live("click",function(){
+          if(confirm("要删除这个竞猜吗，请确认")){
+              var mid = $(this).val();
+              $.ajax({
+                type:"get",
+                url:"{:U('Guessing/delete_ajax')}",
+                data:{"mid":mid},
+                success:function(msg){
+                  if(msg==1){
+                      history.go(0);
+                  }else{
+                    alert("删除失败");
+                  }
+                }
+              })
+          }else{
+              return false;
+          }
+      });
+
+      /*
+       *更新结果 
+       */
+      $("#update_result").live("click",function(){
+          var mid = $(this).val();
+          $.ajax({
+            type:"get",
+            url:"{:U('Guessing/update_result')}",
+            data:{"mid":mid},
+            success:function(msg){
+              if(msg==1){
+                  alert("更新结果成功");
+                  history.go(0);
+              }else{
+                  alert("更新失败，请先更新比分");
+              }
+            }
+          })
+      });
+
+
+      /*
+       *结算竞猜
+       */
+      $("#bonus_settle").live("click",function(){
+          var mid = $(this).val();
+          $.ajax({
+            type:"get",
+            url:"{:U('Guessing/update_guess')}",
+            data:{"mid":mid},
+            success:function(msg){
+              //alert(msg);
+              if(msg==1){
+                  alert("奖金结算成功");
+                  history.go(0);
+              }else{
+                  alert("奖金结算失败");
+              }
+            }
+          })
+      });
+
+  });
+</script>
+</body>
+</html>

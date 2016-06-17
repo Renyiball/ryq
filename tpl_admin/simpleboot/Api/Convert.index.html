@@ -1,0 +1,90 @@
+<admintpl file="apiheader"/>
+<title>球币换装备</title>
+<body class="J_scroll_fixed" onselectstart="return true">
+<style>
+	.wrap{padding: 0 20px;margin-top: 50px;}
+	.navbar-fixed-top{
+		margin-right: 0px;
+		margin-left: 0px;
+		position: fixed;
+		right: 0;
+		left: 0;
+		z-index: 1030;
+		margin-bottom: 0;
+	}
+	.navbar {
+		background: #FFFFFF;
+		-webkit-box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		-moz-box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		box-shadow: 0 1px 1px 0 rgba(50,50,50,0.08);
+		top: 0;
+		overflow: visible;
+	}
+	h5{
+		margin:10px 20px;
+	}
+	td{
+    position:relative;
+	}
+	td span{
+	    position:absolute;
+	    top:0;
+	    left:0;
+	    color: #1BAD4E;
+	    font-weight:bold;
+	    margin: 8px 5px;
+	    padding: 4px;
+	    background: #FFFFFF;
+	}
+</style>
+    <div class="navbar navbar-fixed-top">
+    	<h5>球币换装备<a style="float: right;"href="{:U('Convert/myorder',array('userid'=>$userid))}">我的订单</a></h5>
+    </div>
+<div class="wrap J_check_wrap">
+    <div class="common-form">
+	  <div class="table_list">
+        
+          	<php>
+          		foreach($exchanges as $exch){
+		          	if($exch['uses'] == $exch['cnt']){ $uc = "<span>★已兑完★</span>";}else{ $uc=NULL;}
+          			echo '<table cellpadding="2" cellspacing="2" width="100%" class="table table-hover"><tbody>';
+	          		foreach($images as $imag){
+		          		if($exch['itemid'] == $imag['relatedID']){
+		          			echo "<tr><td>".$uc."<a href=".U('Convert/detail',array('userid'=>$userid,'exchid'=>$exch['id']))."><img width='100%' src='".$imgtituan.$imag['filepath'].$imag['filename']."'></a></td></tr>";
+		          		}
+	          		}
+	          		foreach($iteminfos as $item){
+		          		if($exch['itemid'] == $item['id']){
+		          			echo "<tr><td><a href=".U('Convert/detail',array('userid'=>$userid,'exchid'=>$exch['id']))."><b>".$item['itemDesc']."</b></a></td></tr>";
+		          		}
+	          		}
+	          		foreach($property as $prop){
+		          		if($exch['itemid'] == $prop['itemID']){
+		          			foreach($price as $pric){
+		          				if($prop['id'] == $pric['relatedID']){
+		          					echo "<tr><td>兑换所需 <b>".$exch['points']."</b> 球币";
+		          					foreach($typeconfigs as $config){
+		          						if($config['typeID'] == $exch['point_level']){
+		          							echo "<a style='float: right;' href=".U('Convert/level',array('userid'=>$userid,'exchid'=>$exch['id'])).">→ <b>".$config['typeName']."</b> 专享商品 ←</a>";
+		          						}
+		          					}
+		          					echo "</td></tr>";
+		          				}
+		          			}
+		          		}
+	          		}
+	          		echo '</tbody></table>';
+          		}
+          	</php>
+      </div>
+    </div>
+</div>
+<script>
+function stop(){
+return false;
+}
+document.oncontextmenu=stop;
+</script>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

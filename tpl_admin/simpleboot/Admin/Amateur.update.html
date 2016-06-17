@@ -1,0 +1,185 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('amateur/index')}">比赛列表</a></li>
+     <li><a href="{:U('amateur/add')}">添加比赛</a></li>
+     <li class="active"><a>更新赛况</a></li>
+     <li><a href="{:U('amateur/old')}">比赛列表(旧)</a></li>
+  </ul>
+<php>
+  	$j=0;$main_typeid =$temp =  array();
+	for ($i = 0;$i<count($teams);$i++) {
+			$typeid = $teams[$i]["id"];
+			$main_typeid[$i] = $typeid;
+	}
+</php>
+
+
+<script language="JavaScript" type="text/javascript">
+<php>
+echo 'var twoclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($userroles);$i++) {
+			if($userroles[$i]["relatedID"] == $main_typeid[$j]){
+					for ($k = 0;$k<count($typeconfigs);$k++) {
+						if($userroles[$i]['roleTypeID'] == $typeconfigs[$k]['typeID']){
+							$type = $typeconfigs[$k]['typeName'].' — ';
+							echo '"'.preg_replace('/\r|\n/', '', $type);
+							break;
+						}
+					}
+					for ($l = 0;$l<count($userdetails);$l++) {
+						if($userroles[$i]['relatedUserID'] == $userdetails[$l]['relatedUserID']){
+							$user = $userdetails[$l]['realname'];
+							if($user == ''){
+								$user = '未填写';
+							}
+							echo preg_replace('/\r|\n/', '', $user);
+							break;
+						}
+					}
+					if($userroles[$i]["play_number"] !=''){
+						$num = $userroles[$i]["play_number"];
+						echo ' — '.preg_replace('/\r|\n/', '', $num).'号",';
+					}else{
+						echo '",';
+					}
+			}
+		}
+		echo '],';
+	}
+	echo '];var threeclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($userroles);$i++) {
+			if($userroles[$i]["relatedID"] == $main_typeid[$j]){
+					echo '"';
+					for ($l = 0;$l<count($userdetails);$l++) {
+						if($userroles[$i]['relatedUserID'] == $userdetails[$l]['relatedUserID']){
+							$user = $userroles[$i]['id'];
+							echo preg_replace('/\r|\n/', '', $user);
+							break;
+						}
+					}
+					if($userroles[$i]["play_number"] !=''){
+						$num = $userroles[$i]["play_number"];
+						echo ','.preg_replace('/\r|\n/', '', $num).'",';
+					}else{
+						echo ',0",';
+					}
+			}
+		}
+		echo '],';
+	}
+	echo '];';
+</php> 
+function gettwo(){
+var sltone=document.formadd.oneclass;
+var slttwo=document.formadd.twoclass;  
+var sltthree=document.formadd.threeclass;
+var Onetwo=twoclass[sltone.selectedIndex-1];  
+var Twothree=threeclass[sltone.selectedIndex-1];
+slttwo.length=1;
+for(var i=0;i<Onetwo.length;i++){   
+slttwo[i+1]=new Option(Onetwo[i],Twothree[i]);   
+}   
+}   
+</script> 
+<style> 
+input .danxuan{ width:14px; height:14px;float:left;} 
+span .text{ margin-right: 30px;} 
+tr{height: 34px;}
+.radio {margin-top: 5px;}
+</style> 
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('amateur/update_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 120px;">选择球队:</td>
+              <td>
+              	<select name="oneclass" onChange="gettwo()"> 
+				<option value="0">--请选择球队--</option>   
+        			<foreach name="teams" item="vo">
+						<if condition="$vo['constid'] eq $infos['teamid1'] || $vo['teamnumber'] eq $infos['teamid1']">
+							<option value="{$infos.matchconstid},{$vo.teamname}">{$vo.teamname}</option>
+		        		</if>
+						<if condition="$vo['constid'] eq $infos['teamid2'] || $vo['teamnumber'] eq $infos['teamid2']">
+							<option value="{$infos.matchconstid},{$vo.teamname}">{$vo.teamname}</option>
+		        		</if>
+        			</foreach>
+               </select>
+            </tr>
+            <tr>
+              <td>选择球员:</td>
+              <td>
+          			<select name="twoclass" >   
+						<option value="0">--请选择队员--</option>   
+					</select>
+            </tr>
+            <tr>
+              <td>进球数:</td>
+		      <td><input type="text" name="enter" class="input"></td>
+            </tr>
+            <tr>
+              <td>黄牌数:</td>
+		      <td><input type="text" name="yellow" class="input"></td>
+            </tr>
+            <tr>
+              <td>红牌数:</td>
+		      <td><input type="text" name="red" class="input"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+		      <div class="p10"><div class="pages"> {$Page} </div> </div>
+		       		<table class="table table-bordered table-striped table-hover">
+				    <thead>
+				      <tr>
+				        <th style="min-width: 60px;">球队-号码</th>
+				        <th>进球</th>
+				        <th>红牌</th>
+				        <th>黄牌</th>
+				        <th>操作</th>
+				      </tr>
+				    </thead>
+				    <tbody>
+				    <foreach name="lists" item="vo">
+				      <tr>
+				        <td>{$vo.description}</td>
+				        <td>{$vo.goals}</td>
+				        <td>{$vo.red_card}</td>
+				        <td>{$vo.yellow_card}</td>
+				        <td>
+				        	<a href="{:U('Amateur/player',array('id'=>$vo['id']))}">修改</a> 
+							<if condition="$roleid eq 1">
+						  	| <a class="J_ajax_del" href="{:U('Amateur/deleteplayer',array('id'=>$vo['id']))}">删除</a>
+        			</if>
+				        </td>
+				      </tr>
+				    </foreach>
+				    </tbody>
+				    <thead>
+				      <tr>
+				        <th style="min-width: 60px;">球队-号码</th>
+				        <th>进球</th>
+				        <th>红牌</th>
+				        <th>黄牌</th>
+				        <th>操作</th>
+				      </tr>
+				    </thead>
+				  </table>
+		      <div class="p10"><div class="pages"> {$Page} </div> </div>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

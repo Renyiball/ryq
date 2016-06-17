@@ -1,0 +1,79 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Exchange/index')}">兑换列表</a></li>
+     <li><a href="{:U('Exchange/add')}">添加兑换</a></li>
+     <li class="active"><a>修改兑换</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Exchange/edit_post')}">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>活动商品:</td>
+              <td>
+				        	<img src="{$imgtituan}{$images.filepath}{$images.filename}" name="{$imgtituan}{$images.filepath}{$images.filename}" title="双击查看" width="80" height="45"ondblclick="image_priview(this.name);" >
+              </td>
+            </tr>
+            <tr>
+              <td>活动类型:</td>
+              <td>
+              	<select name="itemtype" class="normal_select">
+		        			<foreach name="activity" item="vo">
+			        			<if condition="$item['itemtype'] eq $vo['typeid']">
+				        			<option selected="selected" value="{$vo.typeid}">{$vo.type_text}</option>
+				        			<else />
+				        			<option value="{$vo.typeid}">{$vo.type_text}</option>
+			        			</if>
+		              </foreach>
+	              </select>
+	            </td>
+            </tr>
+            <tr>
+              <td>描述:</td>
+              <td><input type="text" class="input" name="description" value="{$item.description}"></td>
+            </tr>
+            <tr>
+              <td>兑换类型:</td>
+              <td>
+              <php>
+          		$typeid_yes=$item['typeid']==100?"checked":"";
+          		$typeid_no=$item['typeid']==200?"checked":"";
+          		</php>
+              	<label class="radio"><input type="radio" name="typeid" value="100" {$typeid_yes}><span>一次活动</span></label>
+								<label class="radio"><input type="radio" name="typeid" value="200" {$typeid_no}><span>重复活动</span></label>
+	        		</td>
+            </tr>
+            <tr>
+              <td>兑换消耗:</td>
+              <td><input type="text" class="input" name="points" value="{$item.points}"></td>
+            </tr>
+            <tr>
+              <td>商品总数:</td>
+              <td><input type="text" class="input" name="cnt" value="{$item.cnt}"></td>
+            </tr>
+            <tr>
+              <td>活动开始:</td>
+              <td><input type="text" class="J_datetime" name="period_from" value="{$item.period_from}"></td>
+            </tr>
+            <tr>
+              <td>活动结束:</td>
+              <td><input type="text" class="J_datetime" name="period_to" value="{$item.period_to}"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+				<input type="hidden" name="id" value="{$item.id}" />
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">修改</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+</body>
+</html>

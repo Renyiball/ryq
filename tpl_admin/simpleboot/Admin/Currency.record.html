@@ -1,0 +1,81 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('Currency/index')}">每日登录</a></li>
+     <li><a href="{:U('Currency/guess')}">每周猜球</a></li>
+     <li class="active"><a href="{:U('Currency/record')}">发放记录</a></li>
+     <li><a href="{:U('Currency/grant')}">球币发放</a></li>
+  </ul>
+		<form class="well form-search" method="post" action="{:U('Currency/record')}">
+			<div class="search_type cc mb10">
+				<div class="mb10">
+					<span class="mr20">
+					<span class="mr20">用户ID：
+						<input type="text" name="userid" value="{$formpost.userid}"  style="width: 80px;">
+	               	发放时间：
+						<input type="text" name="start_time" value="{$formpost.start_time}" class="J_date" style="width: 80px;">~
+						<input type="text" name="end_time" value="{$formpost.end_time}" class="J_date" style="width: 80px;"> &nbsp; &nbsp;
+						<input type="submit" class="btn btn-primary" name="search" value="搜索" />
+						<if condition="$num neq 0">
+							共有 {$num} 条相关记录
+						</if>
+					</span>
+				</div>
+			</div>
+		</form>
+		      <div class="p10"><div class="pages"> {$Page} </div> </div>
+    <div class="table_list">
+      <table width="100%" class="table table-hover">
+        <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th width="200">ID：用户昵称</th>
+            <th>发放金额</th>
+            <th>发放倍数</th>
+            <th>发放原因</th>
+            <th width="120">发放时间</th>
+            <th width="60">管理操作</th>
+          </tr>
+        </thead>
+        <foreach name="userbets" item="vo">
+        	<tr>
+				<td>{$vo.id}</td>
+				<td>{$vo.userid}：
+        		<foreach name="users" item="user">
+						<if condition="$user['id'] eq $vo['userid']">
+	        		{$user.nickname}
+	        	</if>
+            </foreach>
+				</td>
+				<td>{$vo.points}</td>
+				<td>{$vo.odds}</td>
+				<td>{$vo.description}</td>
+				<td>{$vo.created}</td>
+				<td>
+					<if condition="$roleid eq 1">
+						<a class="J_ajax_del" href="{:U('Currency/delete',array('id'=>$vo['id']))}">删除</a> 
+					<else />
+						无权限
+        	</if>
+				</td>
+			</tr>
+        </foreach>
+        <thead>
+          <tr>
+            <th width="60">ID</th>
+            <th width="200">ID：用户昵称</th>
+            <th>发放金额</th>
+            <th>发放倍数</th>
+            <th>发放原因</th>
+            <th width="120">发放时间</th>
+            <th width="60">管理操作</th>
+          </tr>
+        </thead>
+      </table>
+      <div class="p10"><div class="pages"> {$Page} </div> </div>
+    </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

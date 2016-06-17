@@ -1,0 +1,88 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('event/expert')}">专业赛事</a></li>
+     <li><a href="{:U('event/amateur')}">业余赛事</a></li>
+     <li><a href="{:U('event/old')}">业余赛事(旧)</a></li>
+     <li class="active"><a href="{:U('event/addamateur')}">添加业余赛事</a></li>
+  </ul>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('event/addamateur_post')}">
+      <div class="table_list">
+      <table class="table table-hover">
+	    <tr>
+	      <td>名称</td>
+	      <td><input type="text" name="game_name" class="input input_hd J_title_color"/></td>
+	    </tr>
+	    <tr>
+	      <td>赛规地址</td>
+	      <td><input type="text" name="rules_url" class="input input_hd J_title_color"/></td>
+	    </tr>
+	    <tr>
+	      <td>说明</td>
+	      <td><textarea name='game_description1' style='height:55px;'></textarea></td>
+	    </tr>
+	    <tr>
+	      <td>参数人数</td>
+	      <td>
+				<select name="player_type" class="normal_select">
+	    		<foreach name="players" item="player">
+							<option value="{$player.id}">{$player.name}</option>
+	        </foreach>
+				</select>
+	      </td>
+	    </tr>
+	    <tr>
+	      <td>主办方</td>
+	      <td><input type="text" name="host_title"></td>
+	    </tr>
+	    <tr>
+	      <td>协办方</td>
+	      <td><input type="text" name="host_field"></td>
+	    </tr>
+	    <tr>
+	      <td>承办方</td>
+	      <td><input type="text" name="other_partner"></td>
+	    </tr>
+	    <tr>
+	      <td>比赛地点</td>
+	      <td><input type="text" name="area"></td>
+	    </tr>
+	    <tr>
+	      <td>开始时间</td>
+	      <td><input type='text' name='startdate' value="{:date('Y-m-d',strtotime('+7 day'))}" class="J_date"></td>
+	    </tr>
+	    <tr>
+	      <td>开赛时间</td>
+	      <td><input type='text' name='gamedate' value="{:date('Y-m-d',strtotime('+15 day'))}" class="J_date"></td>
+	    </tr>
+	    <tr>
+	      <td>结束时间</td>
+	      <td><input type='text' name='enddate' value="{:date('Y-m-d',strtotime('+2 month'))}" class="J_date"></td>
+	    </tr>
+	    <tr>
+	      <td>LOGO</td>
+	      <td><input type="file" name="game_logo"  accept="image/*" /></td>
+	    </tr>
+	    <tr>
+	      <td>广告</td>
+	      <td><input type="file" name="game_adv"  accept="image/*" /></td>
+	    </tr>
+	    <tr>
+	      <td>背景</td>
+	      <td><input type="file" name="game_bg"  accept="image/*" /></td>
+	    </tr>
+	  </table>
+
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+</body>
+</html>

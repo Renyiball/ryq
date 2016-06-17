@@ -1,0 +1,95 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('home/plate')}">板块管理</a></li>
+     <li><a href="{:U('home/index',array('itemid'=>$formget['itemid']))}">模块管理</a></li>
+     <li class="active"><a>添加模块</a></li>
+  </ul>
+  <script type="application/javascript">
+  	var currentShowCity=0;
+$(document).ready(function(){
+   $("#select").change(function(){
+   $("#select option").each(function(i,o){
+   if($(this).attr("selected"))
+   {
+  
+   $(".Activity").hide();
+   $(".Activity").eq(i).show();
+   currentShowCity=i;
+   }
+   });
+   });
+   $("#select").change();
+});
+  </script>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('home/add_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td>选择事件:</td>
+              <td><select name="clickid" id="select">   
+								<option value="0">----请选择----</option>
+								<foreach name="arrs" item="vo">
+	        				<if condition="$formget['eventid'] eq $vo['id']">
+										<option selected="selected" value="{$vo.id}">{$vo.name}</option>
+            			<else/>
+			        			<option value="{$vo.id}">{$vo.name}</option>
+	        				</if>
+		            </foreach>
+                </select></td>
+            </tr>
+            <tr>
+            	<td>关联操作</td>
+            	<td>
+            		<div class="Activity" name="parameter"></div>
+            		<div class="Activity" name="parameter"><input type="text" class="input" name="typeid" value=""></div>
+            		<div class="Activity" name="parameter">
+	        				<if condition="$formget['groupid']">
+	        					已关联（{$formget.groupid}）
+	        					 | 
+	        					<a href="{:U('home/group',array('itemid'=>$formget['itemid'],'eventid'=>'2','source'=>'add'))}">修改</a>
+        						<input type="hidden" name="groupid" value="{$formget.groupid}">
+            			<else/>
+            				<a href="{:U('home/group',array('itemid'=>$formget['itemid'],'eventid'=>'2','source'=>'add'))}">关联商品集</a>
+	        				</if>
+            		</div>
+            		<div class="Activity" name="parameter">
+	        				<if condition="$formget['shopid']">
+	        					<a href="{:U('shop/edit',array('id'=>$formget['shopid']))}">已关联（{$formget.shopid}）</a>
+	        					 | 
+	        					<a href="{:U('home/shop',array('itemid'=>$formget['itemid'],'eventid'=>'3','source'=>'add'))}">修改</a>
+        						<input type="hidden" name="shopid" value="{$formget.shopid}">
+            			<else/>
+            				<a href="{:U('home/shop',array('itemid'=>$formget['itemid'],'eventid'=>'3','source'=>'add'))}">关联商品</a>
+	        				</if>
+            		</div>
+            	</td>
+            </tr>
+            <tr>
+              <td>模块名称:</td>
+              <td><input type="text" class="input" name="title" value=""></td>
+            </tr>
+						<tr>
+              <td>图片列表:</td>
+              <td><input type="file" name="homeimg"  accept="image/*" /></td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <input type="hidden" name="id" value="{$formget.itemid}">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+</body>
+</html>

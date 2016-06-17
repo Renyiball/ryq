@@ -1,0 +1,318 @@
+<admintpl file="header"/>
+<body class="J_scroll_fixed">
+<div class="wrap J_check_wrap">
+  <ul class="nav nav-tabs">
+     <li><a href="{:U('shop/index')}">商品列表</a></li>
+     <li class="active"><a href="{:U('shop/add')}">添加商品</a></li>
+     <li><a href="{:U('shop/logistics')}">库存导入</a></li>
+  </ul>
+  <script type="application/javascript">
+  	var currentShowCity=0;
+$(document).ready(function(){
+   $("#province").change(function(){
+   $("#province option").each(function(i,o){
+   if($(this).attr("selected"))
+   {
+  
+   $(".xssize").hide();
+   $(".xssize").eq(i).show();
+   $(".ljsize").hide();
+   $(".ljsize").eq(i).show();
+   currentShowCity=i;
+   }
+   });
+   });
+   $("#province").change();
+});
+function getSelectValue(){
+alert("1级="+$("#province").val());
+  
+$(".xssize").each(function(i,o){
+                    
+ if(i == currentShowCity){
+alert("2级="+$(".xssize").eq(i).val());
+ }
+   });
+$(".ljsize").each(function(i,o){
+                    
+ if(i == currentShowCity){
+alert("2级="+$(".ljsize").eq(i).val());
+ }
+   });
+}
+  </script>
+  <php>
+  	$j=0;$main_typeid =$temp =  array();
+	for ($i = 0;$i<count($one);$i++) {
+		if($one[$i]["group_text"] == "一级分类"){
+			$typeid = $one[$i]["typeid"];
+			$main_typeid[$j] = $typeid;
+			$j++;
+		}
+	}
+</php>
+
+<script language="JavaScript" type="text/javascript">
+<php>
+echo 'var twoclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($one);$i++) {
+			if($one[$i]["parent_typeid"] == $main_typeid[$j]){
+				$onetext = $one[$i]["type_text"];
+				echo '"'.preg_replace('/\r|\n/', '', $onetext).'",';
+			}
+		}
+		echo '],';
+	}
+	echo '];var threeclass=[';
+	for ($j = 0;$j<count($main_typeid);$j++) {
+		echo '[';
+		for ($i = 0;$i<count($one);$i++) {
+			if($one[$i]["parent_typeid"] == $main_typeid[$j]){
+				$oneid = $one[$i]["typeid"];
+				echo '"'.preg_replace('/\r|\n/', '', $oneid).'",';
+			}
+		}
+		echo '],';
+	}
+	echo '];';
+</php> 
+function gettwo(){
+var sltone=document.formadd.oneclass;
+var slttwo=document.formadd.twoclass;  
+var sltthree=document.formadd.threeclass;
+var Onetwo=twoclass[sltone.selectedIndex-1];  
+var Twothree=threeclass[sltone.selectedIndex-1];
+slttwo.length=1;
+for(var i=0;i<Onetwo.length;i++){   
+slttwo[i+1]=new Option(Onetwo[i],Twothree[i]);   
+}   
+}   
+</script>
+<style> 
+span,input{float:left;} 
+input .duoxuan{ width:14px; height:14px;} 
+span{ margin-right:30px;} 
+.table_list table tr{ height: 34px;}
+li{line-height: 30px;margin-bottom: 10px;}
+</style>
+  <div class="common-form">
+    <form method="post" class="form-horizontal J_ajaxForm" action="{:U('Shop/add_post')}" name="formadd">
+      <div class="table_list">
+        <table cellpadding="2" cellspacing="2" width="100%" class="table table-hover">
+          <tbody>
+            <tr>
+              <td style="width: 100px;">商品名称:</td>
+              <td><input type="text" class="input" name="shopname" value="">
+              		<input type="checkbox" name="push" value="1" class="duoxuan"/><span>新品推送</span>
+              </td>
+            </tr>
+            <tr>
+              <td>品牌分类:</td>
+              <td><select name="brandclass" >   
+				<option value="0">----请选择品牌分类----</option>  
+        		<foreach name="brand" item="vo"> 
+                	<if condition="$vo.group_text == '品牌分类'">
+    					<option value='{$vo.typeid}'>{$vo.type_text}</option>
+	               	</if>
+               </foreach>
+                </select></td>
+            </tr>
+            <tr>
+              <td>一级分类:</td>
+              <td>
+              	<select name="oneclass" onChange="gettwo()"> 
+				<option value="0">----请选择一级分类----</option>   
+        		<foreach name="one" item="vo">
+                	<if condition="$vo.group_text == '一级分类'">
+    					<option value='{$vo.typeid}'>{$vo.type_text}</option>
+	                </if>
+               </foreach>
+               </select>
+              </td>
+            </tr>
+            <tr>
+              <td>二级分类:</td>
+              <td>
+              			<select name="twoclass" >   
+							<option value="0">----请选择二级分类---</option>   
+						</select>
+              </td>
+            </tr>
+            <tr>
+              <td><input type="checkbox" name="whether" value="0"  class="duoxuan"/>特许分类</td>
+              <td>
+					<div id="divcon" style="display:none">
+						<select name="maxclass" > 
+						<option value="0">----请选择特许分类----</option>          
+			        		<foreach name="max" item="vo">
+				    					<option value='{$vo.typeid}'>{$vo.type_text}</option>
+			               </foreach>
+						</select>
+					</div>
+              </td>
+            </tr>
+            <tr>
+              <td>商品价格:</td>
+              <td><input type="text" class="input" name="price" id="action" value=""></td>
+            </tr>
+            <tr>
+              <td>商品折扣:</td>
+              <td><input type="text" class="input" name="repeatType" id="action" value="">例：打八五折、折扣价框填写85</td>
+            </tr>
+            <tr>
+              <td>商品数量:</td>
+              <td><input type="text" class="input" name="property" id="action" value=""></td>
+            </tr>
+            <tr>
+              <td>库存货号:</td>
+              <td><input type="text" class="input" name="key" id="action" value=""></td>
+            </tr>
+            <!--tr>
+              <td>商品介绍:</td>
+              <td><textarea name="description" rows="5" cols="57"></textarea></td>
+            </tr-->
+            <tr>
+              <td>颜色:</td>
+              <td>
+	        		<php>$i=0;</php>
+	        		<foreach name="attr" item="vo">
+	               <if condition="$vo.parent_type_text == 颜色">
+							  <input type="checkbox" name="color{$i}" value='{$vo.type_text}' class="duoxuan"/><span>{$vo.type_text}</span>
+	        			<php>$i++;</php>
+		            </if>
+	            </foreach>
+              </td>
+            </tr>
+            <tr>
+              <td>尺码类型:</td>
+              <td>
+              	<select  id="province"> 
+    					<option value="1">球鞋码</option>
+    					<option value="2">球服码</option>
+    					<option value="3">配件码</option>
+               </select>
+              </td>
+            </tr>
+            <tr>
+              <td>显示尺码:</td>
+              <td>
+		      <select class="xssize" name="xssize[]" multiple class="form-control"> 
+	        		<php>$k=0;</php>
+	        		<foreach name="attr" item="vo">
+	                	<if condition="$vo.parent_type_text == 鞋码  && $vo.type_text egt 20">
+							 <option name="size{$k}" value='{$vo.type_text}'/>{$vo.type_text}</option>
+	        			<php>$k++;</php>
+		                </if>
+	               	</foreach>
+			  	</select> 
+		      <select class="xssize" name="xssize[]" multiple class="form-control"> 
+	        		<php>$j=0;</php>
+	        		<foreach name="attr" item="vo">
+	                	<if condition="$vo.parent_type_text == 衣服码">
+							  <option name="size{$j}" value='{$vo.type_text}'/>{$vo.type_text}</option>
+	        			<php>$j++;</php>
+		                </if>
+	               	</foreach>
+			   </select>
+		      <select class="xssize" name="xssize[]" multiple class="form-control"> 
+	        		<php>$m=0;</php>
+	        		<foreach name="attr" item="vo">
+	                	<if condition="$vo.parent_type_text == 配件码">
+         					<option name="size{$m}" value='{$vo.type_text}'/>{$vo.type_text}</option>
+	        			<php>$m++;</php>
+		                </if>
+	               	</foreach>
+			   </select> 
+			   <div>Windows：按住键盘 Ctrl 按键来选择多个选项<br>
+			   	Mac：按住键盘 command 按键来选择多个选项<br>
+			   	或：按住鼠标左键拖动选择</div>
+              </td>
+            </tr>
+            <tr>
+              <td>丽晶尺码:</td>
+              <td>
+		      <select class="ljsize" name="ljsize[]" multiple class="form-control"> 
+	        		<php>$o=0;</php>
+	        		<foreach name="attr" item="vo">
+	                	<if condition="$vo.parent_type_text == 鞋码">
+							 <option name="ljsize{$o}" value='{$vo.type_text}'/>{$vo.type_text}</option>
+	        			<php>$o++;</php>
+		                </if>
+	               	</foreach>
+			  </select> 
+		      <select class="ljsize" name="ljsize[]" multiple class="form-control"> 
+	        		<php>$p=0;</php>
+	        		<foreach name="attr" item="vo">
+	                	<if condition="$vo.parent_type_text == 衣服码">
+							  <option name="ljsize{$p}" value='{$vo.type_text}'/>{$vo.type_text}</option>
+	        			<php>$p++;</php>
+		                </if>
+	               	</foreach>
+			   </select>
+		      <select class="ljsize" name="ljsize[]" multiple class="form-control"> 
+	        		<php>$q=0;</php>
+	        		<foreach name="attr" item="vo">
+	                	<if condition="$vo.parent_type_text == 配件码">
+         					<option name="ljsize{$q}" value='{$vo.type_text}'/>{$vo.type_text}</option>
+	        			<php>$q++;</php>
+		                </if>
+	               	</foreach>
+			   </select> 
+			   <div>显示尺码与丽晶尺码选择数量需相同！</div>
+              </td>
+            </tr>
+            <tr>
+              <td>是否上架:</td>
+              <td><select name="updown" >   
+    					<option value='0'>不上架</option>
+    					<option value='100'>上架</option>
+               </select></td>
+            </tr>
+			<tr>
+              <td>图片列表:</td>
+              <td>
+				<fieldset class="blue pad-10">
+		        <ul id="photos" class="picList unstyled"></ul>
+				</fieldset>
+				<a href="javascript:;" style="margin: 5px 0;" onclick="javascript:flashupload('albums_images', '图片上传','photos',change_images,'10,gif|jpg|jpeg|png|bmp,0','','','')" class="btn">选择图片 </a>
+			  </td>
+            </tr>
+            
+          </tbody>
+        </table>
+      </div>
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary btn_submit  J_ajax_submit_btn">添加</button>
+        <button type="button" class="btn" onclick="javascript:history.go(-1);">返回</button>
+      </div>
+    </form>
+  </div>
+</div>
+<script type="text/javascript" src="__ROOT__/statics/js/common.js"></script>
+<script type="text/javascript" src="__ROOT__/statics/js/content_addtop.js"></script>
+
+<script>
+    window.onload=function(){
+        var whether=document.getElementsByName("whether");
+        var divcon=document.getElementById("divcon");
+        for(var i=0;i<whether.length;i++){
+            whether[i].onclick=function(){
+                var k=0;
+                for(var n=0;n<whether.length;n++){
+                    if(whether[n].checked){
+                        k++;
+                    }
+                }
+                if(k==0){
+                    divcon.style.display="none";
+                }else{
+                    divcon.style.display="";
+                }
+            }
+        }
+    }
+</script>
+</body>
+</html>
